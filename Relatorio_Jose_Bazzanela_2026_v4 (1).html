@@ -1,0 +1,2606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Financeiro — José Felipe Bazzanella Lírio 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root {
+  --green:#4AA834;--green-light:#C9DAAB;--green-bg:#EEF4E3;
+  --dark:#1E2320;--dark2:#2E3830;--cream:#F4F1F0;--cream2:#EAE7E4;
+  --red:#D94F4F;--amber:#E8943A;--muted:#6B6B5E;
+  --border:rgba(30,35,32,0.10);--sidebar-w:234px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);font-size:14px;line-height:1.6;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--dark);display:flex;flex-direction:column;z-index:200;overflow-y:auto;border-right:1px solid rgba(201,218,171,0.1);}
+.sb-logo{padding:26px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.sb-logo-text{font-family:'Playfair Display',serif;font-size:15px;color:#C9DAAB;letter-spacing:2px;text-transform:uppercase;}
+.sb-logo-sub{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-top:3px;}
+.sb-section{padding:14px 14px 4px;font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,0.2);font-weight:600;}
+.nav-tab{display:flex;align-items:center;gap:10px;background:none;border:none;color:rgba(255,255,255,0.5);padding:9px 14px 9px 16px;font-size:12.5px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .18s;border-left:3px solid transparent;text-align:left;width:100%;border-radius:0 8px 8px 0;margin:1px 0;}
+.nav-tab:hover{color:white;background:rgba(255,255,255,0.06);}
+.nav-tab.active{color:#C9DAAB;background:rgba(201,218,171,0.1);border-left-color:#4AA834;font-weight:600;}
+.nav-tab .ti{font-size:14px;width:20px;text-align:center;flex-shrink:0;}
+.sb-bottom{margin-top:auto;padding:14px;border-top:1px solid rgba(255,255,255,0.07);font-size:10px;color:rgba(255,255,255,0.2);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);min-height:100vh;position:relative;}
+.page{max-width:1180px;margin:0 auto;padding:36px 40px;}
+.panel{display:none;}.panel.active{display:block;}
+html,body{scroll-behavior:auto;}
+
+/* SECTION HEADER */
+.sec-ey{font-size:11px;text-transform:uppercase;letter-spacing:2.5px;color:var(--green);margin-bottom:6px;font-weight:600;}
+.sec-title{font-family:'Playfair Display',serif;font-size:28px;color:var(--dark);margin-bottom:4px;}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:24px;}
+
+/* FILTER BAR */
+.filter-bar{background:white;border:1px solid var(--border);border-radius:12px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.filter-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:600;}
+.filter-btn{background:var(--cream2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--dark);transition:all .18s;}
+.filter-btn:hover,.filter-btn.active{background:var(--dark);color:white;border-color:var(--dark);}
+.filter-select{background:var(--cream2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--dark);cursor:pointer;}
+.filter-sep{color:var(--border);font-size:18px;}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.kpi{background:white;border-radius:12px;padding:18px 20px;border:1px solid var(--border);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.08);}
+.kpi::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--green);}
+.kpi.red::before{background:var(--red);}
+.kpi.amber::before{background:var(--amber);}
+.kpi.neutral::before{background:#C9DAAB;}
+.kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px;}
+.kpi-value{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);}
+.kpi-value.green{color:var(--green);}
+.kpi-value.red{color:var(--red);}
+.kpi-deducao{font-size:10px;color:var(--muted);margin-top:3px;font-style:italic;border-top:1px dashed var(--border);padding-top:4px;margin-top:6px;}
+.kpi-tag{font-size:11px;margin-top:5px;}
+.kpi-tag.up{color:var(--green);}
+.kpi-tag.down{color:var(--red);}
+.kpi-tag.neutral{color:var(--muted);}
+
+/* PULSE ANIMATION for dashboard */
+@keyframes pulse-val{0%{opacity:.4;transform:scale(.97)}100%{opacity:1;transform:scale(1)}}
+.kpi-value.animating{animation:pulse-val .4s ease forwards;}
+
+/* CHART CARDS */
+.chart-row{display:grid;gap:18px;margin-bottom:20px;}
+.c2{grid-template-columns:1.6fr 1fr;}
+.c2eq{grid-template-columns:1fr 1fr;}
+.c3{grid-template-columns:1fr 1fr 1fr;}
+.chart-card{background:white;border-radius:12px;padding:20px 22px;border:1px solid var(--border);}
+.chart-title{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px;}
+.chart-sub{font-size:11px;color:var(--muted);margin-bottom:16px;}
+.canvas-wrap{position:relative;width:100%;}
+
+/* MES */
+.mes-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;}
+.mes-box{background:white;border-radius:12px;padding:18px;border:1px solid var(--border);}
+.mes-box-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:10px;}
+.cat-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12.5px;}
+.cat-row:last-child{border-bottom:none;}
+.cat-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.cat-name{flex:1;color:var(--dark);}
+.cat-val{font-weight:600;color:var(--dark);}
+.cat-pct{color:var(--muted);font-size:11px;margin-left:6px;}
+.cat-net{color:var(--amber);font-size:10px;margin-left:4px;}
+
+/* BADGE */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge.pos{background:#EEF4E3;color:#2D9E6B;}
+.badge.neg{background:#FDECEA;color:var(--red);}
+.badge.warn{background:#FEF3E7;color:var(--amber);}
+.badge.neutral{background:var(--cream2);color:var(--muted);}
+.badge.parcial{background:#FEF3E7;color:var(--amber);border:1px dashed var(--amber);}
+
+/* TABLE */
+.ov-table{width:100%;border-collapse:collapse;}
+.ov-table th{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.ov-table td{padding:9px 12px;border-bottom:1px solid rgba(0,0,0,0.04);font-size:13px;}
+.ov-table tr:hover td{background:var(--cream);}
+
+/* ALERT */
+.alert{border-radius:10px;padding:12px 16px;margin-bottom:12px;border-left:4px solid;display:flex;align-items:flex-start;gap:10px;}
+.alert.danger{background:#FDECEA;border-color:var(--red);}
+.alert.warn{background:#FEF3E7;border-color:var(--amber);}
+.alert.ok{background:#EEF4E3;border-color:#2D9E6B;}
+.alert-icon{font-size:14px;margin-top:1px;}
+.alert-title{font-weight:600;font-size:13px;color:var(--dark);margin-bottom:2px;}
+.alert-body{font-size:12px;color:var(--muted);}
+
+/* META CARD */
+.meta-card{background:white;border-radius:16px;padding:26px;border:1px solid var(--border);margin-bottom:18px;}
+.meta-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;}
+.meta-name{font-size:16px;font-weight:600;}
+.meta-pct{font-family:'Playfair Display',serif;font-size:34px;color:var(--green);}
+.progress-bar{background:var(--cream2);border-radius:20px;height:12px;overflow:hidden;margin-bottom:6px;}
+.progress-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#4AA834,#C9DAAB);transition:width 1.2s ease;}
+.meta-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;}
+.meta-detail{text-align:center;padding:12px;background:var(--cream);border-radius:10px;}
+.meta-detail-val{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--dark);}
+.meta-detail-lab{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-top:4px;}
+
+/* TRAVEL CARD */
+.trip-card{background:white;border-radius:16px;border:1px solid var(--border);overflow:hidden;margin-bottom:22px;}
+.trip-header{background:var(--dark);color:white;padding:22px 26px;display:flex;justify-content:space-between;align-items:center;}
+.trip-name{font-family:'Playfair Display',serif;font-size:21px;}
+.trip-dates{font-size:12px;color:#C9DAAB;margin-top:3px;}
+.trip-budget-pill{background:rgba(201,218,171,0.15);border:1px solid rgba(201,218,171,0.3);border-radius:20px;padding:8px 18px;text-align:center;}
+.trip-budget-val{font-family:'Playfair Display',serif;font-size:19px;color:#C9DAAB;}
+.trip-budget-lab{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;}
+.trip-body{padding:26px;}
+.trip-seg{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.trip-seg:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.trip-seg-icon{width:34px;height:34px;border-radius:10px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.trip-seg-info{flex:1;}
+.trip-seg-title{font-weight:600;font-size:13px;}
+.trip-seg-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.trip-seg-cost{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--dark);}
+.exchange-box{background:var(--green-bg);border-radius:10px;padding:12px 16px;margin-top:12px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
+.exchange-item{text-align:center;}
+.exchange-val{font-weight:700;font-size:14px;color:var(--dark);}
+.exchange-lab{font-size:10px;color:var(--muted);}
+
+/* HISTORY TRIP CARD */
+.hist-trip-card{background:white;border-radius:12px;padding:20px;border:1px solid var(--border);margin-bottom:14px;}
+.hist-trip-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.hist-trip-name{font-weight:600;font-size:15px;}
+.hist-trip-total{font-family:'Playfair Display',serif;font-size:17px;color:var(--green);}
+.hist-cat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;border-radius:6px;font-size:12.5px;}
+.hist-cat-row:hover{background:var(--cream);}
+
+/* ORC TABLE */
+.orc-table{width:100%;border-collapse:collapse;}
+.orc-table th{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:var(--cream);}
+.orc-table td{padding:8px 12px;border-bottom:1px solid rgba(0,0,0,0.04);font-size:13px;}
+.orc-table .total-row td{font-weight:700;background:var(--green-bg);color:var(--dark);}
+.orc-table tr:hover td{background:var(--cream);}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:16px;align-items:flex-start;padding-bottom:18px;border-left:2px solid var(--green);margin-left:10px;padding-left:20px;position:relative;}
+.tl-item.work{border-left-color:var(--amber);}
+.tl-item.last{border-left:none;}
+.tl-dot{width:20px;height:20px;background:var(--green);border-radius:50%;position:absolute;left:-11px;top:0;flex-shrink:0;}
+.tl-dot.small{width:14px;height:14px;left:-8px;}
+.tl-dot.work{background:var(--amber);}
+.tl-dot.end{background:var(--dark);}
+
+/* AI LOADING */
+.ai-loading{text-align:center;padding:40px;color:var(--muted);}
+.ai-spinner{width:32px;height:32px;border:3px solid var(--cream2);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* COMPENSATION TAG */
+.net-pill{display:inline-block;background:#FEF3E7;color:var(--amber);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;}
+
+/* COUNTER ANIMATION */
+@keyframes countUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.count-anim{animation:countUp .5s ease forwards;}
+
+@media(max-width:900px){
+  .sidebar{width:60px;}
+  .nav-tab span.tab-lbl{display:none;}
+  .main{margin-left:60px;}
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+  .c2,.c2eq,.c3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-text">Rica Capital</div>
+    <div class="sb-logo-sub">Gestão Financeira · 2026</div>
+  </div>
+  <div class="sb-section">Visão Geral</div>
+  <button class="nav-tab active" onclick="show('dashboard')" id="tab-dashboard">
+    <span class="ti">📊</span><span class="tab-lbl">Dashboard</span>
+  </button>
+  <div class="sb-section">Análise</div>
+  <button class="nav-tab" onclick="show('mensal')" id="tab-mensal">
+    <span class="ti">📅</span><span class="tab-lbl">Mensal / Anual</span>
+  </button>
+  <button class="nav-tab" onclick="show('orcamento')" id="tab-orcamento">
+    <span class="ti">📋</span><span class="tab-lbl">Orçamento</span>
+  </button>
+  <button class="nav-tab" onclick="show('distribuicao')" id="tab-distribuicao">
+    <span class="ti">🍕</span><span class="tab-lbl">Distribuição</span>
+  </button>
+  <button class="nav-tab" onclick="show('evolucao')" id="tab-evolucao">
+    <span class="ti">📉</span><span class="tab-lbl">Evolução Mensal</span>
+  </button>
+  <button class="nav-tab" onclick="show('resultado')" id="tab-resultado">
+    <span class="ti">📊</span><span class="tab-lbl">Resultado/Margem</span>
+  </button>
+  <button class="nav-tab" onclick="show('alertas')" id="tab-alertas">
+    <span class="ti">🔔</span><span class="tab-lbl">Alertas</span>
+  </button>
+  <div class="sb-section">Planejamento</div>
+  <button class="nav-tab" onclick="show('metas')" id="tab-metas">
+    <span class="ti">🎯</span><span class="tab-lbl">Metas</span>
+  </button>
+  <button class="nav-tab" onclick="show('historico')" id="tab-historico">
+    <span class="ti">📜</span><span class="tab-lbl">Histórico</span>
+  </button>
+  <button class="nav-tab" onclick="show('projecao')" id="tab-projecao">
+    <span class="ti">🔮</span><span class="tab-lbl">Projeção Mensal</span>
+  </button>
+  <div class="sb-section">✈️ Viagens</div>
+  <button class="nav-tab" onclick="show('chile')" id="tab-chile">
+    <span class="ti">🇨🇱</span><span class="tab-lbl">✈️ Chile</span>
+  </button>
+  <button class="nav-tab" onclick="show('dubai')" id="tab-dubai">
+    <span class="ti">🇦🇪🇨🇳</span><span class="tab-lbl">✈️ Dubai & China</span>
+  </button>
+  <div class="sb-bottom">José Felipe Bazzanella Lírio<br>Fechamento: <strong style="color:#4AA834;">Abril/26</strong> · Parcial: Maio/26</div>
+</nav>
+
+<div class="main">
+
+<div id="panel-dashboard" class="panel active">
+<div class="page">
+  <div class="sec-ey">Painel Principal</div>
+  <div class="sec-title">Visão Geral 2026</div>
+  <div class="sec-sub">Fechamento confirmado: Abril/26 · Dados parciais de Maio/26 incluídos</div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Período:</span>
+    <button class="filter-btn active" onclick="setDashFilter('2026-04')" id="dbtn-2026-04">Abril/26</button>
+    <button class="filter-btn" onclick="setDashFilter('2026-03')" id="dbtn-2026-03">Março/26</button>
+    <button class="filter-btn" onclick="setDashFilter('2026-02')" id="dbtn-2026-02">Fev/26</button>
+    <button class="filter-btn" onclick="setDashFilter('2026-01')" id="dbtn-2026-01">Jan/26</button>
+    <button class="filter-btn" onclick="setDashFilter('2026-05')" id="dbtn-2026-05">Mai/26 ★</button>
+    <button class="filter-btn" onclick="setDashFilter('anual')" id="dbtn-anual">Acumulado 2026</button>
+  </div>
+
+  <div class="kpi-grid" id="dash-kpis"></div>
+
+  <div class="chart-row c2">
+    <div class="chart-card">
+      <div class="chart-title">Receita × Despesa (2026)</div>
+      <div class="chart-sub">Valores mensais por Mês Caixa</div>
+      <div class="canvas-wrap" style="height:220px"><canvas id="chartEvo"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Saldo Acumulado 2026</div>
+      <div class="chart-sub">Resultado líquido mês a mês</div>
+      <div class="canvas-wrap" style="height:220px"><canvas id="chartSaldo"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row c2eq">
+    <div class="chart-card">
+      <div class="chart-title">Composição das Receitas</div>
+      <div class="chart-sub" id="dash-r-sub">Todas as categorias — mês selecionado</div>
+      <div class="canvas-wrap" style="height:200px"><canvas id="chartRec"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Composição das Despesas</div>
+      <div class="chart-sub" id="dash-d-sub">Todas as categorias — mês selecionado</div>
+      <div class="canvas-wrap" style="height:200px"><canvas id="chartDesp"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row c2eq">
+    <div class="chart-card">
+      <div class="chart-title">Receitas — Operacionais</div>
+      <div class="chart-sub" id="dash-r2-sub">Excluindo Empresa · Empréstimo · Venda de Bens</div>
+      <div class="canvas-wrap" style="height:200px"><canvas id="chartRecOp"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Despesas — Operacionais (sem Investimentos)</div>
+      <div class="chart-sub" id="dash-d2-sub">Excluindo Investimentos · Aquisição de Bens · Empresa</div>
+      <div class="canvas-wrap" style="height:200px"><canvas id="chartDespOp"></canvas></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="panel-distribuicao" class="panel">
+<div class="page">
+  <div class="sec-ey">Análise — Composição</div>
+  <div class="sec-title">Distribuição de Gastos</div>
+  <div class="sec-sub">Participação percentual de cada categoria · filtro por mês ou acumulado 2026</div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Período:</span>
+    <button class="filter-btn active" onclick="setDistFilter('2026-04')" id="dfbtn-2026-04">Abril/26</button>
+    <button class="filter-btn" onclick="setDistFilter('2026-03')" id="dfbtn-2026-03">Março/26</button>
+    <button class="filter-btn" onclick="setDistFilter('2026-02')" id="dfbtn-2026-02">Fev/26</button>
+    <button class="filter-btn" onclick="setDistFilter('2026-01')" id="dfbtn-2026-01">Jan/26</button>
+    <button class="filter-btn" onclick="setDistFilter('2026-05')" id="dfbtn-2026-05">Mai/26 ★</button>
+    <button class="filter-btn" onclick="setDistFilter('anual')" id="dfbtn-anual">Acumulado</button>
+  </div>
+
+  <div class="chart-row c2eq">
+    <div class="chart-card">
+      <div class="chart-title" id="dist-r-title">Distribuição de Receitas</div>
+      <div class="chart-sub" id="dist-r-sub">Por categoria — mês selecionado</div>
+      <div class="canvas-wrap" style="height:240px"><canvas id="chartDistR"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title" id="dist-d-title">Distribuição de Despesas</div>
+      <div class="chart-sub" id="dist-d-sub">Por categoria (ex-Empresa, ex-P/Terceiros)</div>
+      <div class="canvas-wrap" style="height:240px"><canvas id="chartDistD"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row c2eq">
+    <div class="chart-card">
+      <div class="chart-title">Receitas — Detalhamento</div>
+      <div class="chart-sub">Valores e % de cada categoria</div>
+      <div id="dist-rec-list"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Despesas — Detalhamento</div>
+      <div class="chart-sub">Valores e % de cada categoria</div>
+      <div id="dist-desp-list"></div>
+    </div>
+  </div>
+
+  <!-- NOVOS PARCELAMENTOS -->
+  <div class="sec-ey" style="margin-top:32px;">Compromissos Futuros</div>
+  <div class="sec-title" style="font-size:22px;margin-bottom:4px;">Novos Parcelamentos por Mês</div>
+  <div class="sec-sub" style="margin-bottom:16px;">Apenas parcelas <strong>iniciadas</strong> no mês · sem repetições de continuações · Financiamento Caminhonete tratado separadamente · <span style="color:#4AA834;font-weight:600;">✅ Fechamento real: Abril/2026</span></div>
+  <div id="parcelamentos-content" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;"></div>
+
+  <!-- TIPO DE DESPESA -->
+  <div class="sec-ey" style="margin-top:8px;">Comportamento do Gasto</div>
+  <div class="sec-title" style="font-size:22px;margin-bottom:4px;">Tipo de Despesa por Mês</div>
+  <div class="sec-sub" style="margin-bottom:16px;">Eventual · Mensal Variável · Parcelamento · Fixa</div>
+  <div class="chart-row c2eq">
+    <div class="chart-card">
+      <div class="chart-title">Composição por Tipo — Jan a Mai/26</div>
+      <div class="chart-sub">Valores absolutos empilhados por tipo</div>
+      <div class="canvas-wrap" style="height:260px"><canvas id="chartTipoDesp"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Participação % por Tipo</div>
+      <div class="chart-sub">Proporção de cada tipo dentro do total mensal</div>
+      <div class="canvas-wrap" style="height:260px"><canvas id="chartTipoPct"></canvas></div>
+    </div>
+  </div>
+  <div class="chart-card" style="overflow-x:auto;">
+    <div class="chart-title">Detalhamento por Tipo — Jan a Mai/26</div>
+    <div class="chart-sub">Total por tipo de despesa mensal</div>
+    <table class="orc-table" style="margin-top:8px;">
+      <thead><tr style="background:var(--cream)">
+        <th>Mês</th>
+        <th style="text-align:right">🔴 Eventual</th>
+        <th style="text-align:right">🟠 Mensal Variável</th>
+        <th style="text-align:right">🔵 Parcelamento</th>
+        <th style="text-align:right">🟢 Fixa</th>
+        <th style="text-align:right">Total</th>
+        <th>Destaque</th>
+      </tr></thead>
+      <tbody id="tipo-desp-tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+</div>
+
+<div id="panel-evolucao" class="panel">
+<div class="page">
+  <div class="sec-ey">Análise — Tendência</div>
+  <div class="sec-title">Evolução Mensal 2026</div>
+  <div class="sec-sub">Comparativo de receitas, despesas e saldos mês a mês · Inclui histórico 2025</div>
+
+  <div class="filter-bar" style="margin-bottom:16px;">
+    <span class="filter-label">Período:</span>
+    <button class="filter-btn active" onclick="setEvolFilter('anual')" id="efbtn-anual">Anual 2026</button>
+    <button class="filter-btn" onclick="setEvolFilter('trimestre')" id="efbtn-trimestre">Trimestre (Jan–Mar)</button>
+    <button class="filter-btn" onclick="setEvolFilter('semestre')" id="efbtn-semestre">Últimos 6 meses</button>
+    <button class="filter-btn" onclick="setEvolFilter('historico')" id="efbtn-historico">Histórico Completo</button>
+  </div>
+
+  <div class="kpi-grid" id="evol-medias" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;"></div>
+
+  <div class="chart-card" style="margin-bottom:20px;">
+    <div class="chart-title">Receita × Despesa — Jan/26 a Mai/26</div>
+    <div class="chart-sub">Barras = valores mensais · Linha = saldo acumulado no ano</div>
+    <div class="canvas-wrap" style="height:260px"><canvas id="chartEvol2026"></canvas></div>
+  </div>
+
+  <div class="chart-row c2eq">
+    <div class="chart-card">
+      <div class="chart-title">Saldo Mensal — 2026</div>
+      <div class="chart-sub">Resultado positivo (verde) e negativo (vermelho)</div>
+      <div class="canvas-wrap" style="height:220px"><canvas id="chartEvolSaldo"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Receita Líquida vs Despesa Pessoal</div>
+      <div class="chart-sub">Excluindo passagens de Empresa e P/Terceiros</div>
+      <div class="canvas-wrap" style="height:220px"><canvas id="chartEvolPessoal"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Histórico Completo — Jul/25 a Mai/26</div>
+    <div class="chart-sub">Linha de tendência de receitas e despesas nos últimos 11 meses</div>
+    <div class="canvas-wrap" style="height:240px"><canvas id="chartEvolHist"></canvas></div>
+  </div>
+</div>
+</div>
+
+<div id="panel-resultado" class="panel">
+<div class="page">
+  <div class="sec-ey">Análise — Performance</div>
+  <div class="sec-title">Resultado & Margem</div>
+  <div class="sec-sub">Análise do resultado financeiro mensal · margem pessoal (ex-Empresa) e comparativo acumulado</div>
+
+  <div class="kpi-grid" id="res-kpis" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;"></div>
+
+  <div class="chart-row c2eq">
+    <div class="chart-card">
+      <div class="chart-title">Resultado Mensal (Bruto × Pessoal)</div>
+      <div class="chart-sub">Saldo bruto e saldo pessoal por mês</div>
+      <div class="canvas-wrap" style="height:230px"><canvas id="chartResBruto"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Margem Financeira Pessoal %</div>
+      <div class="chart-sub">Saldo pessoal / Receita pessoal</div>
+      <div class="canvas-wrap" style="height:230px"><canvas id="chartMargem"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Resumo Comparativo — Jan a Mai/26</div>
+    <div class="chart-sub">Receita · Despesa · Saldo · Margem por mês · base = Mês Caixa</div>
+    <table class="orc-table" style="margin-top:8px;">
+      <thead>
+        <tr style="background:var(--cream)">
+          <th>Mês</th><th>Status</th>
+          <th style="text-align:right">Rec. Bruta</th>
+          <th style="text-align:right">Rec. sem Empresa</th>
+          <th style="text-align:right">Desp. Bruta</th>
+          <th style="text-align:right">Desp. Pessoal</th>
+          <th style="text-align:right">Saldo Bruto</th>
+          <th style="text-align:right">Saldo Pessoal</th>
+          <th style="text-align:right">Margem</th>
+        </tr>
+      </thead>
+      <tbody id="res-tbody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<div id="panel-alertas" class="panel">
+<div class="page">
+  <div class="sec-ey">Análise — Monitoramento</div>
+  <div class="sec-title">Alertas & Diagnóstico</div>
+  <div class="sec-sub">Categorias acima do orçado · itens extraordinários · recomendações · última atualização: Abril/26 fechado</div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Período:</span>
+    <button class="filter-btn active" onclick="setAlertFilter('2026-04')" id="afbtn-2026-04">Abril/26</button>
+    <button class="filter-btn" onclick="setAlertFilter('2026-03')" id="afbtn-2026-03">Março/26</button>
+    <button class="filter-btn" onclick="setAlertFilter('2026-02')" id="afbtn-2026-02">Fev/26</button>
+    <button class="filter-btn" onclick="setAlertFilter('2026-01')" id="afbtn-2026-01">Jan/26</button>
+    <button class="filter-btn" onclick="setAlertFilter('2026-05')" id="afbtn-2026-05">Mai/26 ★</button>
+    <button class="filter-btn" onclick="setAlertFilter('anual')" id="afbtn-anual">Acumulado</button>
+  </div>
+
+  <div id="alertas-content"></div>
+</div>
+</div>
+
+<div id="panel-mensal" class="panel">
+<div class="page">
+  <div class="sec-ey">Análise Financeira</div>
+  <div class="sec-title">Mensal & Anual</div>
+  <div class="sec-sub">Selecione o período · Saldos calculados com base na aba Mês Caixa do controle financeiro</div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Tipo:</span>
+    <button class="filter-btn active" onclick="setMensalMode('mensal')" id="mbtn-mensal">Mensal</button>
+    <button class="filter-btn" onclick="setMensalMode('anual')" id="mbtn-anual">Anual (2026)</button>
+    <span class="filter-sep">|</span>
+    <span class="filter-label">Mês:</span>
+    <select class="filter-select" id="mes-select" onchange="renderMensal()">
+      <option value="2026-05">Maio/26 ★ Parcial</option>
+      <option value="2026-04" selected>Abril/26</option>
+      <option value="2026-03">Março/26</option>
+      <option value="2026-02">Fevereiro/26</option>
+      <option value="2026-01">Janeiro/26</option>
+      <option value="2025-12">Dezembro/25</option>
+      <option value="2025-11">Novembro/25</option>
+      <option value="2025-10">Outubro/25</option>
+      <option value="2025-09">Setembro/25</option>
+      <option value="2025-08">Agosto/25</option>
+      <option value="2025-07">Julho/25</option>
+    </select>
+  </div>
+
+  <div id="mensal-content"></div>
+</div>
+</div>
+
+<div id="panel-orcamento" class="panel">
+<div class="page">
+  <div class="sec-ey">Controle Orçamentário</div>
+  <div class="sec-title">Orçamento 2026</div>
+  <div class="sec-sub">Baseado nos dados reais de cada Mês Caixa · Parcial Maio/26 incluído</div>
+
+  <div class="chart-card" style="margin-bottom:20px;">
+    <div class="chart-title">Evolução Receita × Despesa × Saldo</div>
+    <div class="chart-sub">Todos os meses — valores reais por Mês Caixa</div>
+    <div class="canvas-wrap" style="height:240px"><canvas id="chartOrc"></canvas></div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:20px;">
+    <table class="orc-table">
+      <thead>
+        <tr>
+          <th>Mês</th>
+          <th>Receita Bruta</th>
+          <th>(-) Empresa/Terc.</th>
+          <th>Receita Líquida</th>
+          <th>Despesa Total</th>
+          <th>Cat. Compensadas</th>
+          <th>Saldo</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="orc-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- ORÇAMENTO DETALHADO POR CATEGORIA -->
+  <div class="sec-ey" style="margin-top:8px;">Orçado × Realizado</div>
+  <div class="sec-title" style="font-size:22px;margin-bottom:4px;">Detalhamento por Categoria</div>
+  <div class="sec-sub" style="margin-bottom:16px;">Comparativo entre meta orçamentária e execução real — por mês</div>
+
+  <div class="filter-bar" style="margin-bottom:16px;">
+    <span class="filter-label">Mês:</span>
+    <button class="filter-btn active" onclick="setOrcFilter('2026-04')" id="ofbtn-2026-04">Abril/26</button>
+    <button class="filter-btn" onclick="setOrcFilter('2026-03')" id="ofbtn-2026-03">Março/26</button>
+    <button class="filter-btn" onclick="setOrcFilter('2026-02')" id="ofbtn-2026-02">Fev/26</button>
+    <button class="filter-btn" onclick="setOrcFilter('2026-01')" id="ofbtn-2026-01">Jan/26</button>
+    <button class="filter-btn" onclick="setOrcFilter('2026-05')" id="ofbtn-2026-05">Mai/26 ★</button>
+    <button class="filter-btn" onclick="setOrcFilter('anual')" id="ofbtn-anual">Acumulado</button>
+  </div>
+
+  <div class="chart-card">
+    <div id="orc-detalhe-title" class="chart-title" style="margin-bottom:3px;">Orçado vs Realizado — Abril/26</div>
+    <div class="chart-sub">Todas as categorias de despesa · verde = dentro · amarelo = atenção · vermelho = estourou</div>
+    <table class="orc-table" style="margin-top:8px;">
+      <thead>
+        <tr style="background:var(--cream)">
+          <th>Categoria</th>
+          <th style="text-align:right">Orçado</th>
+          <th style="text-align:right">Realizado</th>
+          <th style="text-align:right">Diferença</th>
+          <th style="text-align:center">Status</th>
+        </tr>
+      </thead>
+      <tbody id="orc-detalhe-tbody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<div id="panel-metas" class="panel">
+<div class="page">
+  <div class="sec-ey">Planejamento</div>
+  <div class="sec-title">Metas Financeiras</div>
+  <div class="sec-sub">Acompanhamento dos objetivos financeiros de José Felipe</div>
+
+  <div class="meta-card">
+    <div class="meta-header">
+      <div>
+        <div class="meta-name">🏦 Reserva Patrimonial</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Aporte mensal de R$ 20.000 · Meta: R$ 500.000</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="meta-pct">20,4%</div>
+        <div style="font-size:11px;color:var(--muted);">do objetivo</div>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:20.4%"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">R$ 102.000 de R$ 500.000 · Faltam ~R$ 398.000</div>
+    <div class="meta-detail-grid">
+      <div class="meta-detail">
+        <div class="meta-detail-val">R$ 102K</div>
+        <div class="meta-detail-lab">Em Caixa Hoje</div>
+      </div>
+      <div class="meta-detail">
+        <div class="meta-detail-val">R$ 20K</div>
+        <div class="meta-detail-lab">Aporte Mensal</div>
+      </div>
+      <div class="meta-detail">
+        <div class="meta-detail-val">~20 meses</div>
+        <div class="meta-detail-lab">Para a Meta</div>
+      </div>
+    </div>
+    <div class="alert ok" style="margin-top:18px;">
+      <div class="alert-icon">✅</div>
+      <div>
+        <div class="alert-title">Composição do Caixa Atual — R$ 102.000</div>
+        <div class="alert-body">R$ 20.000 do aporte de Abril/26 + R$ 82.000 provenientes da venda do veículo. <strong>Não inclui</strong> eventual venda do lote (Marau–RS), que poderá acelerar significativamente o atingimento da meta.</div>
+      </div>
+    </div>
+    <div class="alert warn" style="margin-top:0;">
+      <div class="alert-icon">📌</div>
+      <div>
+        <div class="alert-title">Projeção com Consistência de Aportes</div>
+        <div class="alert-body">Mantendo R$ 20.000/mês, a meta de R$ 500.000 será atingida em <strong>~20 meses (Fevereiro/2028)</strong>. Com a venda do lote (estimativa: R$ 60–80K), esse prazo reduz para <strong>12–15 meses</strong>. O mês de Maio/26 já conta com o aporte do mês.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Projeção de Acumulação — Reserva Patrimonial</div>
+    <div class="chart-sub">Cenário base (R$ 20K/mês) vs. cenário com venda do lote (+ R$ 70K estimado em Out/26)</div>
+    <div class="canvas-wrap" style="height:230px"><canvas id="chartMeta"></canvas></div>
+  </div>
+</div>
+</div>
+
+<div id="panel-projecao" class="panel">
+<div class="page">
+  <div class="sec-ey">Planejamento</div>
+  <div class="sec-title">Projeção Mensal</div>
+  <div class="sec-sub">Histórico de entradas e saídas · Fixas + Parcelamentos comprometidos + Médias variáveis históricas</div>
+
+  <div class="kpi-grid" id="proj-kpis" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;"></div>
+
+  <div class="chart-card" style="margin-bottom:20px;">
+    <div class="chart-title">Fluxo de Caixa Projetado — Jun a Dez/26</div>
+    <div class="chart-sub">Entradas previstas vs saídas totais projetadas · saldo acumulado estimado</div>
+    <div class="canvas-wrap" style="height:260px"><canvas id="chartProjFluxo"></canvas></div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:20px;">
+    <div class="chart-title">Composição das Saídas Projetadas</div>
+    <div class="chart-sub">Fixas · Parcelamentos · Variáveis médias históricas</div>
+    <div class="canvas-wrap" style="height:240px"><canvas id="chartProjSaidas"></canvas></div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:20px;overflow-x:auto;">
+    <div class="chart-title">Tabela de Projeção Mensal — Jun a Dez/26</div>
+    <div class="chart-sub">Entradas · Fixas · Parcelamentos · Variáveis · Saldo projetado</div>
+    <table class="orc-table" style="margin-top:8px;">
+      <thead>
+        <tr style="background:var(--dark);color:white;">
+          <th style="padding:10px 12px;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Mês</th>
+          <th style="padding:10px 12px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Entradas</th>
+          <th style="padding:10px 12px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Fixas</th>
+          <th style="padding:10px 12px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Parcel.</th>
+          <th style="padding:10px 12px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Variáveis</th>
+          <th style="padding:10px 12px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Total Saídas</th>
+          <th style="padding:10px 12px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Saldo Proj.</th>
+          <th style="padding:10px 12px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Acum. Caixa</th>
+        </tr>
+      </thead>
+      <tbody id="proj-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="chart-row c2eq">
+    <div class="chart-card">
+      <div class="chart-title">Parcelamentos Comprometidos</div>
+      <div class="chart-sub">Compromissos de cartão/crédito ativos — evolução mensal</div>
+      <div id="proj-parc-detail"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Médias Variáveis Utilizadas</div>
+      <div class="chart-sub">Base histórica Jan–Abr/26 (excluindo outliers)</div>
+      <div id="proj-var-detail"></div>
+    </div>
+  </div>
+
+  <div class="chart-card" style="margin-top:18px;">
+    <div class="chart-title">Histórico Anual — Entradas e Saídas por Categoria</div>
+    <div class="chart-sub">Jan/26 a Dez/26 · Realizados + Projetados (Jun→Dez estimados)</div>
+    <div class="canvas-wrap" style="height:280px"><canvas id="chartProjAnual"></canvas></div>
+    <div id="proj-anual-table" style="margin-top:14px;overflow-x:auto;"></div>
+  </div>
+
+</div>
+</div>
+
+<div id="panel-historico" class="panel">
+<div class="page">
+  <div class="sec-ey">Histórico</div>
+  <div class="sec-title">Histórico Financeiro</div>
+  <div class="sec-sub">Visão consolidada mês a mês desde Julho/25 · Base: Mês Caixa</div>
+
+  <div class="chart-card" style="margin-bottom:20px;">
+    <div class="chart-title">Histórico Completo — Receita vs Despesa</div>
+    <div class="chart-sub">Jul/25 a Mai/26 (parcial)</div>
+    <div class="canvas-wrap" style="height:240px"><canvas id="chartHist"></canvas></div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:26px;">
+    <table class="ov-table">
+      <thead>
+        <tr><th>Mês</th><th>Receita</th><th>Despesa</th><th>Cat. Compensadas</th><th>Saldo</th><th>Status</th></tr>
+      </thead>
+      <tbody id="hist-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="sec-ey" style="margin-top:8px;">Histórico de Viagens</div>
+  <div class="sec-title" style="font-size:22px;">Viagens Realizadas — Análise por IA</div>
+  <div class="sec-sub">Cada despesa classificada por categoria · Análise gerada com inteligência artificial</div>
+  <div id="hist-trips-loading" class="ai-loading">
+    <div class="ai-spinner"></div>
+    <div style="font-size:13px;">Analisando despesas de viagens com IA...</div>
+  </div>
+  <div id="hist-trips" style="display:none;"></div>
+</div>
+</div>
+
+<div id="panel-chile" class="panel">
+<div class="page">
+  <div class="sec-ey">✈️ Planejamento de Viagens</div>
+  <div class="sec-title">✈️ Viagens Planejadas — 2026</div>
+  <div class="sec-sub">Planejamento financeiro detalhado para viagens programadas — estratégia para curtir sem dívidas</div>
+
+  <div class="trip-card" style="margin-bottom:24px;">
+    <div class="trip-header">
+      <div style="margin-bottom:18px;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2.5px;color:rgba(201,218,171,.55);margin-bottom:10px;">✈ Viagem Internacional Confirmada</div>
+        <div class="trip-name">Chile — Santiago</div>
+        <div class="trip-dates">POA → Santiago · 10 a 15 de Agosto de 2026 · Com amigos</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);">
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Check-In</div>
+          <div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:white;">10 Ago/26</div>
+        </div>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Check-Out</div>
+          <div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:white;">15 Ago/26</div>
+        </div>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Duração</div>
+          <div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:white;">5 noites</div>
+        </div>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Passagem</div>
+          <div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:white;">R$ 2.400</div>
+          <div style="font-size:10px;color:rgba(201,218,171,.6);margin-top:3px;">6x sem juros ✓</div>
+        </div>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Budget Total</div>
+          <div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:#C9DAAB;">R$ 7.500</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;">estimado completo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;">
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:22px;">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--green);font-weight:700;margin-bottom:16px;">🔥 Orçamento Estimado — 5 dias em Santiago</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--cream);">
+        <span style="font-size:14px;font-weight:700;">Total estimado</span>
+        <span style="font-size:17px;font-weight:700;font-family:'Playfair Display',serif;color:var(--green);">R$ 7.500</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream);">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:2px;background:#C9DAAB;flex-shrink:0;"></span><span style="font-size:13px;">Passagem (já parcelada 6x)</span></div>
+        <span style="font-size:13px;font-weight:600;">R$ 2.400</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream);">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:2px;background:#1A3A5C;flex-shrink:0;"></span><span style="font-size:13px;">Hospedagem (5 noites Airbnb/hotel)</span></div>
+        <span style="font-size:13px;font-weight:600;">R$ 1.800</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream);">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:2px;background:#4AA834;flex-shrink:0;"></span><span style="font-size:13px;">Alimentação (R$ 200/dia × 5)</span></div>
+        <span style="font-size:13px;font-weight:600;">R$ 1.000</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream);">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:2px;background:#E8943A;flex-shrink:0;"></span><span style="font-size:13px;">Passeios e atrações</span></div>
+        <span style="font-size:13px;font-weight:600;">R$ 800</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream);">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:2px;background:#87CEEB;flex-shrink:0;"></span><span style="font-size:13px;">Transporte local (metro + Uber)</span></div>
+        <span style="font-size:13px;font-weight:600;">R$ 300</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream);">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:2px;background:#7F77DD;flex-shrink:0;"></span><span style="font-size:13px;">Compras / lembranças</span></div>
+        <span style="font-size:13px;font-weight:600;">R$ 700</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream);">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:2px;background:#D94F4F;flex-shrink:0;"></span><span style="font-size:13px;">Reserva de emergências (+R$ 100/dia)</span></div>
+        <span style="font-size:13px;font-weight:600;">R$ 500</span>
+      </div>
+      <div style="margin-top:14px;background:var(--green-bg);border-radius:8px;padding:10px 14px;font-size:12.5px;">
+        <strong>Custo adicional à passagem: <span style="color:var(--green);">R$ 5.100</span></strong> · Reservar até Julho/26
+      </div>
+    </div>
+
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:22px;">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#1A3A5C;font-weight:700;margin-bottom:10px;">📅 Plano de Reserva — Sem Dívidas</div>
+      <div style="background:#FEF3E7;border:1px solid rgba(232,148,58,0.35);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;">
+        👤 <strong style="color:var(--amber);">Viagem pessoal:</strong> a empresa <strong>não custeará</strong> esta viagem — 100% custeada pelo José dentro do plano financeiro pessoal
+      </div>
+      <div style="display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">Abr</div>
+        <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;">Reservar R$ 1.700</div><div style="font-size:11.5px;color:var(--muted);">Em conta separada "Viagem Chile" — iniciar agora</div></div>
+      </div>
+      <div style="display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">Mai</div>
+        <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;">Reservar R$ 1.700 + Reservar hospedagem</div><div style="font-size:11.5px;color:var(--muted);">Confirmar hotel/Airbnb com antecedência — preço melhor</div></div>
+      </div>
+      <div style="display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">Jun</div>
+        <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;">Reservar R$ 1.700 + Contratar seguro viagem</div><div style="font-size:11.5px;color:var(--muted);">Seguro obrigatório para Chile (~R$ 200). Pesquisar câmbio</div></div>
+      </div>
+      <div style="display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div style="width:36px;height:36px;border-radius:50%;background:#1A3A5C;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">Jul</div>
+        <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;">Meta atingida! R$ 5.100 reservados ✓</div><div style="font-size:11.5px;color:var(--muted);">Converter parte para dólares/pesos chilenos. Definir roteiro</div></div>
+      </div>
+      <div style="display:flex;gap:14px;padding:10px 0;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#C9DAAB;color:var(--dark);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">✈️</div>
+        <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;">Viagem sem dívidas!</div><div style="font-size:11.5px;color:var(--muted);">Tudo pago antecipadamente — curtir sem preocupação!</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:20px;">
+    <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--amber);font-weight:700;margin-bottom:16px;">💡 Estratégia Anti-Dívida — Regras da Viagem</div>
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--cream);">
+      <span style="font-size:16px;color:var(--green);font-weight:700;width:20px;flex-shrink:0;">✓</span>
+      <div><span style="font-size:13px;font-weight:600;">Limite diário de gastos:</span> <span style="font-size:13px;color:var(--muted);">R$ 500/dia (sem passagem)</span></div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--cream);">
+      <span style="font-size:16px;color:var(--green);font-weight:700;width:20px;flex-shrink:0;">✓</span>
+      <div><span style="font-size:13px;font-weight:600;">Câmbio antecipado:</span> <span style="font-size:13px;color:var(--muted);">Levar pesos chilenos e dólares comprados no Brasil</span></div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--cream);">
+      <span style="font-size:16px;color:var(--green);font-weight:700;width:20px;flex-shrink:0;">✓</span>
+      <div><span style="font-size:13px;font-weight:600;">Não parcelar lá fora:</span> <span style="font-size:13px;color:var(--muted);">Pagar tudo no débito ou com reserva — sem novas parcelas</span></div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--cream);">
+      <span style="font-size:16px;color:var(--green);font-weight:700;width:20px;flex-shrink:0;">✓</span>
+      <div><span style="font-size:13px;font-weight:600;">Cartão de crédito:</span> <span style="font-size:13px;color:var(--muted);">Usar apenas como backup emergência — já ter reserva em espécie</span></div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--cream);">
+      <span style="font-size:16px;color:var(--red);font-weight:700;width:20px;flex-shrink:0;">✗</span>
+      <div><span style="font-size:13px;font-weight:600;">Evitar:</span> <span style="font-size:13px;color:var(--muted);">Parcelamentos em lojas, compras por impulso acima de R$ 300</span></div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:11px 0;">
+      <span style="font-size:16px;color:var(--red);font-weight:700;width:20px;flex-shrink:0;">✗</span>
+      <div><span style="font-size:13px;font-weight:600;">Evitar:</span> <span style="font-size:13px;color:var(--muted);">Saques em ATM locais (taxa alta) — carregar moeda do Brasil</span></div>
+    </div>
+    <div style="margin-top:14px;background:var(--green-bg);border-radius:8px;padding:10px 14px;font-size:12.5px;">
+      🎯 <strong>Objetivo:</strong> Voltar do Chile com <strong style="color:var(--green);">zero dívida nova</strong> e a meta do terreno intacta
+    </div>
+  </div>
+
+  <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:22px;">
+    <div style="font-size:15px;font-weight:700;margin-bottom:4px;">📋 Passagem Parcelada — Impacto no Orçamento</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:18px;">POA → Santiago R$ 2.400 · 6x de R$ 400 sem juros · comprada em Abril/2026</div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px;">
+      <div style="background:var(--green-bg);border:1px solid rgba(74,168,52,0.3);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Abr/26</div><div style="font-size:17px;font-weight:700;font-family:'Playfair Display',serif;color:var(--green);">R$ 400</div><div style="font-size:10px;color:var(--muted);margin-top:5px;">1/6 ✓</div></div>
+      <div style="background:var(--green-bg);border:1px solid rgba(74,168,52,0.3);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Mai/26</div><div style="font-size:17px;font-weight:700;font-family:'Playfair Display',serif;color:var(--green);">R$ 400</div><div style="font-size:10px;color:var(--muted);margin-top:5px;">2/6</div></div>
+      <div style="background:var(--green-bg);border:1px solid rgba(74,168,52,0.3);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Jun/26</div><div style="font-size:17px;font-weight:700;font-family:'Playfair Display',serif;color:var(--green);">R$ 400</div><div style="font-size:10px;color:var(--muted);margin-top:5px;">3/6</div></div>
+      <div style="background:var(--green-bg);border:2px solid var(--green);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Jul/26</div><div style="font-size:17px;font-weight:700;font-family:'Playfair Display',serif;color:var(--green);">R$ 400</div><div style="font-size:10px;color:var(--muted);margin-top:5px;">4/6 ✈️</div></div>
+      <div style="background:var(--green-bg);border:2px solid var(--green);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Ago/26</div><div style="font-size:17px;font-weight:700;font-family:'Playfair Display',serif;color:var(--green);">R$ 400</div><div style="font-size:10px;color:var(--muted);margin-top:5px;">5/6 ✈️</div></div>
+      <div style="background:var(--green-bg);border:1px solid rgba(74,168,52,0.3);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Set/26</div><div style="font-size:17px;font-weight:700;font-family:'Playfair Display',serif;color:var(--green);">R$ 400</div><div style="font-size:10px;color:var(--muted);margin-top:5px;">6/6 ✓</div></div>
+    </div>
+    <div style="background:var(--cream);border-radius:8px;padding:10px 14px;font-size:12.5px;">
+      📌 <strong>Impacto no orçamento:</strong> R$ 400/mês por 6 meses — valor baixo, dentro do teto de viagens. Já incluído no planejamento mensal.
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="panel-dubai" class="panel">
+<div class="page">
+  <div class="sec-ey">✈️ Planejamento de Viagens</div>
+  <div class="sec-title">Dubai 🇦🇪 & Shanghai 🇨🇳</div>
+  <div class="sec-sub">08 a 22 de Outubro de 2026 · Passagens já adquiridas ✓ · Lazer em Dubai + Negócios em Shanghai</div>
+
+  <div class="trip-card" style="margin-bottom:24px;">
+    <div class="trip-header">
+      <div style="margin-bottom:18px;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2.5px;color:rgba(201,218,171,.55);margin-bottom:10px;">✈ Viagem Internacional — Passagens Confirmadas ✓</div>
+        <div class="trip-name">Dubai & Shanghai — Out/26</div>
+        <div class="trip-dates">GRU → DXB (08/10) → PVG Shanghai (14/10) → GRU (22/10) · 14 dias no total</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);">
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Embarque</div>
+          <div style="font-size:18px;font-weight:700;font-family:'Playfair Display',serif;color:white;">08 Out/26</div>
+        </div>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Retorno</div>
+          <div style="font-size:18px;font-weight:700;font-family:'Playfair Display',serif;color:white;">22 Out/26</div>
+        </div>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Duração</div>
+          <div style="font-size:18px;font-weight:700;font-family:'Playfair Display',serif;color:white;">14 dias</div>
+        </div>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Passagens</div>
+          <div style="font-size:18px;font-weight:700;font-family:'Playfair Display',serif;color:#C9DAAB;">Pagas ✓</div>
+          <div style="font-size:10px;color:rgba(201,218,171,.6);margin-top:3px;">R$ 10.960,16 quitado</div>
+        </div>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:8px;">Ainda a Reservar</div>
+          <div style="font-size:18px;font-weight:700;font-family:'Playfair Display',serif;color:#C9DAAB;">~R$ 40.000</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;">hospedagem + despesas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- ORÇAMENTO DUBAI + SHANGHAI (sem passagens — já pagas) -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;">
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:22px;">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#E8943A;font-weight:700;margin-bottom:4px;">🇦🇪 Despesas Dubai — 5 dias · Lazer</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:14px;">Passagem já paga ✓ · 1 AED ≈ R$ 1,58 · 1 USD ≈ R$ 5,80</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--cream);">
+        <span style="font-size:14px;font-weight:700;">Subtotal Dubai</span>
+        <span style="font-size:16px;font-weight:700;font-family:'Playfair Display',serif;color:#E8943A;">~R$ 19.080</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span style="color:var(--muted);text-decoration:line-through;">Passagem GRU → DXB</span><div style="text-align:right;"><div style="font-weight:600;color:var(--green);">✓ Paga</div><div style="font-size:10px;color:var(--muted);">R$ 5.220</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Hotel Dubai (5 noites @ AED 1.200)</span><div style="text-align:right;"><div style="font-weight:600;">R$ 9.480</div><div style="font-size:10px;color:var(--muted);">AED 6.000</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Alimentação (6 dias @ AED 250)</span><div style="text-align:right;"><div style="font-weight:600;">R$ 2.370</div><div style="font-size:10px;color:var(--muted);">AED 1.500</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Passeios (Burj Khalifa, Desert Safari)</span><div style="text-align:right;"><div style="font-weight:600;">R$ 1.548</div><div style="font-size:10px;color:var(--muted);">AED 980</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Transporte local (Táxi/Metro)</span><div style="text-align:right;"><div style="font-weight:600;">R$ 948</div><div style="font-size:10px;color:var(--muted);">AED 600</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Compras / Dubai Mall / Gold Souk</span><div style="text-align:right;"><div style="font-weight:600;">R$ 3.160</div><div style="font-size:10px;color:var(--muted);">AED 2.000</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>IOF / Câmbio e Taxas</span><div style="text-align:right;"><div style="font-weight:600;">R$ 800</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12.5px;"><span>Reserva de emergência</span><div style="text-align:right;"><div style="font-weight:600;">R$ 790</div><div style="font-size:10px;color:var(--muted);">AED 500</div></div></div>
+    </div>
+
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:22px;">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#1A3A5C;font-weight:700;margin-bottom:4px;">🇨🇳 Despesas Shanghai — 7 dias · Negócios</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:14px;">Passagens já pagas ✓ · 1 CNY ≈ R$ 0,80 · 1 USD ≈ R$ 5,80</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--cream);">
+        <span style="font-size:14px;font-weight:700;">Subtotal Shanghai</span>
+        <span style="font-size:16px;font-weight:700;font-family:'Playfair Display',serif;color:#1A3A5C;">~R$ 20.888</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span style="color:var(--muted);text-decoration:line-through;">Passagem DXB → PVG</span><div style="text-align:right;"><div style="font-weight:600;color:var(--green);">✓ Paga</div><div style="font-size:10px;color:var(--muted);">R$ 4.060</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span style="color:var(--muted);text-decoration:line-through;">Passagem PVG → GRU (volta)</span><div style="text-align:right;"><div style="font-weight:600;color:var(--green);">✓ Paga</div><div style="font-size:10px;color:var(--muted);">R$ 5.220</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Hotel corporativo (7 noites @ CNY 1.500)</span><div style="text-align:right;"><div style="font-weight:600;">R$ 8.400</div><div style="font-size:10px;color:var(--muted);">CNY 10.500</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Refeições com fornecedores (8 dias)</span><div style="text-align:right;"><div style="font-weight:600;">R$ 2.560</div><div style="font-size:10px;color:var(--muted);">CNY 3.200</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Visitas a fábricas / Intérprete</span><div style="text-align:right;"><div style="font-weight:600;">R$ 1.600</div><div style="font-size:10px;color:var(--muted);">CNY 2.000</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Brindes corporativos / Presentes</span><div style="text-align:right;"><div style="font-weight:600;">R$ 1.600</div><div style="font-size:10px;color:var(--muted);">CNY 2.000</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Transporte (Didi/Metro/Maglev)</span><div style="text-align:right;"><div style="font-weight:600;">R$ 400</div><div style="font-size:10px;color:var(--muted);">CNY 500</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Turismo / Lazer (Bund, Yu Garden)</span><div style="text-align:right;"><div style="font-weight:600;">R$ 728</div><div style="font-size:10px;color:var(--muted);">CNY 910</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>Compras / Eletrônicos / Souvenirs</span><div style="text-align:right;"><div style="font-weight:600;">R$ 2.400</div><div style="font-size:10px;color:var(--muted);">CNY 3.000</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream);font-size:12.5px;"><span>IOF / Câmbio e Taxas</span><div style="text-align:right;"><div style="font-weight:600;">R$ 900</div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12.5px;"><span>Reserva de emergência</span><div style="text-align:right;"><div style="font-weight:600;">R$ 800</div><div style="font-size:10px;color:var(--muted);">CNY 1.000</div></div></div>
+    </div>
+  </div>
+
+  <!-- RESUMO TOTAL -->
+  <div style="background:var(--dark);border-radius:12px;padding:20px;margin-bottom:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:center;">
+    <div style="text-align:center;"><div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:6px;">✈ Passagens</div><div style="font-size:18px;font-weight:700;font-family:'Playfair Display',serif;color:#C9DAAB;">Pagas ✓</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;">R$ 10.960,16 quitado</div></div>
+    <div style="text-align:center;"><div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:6px;">🇦🇪 Dubai (despesas)</div><div style="font-size:18px;font-weight:700;font-family:'Playfair Display',serif;color:#E8943A;">R$ 19.080</div></div>
+    <div style="text-align:center;"><div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:6px;">🇨🇳 Shanghai (despesas)</div><div style="font-size:18px;font-weight:700;font-family:'Playfair Display',serif;color:#87CEEB;">R$ 20.888</div></div>
+    <div style="text-align:center;border-left:1px solid rgba(255,255,255,.1);padding-left:16px;"><div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(201,218,171,.6);margin-bottom:6px;">Ainda a Reservar</div><div style="font-size:22px;font-weight:700;font-family:'Playfair Display',serif;color:#C9DAAB;">~R$ 40.000</div></div>
+  </div>
+
+  <!-- PLANO + ESTRATÉGIA -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;">
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:22px;">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#1A3A5C;font-weight:700;margin-bottom:10px;">📅 Plano de Reserva — Mai a Set/26</div>
+      <div style="background:#EEF4E3;border:1px solid rgba(74,168,52,0.3);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;">
+        💼 <strong style="color:var(--green);">Distribuição de Lucro confirmada:</strong> empresa aportará <strong>R$ 10.000/mês</strong> de Maio a Agosto/26 exclusivamente para esta viagem — total: <strong style="color:var(--green);">R$ 40.000</strong>
+      </div>
+      <div style="display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--border);">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">Mai</div>
+        <div><div style="font-size:12.5px;font-weight:600;margin-bottom:1px;">Distribuição de Lucro: R$ 10.000 <span style="color:var(--green);font-size:11px;">✓ empresa</span></div><div style="font-size:11px;color:var(--muted);">1ª parcela · Separar em conta dedicada "Viagem Dubai/China"</div></div>
+      </div>
+      <div style="display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--border);">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">Jun</div>
+        <div><div style="font-size:12.5px;font-weight:600;margin-bottom:1px;">Distribuição de Lucro: R$ 10.000 + Confirmar hotéis <span style="color:var(--green);font-size:11px;">✓ empresa</span></div><div style="font-size:11px;color:var(--muted);">2ª parcela · Reservar hotel Dubai e Shanghai · Total acum.: R$ 20.000</div></div>
+      </div>
+      <div style="display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--border);">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">Jul</div>
+        <div><div style="font-size:12.5px;font-weight:600;margin-bottom:1px;">Distribuição de Lucro: R$ 10.000 + Seguro internacional <span style="color:var(--green);font-size:11px;">✓ empresa</span></div><div style="font-size:11px;color:var(--muted);">3ª parcela · Contratar seguro (~R$ 600) · Total acum.: R$ 30.000</div></div>
+      </div>
+      <div style="display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--border);">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">Ago</div>
+        <div><div style="font-size:12.5px;font-weight:600;margin-bottom:1px;">Distribuição de Lucro: R$ 10.000 <span style="color:var(--green);font-size:11px;">✓ empresa</span></div><div style="font-size:11px;color:var(--muted);">4ª e última parcela · Definir agenda Shanghai · Total acum.: <strong style="color:var(--green);">R$ 40.000 ✓</strong></div></div>
+      </div>
+      <div style="display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--border);">
+        <div style="width:34px;height:34px;border-radius:50%;background:#1A3A5C;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">Set</div>
+        <div><div style="font-size:12.5px;font-weight:600;margin-bottom:1px;">Meta R$ 40.000 atingida ✓ — Comprar câmbio + instalar VPN</div><div style="font-size:11px;color:var(--muted);">Comprar AED e CNY no Brasil · Confirmar agenda fornecedores Shanghai</div></div>
+      </div>
+      <div style="display:flex;gap:14px;padding:9px 0;">
+        <div style="width:34px;height:34px;border-radius:50%;background:#C9DAAB;color:var(--dark);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">✈️</div>
+        <div><div style="font-size:12.5px;font-weight:600;margin-bottom:1px;">Dubai & Shanghai — sem dívidas!</div><div style="font-size:11px;color:var(--muted);">Curtir o lazer + fechar bons negócios com os fornecedores!</div></div>
+      </div>
+    </div>
+
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:22px;">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--amber);font-weight:700;margin-bottom:16px;">💡 Estratégia — Regras da Viagem</div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--cream);">
+        <span style="font-size:15px;color:var(--green);font-weight:700;width:18px;flex-shrink:0;">✓</span>
+        <div><span style="font-size:12.5px;font-weight:600;">Câmbio antecipado:</span> <span style="font-size:12.5px;color:var(--muted);">Comprar AED e CNY no Brasil — cotação melhor</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--cream);">
+        <span style="font-size:15px;color:var(--green);font-weight:700;width:18px;flex-shrink:0;">✓</span>
+        <div><span style="font-size:12.5px;font-weight:600;">Shanghai é trabalho:</span> <span style="font-size:12.5px;color:var(--muted);">Despesas cobertas pela empresa — focar nos resultados com fornecedores</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--cream);">
+        <span style="font-size:15px;color:var(--green);font-weight:700;width:18px;flex-shrink:0;">✓</span>
+        <div><span style="font-size:12.5px;font-weight:600;">VPN Shanghai:</span> <span style="font-size:12.5px;color:var(--muted);">Instalar antes do embarque — Google/WhatsApp bloqueados</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--cream);">
+        <span style="font-size:15px;color:var(--green);font-weight:700;width:18px;flex-shrink:0;">✓</span>
+        <div><span style="font-size:12.5px;font-weight:600;">Controle diário:</span> <span style="font-size:12.5px;color:var(--muted);">AED 400/dia Dubai · CNY 600/dia Shanghai</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--cream);">
+        <span style="font-size:15px;color:var(--red);font-weight:700;width:18px;flex-shrink:0;">✗</span>
+        <div><span style="font-size:12.5px;font-weight:600;">Evitar:</span> <span style="font-size:12.5px;color:var(--muted);">Compras por impulso em Dubai Mall acima de R$ 1.000</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;">
+        <span style="font-size:15px;color:var(--red);font-weight:700;width:18px;flex-shrink:0;">✗</span>
+        <div><span style="font-size:12.5px;font-weight:600;">Evitar:</span> <span style="font-size:12.5px;color:var(--muted);">Saques em ATM locais — taxas altas nas duas cidades</span></div>
+      </div>
+      <div style="margin-top:12px;background:var(--green-bg);border-radius:8px;padding:10px 14px;font-size:12px;">
+        🎯 <strong>Objetivo:</strong> Fechar negócios em Shanghai + curtir Dubai com <strong style="color:var(--green);">zero dívida nova</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="exchange-box">
+    <div class="exchange-item"><div class="exchange-val">1 AED ≈ R$ 1,58</div><div class="exchange-lab">Dirham (Dubai)</div></div>
+    <div class="exchange-item"><div class="exchange-val">1 CNY ≈ R$ 0,80</div><div class="exchange-lab">Yuan (Shanghai)</div></div>
+    <div class="exchange-item"><div class="exchange-val">1 USD ≈ R$ 5,80</div><div class="exchange-lab">Dólar americano</div></div>
+    <div class="exchange-item"><div class="exchange-val">AED 1.000 ≈ R$ 1.580</div><div class="exchange-lab">Ref. Dubai</div></div>
+    <div class="exchange-item"><div class="exchange-val">CNY 1.000 ≈ R$ 800</div><div class="exchange-lab">Ref. Shanghai</div></div>
+  </div>
+</div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ════════════════════════════════════════════════════════
+// BASE DE DADOS — Mês Caixa · Valores exatos do Excel
+// Compensação: categorias que aparecem em R e D são deduzidas
+// ════════════════════════════════════════════════════════
+const RAW = {
+  "2025-07":{ label:"Jul/25",
+    r:{  "DISTRIBUIÇÃO DE LUCRO":24300,"PRÓ-LABORE":15000,"INVESTIMENTOS":13717,"EMPRESA":12843,"ALUGUEIS":2167,"OUTRAS ENTRADAS":1675 },
+    d:{  "INVESTIMENTOS":20670,"VIAGENS":18286,"EMPRESA":8965,"CASA E DECOR":2247,"FINANCIAMENTO":2094,"MORADIA":1102,"EMPRESTADO":1000,"ACADEMIA":908,"RESTAURANTE":890,"ALIMENTAÇÃO":878 }
+  },
+  "2025-08":{ label:"Ago/25",
+    r:{  "PRÓ-LABORE":16000,"EMPRESA":11712,"ALUGUEIS":1400,"OUTRAS ENTRADAS":1212,"DEVOLUÇÃO":800 },
+    d:{  "INVESTIMENTOS":9000,"EMPRESA":8787,"FINANCIAMENTO":4093,"VIAGENS":3821,"MORADIA":2159,"CASA E DECOR":1895,"ACADEMIA":1130,"P/TERCEIROS":891,"PET":857,"LAZER":842 }
+  },
+  "2025-09":{ label:"Set/25",
+    r:{  "EMPRESA":39865,"PRÓ-LABORE":25000,"ALUGUEIS":1606,"OUTRAS ENTRADAS":257,"JOGOS":101 },
+    d:{  "EMPRESA":41078,"INVESTIMENTOS":15771,"VIAGENS":2920,"MORADIA":2359,"FINANCIAMENTO":2093,"CASA E DECOR":2023,"VESTUÁRIO":1386,"RESTAURANTE":978,"ACADEMIA":858,"PRESENTES":644 }
+  },
+  "2025-10":{ label:"Out/25",
+    r:{  "DISTRIBUIÇÃO DE LUCRO":35686,"PRÓ-LABORE":25000,"EMPRESA":17399,"ALUGUEIS":1552,"VENDA BENS":600,"DEVOLUÇÃO":500 },
+    d:{  "INVESTIMENTOS":36000,"EMPRESA":15273,"VIAGENS":13335,"MORADIA":2374,"FINANCIAMENTO":2092,"RESTAURANTE":1475,"CASA E DECOR":1314,"VESTUÁRIO":1038,"ALIMENTAÇÃO":976,"ACADEMIA":858 }
+  },
+  "2025-11":{ label:"Nov/25",
+    r:{  "PRÓ-LABORE":25000,"EMPRESA":16037,"DISTRIBUIÇÃO DE LUCRO":10000,"DEVOLUÇÃO":5180,"NÃO IDENT.":2600,"ALUGUEIS":2094,"OUTRAS ENTRADAS":14 },
+    d:{  "EMPRESA":18745,"INVESTIMENTOS":15000,"VIAGENS":6875,"FINANCIAMENTO":2091,"MORADIA":2041,"EMPRESTADO":2000,"CASA E DECOR":1619,"NÃO IDENT.":1012,"ACADEMIA":868,"RESTAURANTE":761 }
+  },
+  "2025-12":{ label:"Dez/25",
+    r:{  "EMPRESA":73366,"PRÓ-LABORE":33500,"DISTRIBUIÇÃO DE LUCRO":15000,"NÃO IDENT.":2264,"ALUGUEIS":1474,"APT ALUGADO":179,"DEVOLUÇÃO":44 },
+    d:{  "EMPRESA":64152,"INVESTIMENTOS":28673,"VIAGENS":4194,"RESTAURANTE":2862,"FINANCIAMENTO":2091,"MORADIA":1940,"NÃO IDENT.":1769,"VESTUÁRIO":1559,"ALIMENTAÇÃO":1043,"ASSINATURAS":881 }
+  },
+  "2026-01":{ label:"Jan/26",
+    r:{  "EMPRÉSTIMO":71358,"EMPRESA":24210,"PRÓ-LABORE":17852,"DISTRIBUIÇÃO DE LUCRO":15000,"DEVOLUÇÃO":5160,"NÃO IDENT.":3505,"ALUGUEIS":1188,"VENDA BENS":710,"APT ALUGADO":410,"OUTRAS ENTRADAS":34 },
+    d:{  "AQUISIÇÃO BENS":75000,"INVESTIMENTOS":55298,"EMPRESA":23748,"MORADIA":2506,"VIAGENS":2278,"FINANCIAMENTO":2090,"ALIMENTAÇÃO":1230,"ACADEMIA":868,"RESTAURANTE":755,"NÃO IDENT.":685 }
+  },
+  "2026-02":{ label:"Fev/26",
+    r:{  "FINANCIAMENTO":105700,"PRÓ-LABORE":34875,"EMPRESA":27300,"INVESTIMENTOS":10042,"NÃO IDENT.":2123,"DEVOLUÇÃO":419,"OUTRAS ENTRADAS":32 },
+    d:{  "AQUISIÇÃO BENS":119200,"EMPRESA":28630,"IPVA":9523,"VIAGENS":3069,"MORADIA":2250,"FINANCIAMENTO":2110,"ALIMENTAÇÃO":1221,"NÃO IDENT.":1130,"ACADEMIA":966,"RESTAURANTE":966 }
+  },
+  "2026-03":{ label:"Mar/26",
+    r:{  "PRÓ-LABORE":47731,"EMPRESA":41343,"DISTRIBUIÇÃO DE LUCRO":17075,"OUTRAS ENTRADAS":4420,"ALUGUEIS":2998,"VIAGENS":2114,"VENDA BENS":1300,"LAZER":221,"APT ALUGADO":194,"RESTAURANTE":87 },
+    d:{  "EMPRESA":35897,"VIAGENS":10886,"FINANCIAMENTO":7280,"P/TERCEIROS":3719,"VESTUÁRIO":3491,"COMPRAS AVULSAS":2387,"MORADIA":2062,"JANTAS":1521,"CASA E DECOR":1103,"ACADEMIA":966 }
+  },
+  "2026-04":{ label:"Abr/26",
+    r:{  "VENDA BENS":88490,"EMPRESA":33447,"PRÓ-LABORE":24656,"DISTRIBUIÇÃO DE LUCRO":20000,"VIAGENS":10353,"NÃO IDENT.":4976,"ALUGUEIS":1908,"RESTAURANTE":510,"OUTRAS ENTRADAS":192,"APT ALUGADO":176 },
+    d:{  "INVESTIMENTOS":113500,"VIAGENS":48563,"EMPRESA":33333,"FINANCIAMENTO":9342,"NÃO IDENT.":7355,"IPVA":2605,"MORADIA":2532,"ACADEMIA":966,"PRESENTES":859,"LAZER":671 }
+  },
+  "2026-05":{ label:"Mai/26★",
+    r:{  "PRÓ-LABORE":33463,"DISTRIBUIÇÃO DE LUCRO":5000,"NÃO IDENT.":2466,"EMPRESA":2081,"ALUGUEIS":1400 },
+    d:{  "EMPRESA":32088,"FINANCIAMENTO":8274,"EMPRESTADO":5000,"VIAGENS":3149,"NÃO IDENT.":2597,"RESTAURANTE":1048,"ACADEMIA":1003,"ALIMENTAÇÃO":882,"P/TERCEIROS":659,"MORADIA":653 }
+  }
+};
+
+// Calcula totais e compensações para cada mês
+
+// Dados completos de despesas por categoria (todos os lançamentos por Mês Caixa)
+// Usado pelo Centro de Custos para cálculos precisos
+const FULL_DESP={
+  '2026-01':{
+    'AQUISIÇÃO BENS':75000,'INVESTIMENTOS':55297.50,'EMPRESA':23748.33,
+    'MORADIA':2506.45,'VIAGENS':2277.61,'FINANCIAMENTO':2090.16,
+    'ALIMENTAÇÃO':1230.26,'ACADEMIA':868.04,'RESTAURANTE':754.92,
+    'NÃO IDENT.':684.90,'P/TERCEIROS':658.82,'EDUCAÇÃO':579.93,
+    'VESTUÁRIO':525.48,'APT ALUGADO':444.62,'JOGOS':415.00,
+    'CASA E DECOR':390.31,'ASSINATURAS':368.08,'PET':322.94,
+    'PLANO INT':300.00,'COMPRAS AVULSAS':176.54,'PRESENTES':159.33,
+    'BELEZA':140.00,'JANTAS':126.88,'COMBUSTÍVEL':125.97,
+    'INTERNET':100.00,'ELETRÔNICOS':83.25,'FARMÁCIA':75.00,
+    'LAZER':29.00,'MULTAS':2.91,'TAXAS BANCÁRIAS':-197.50
+  },
+  '2026-02':{
+    'AQUISIÇÃO BENS':119200,'EMPRESA':28630.29,'IPVA':9522.98,
+    'VIAGENS':3069.42,'MORADIA':2250.32,'FINANCIAMENTO':2109.87,
+    'ALIMENTAÇÃO':1221.07,'NÃO IDENT.':1130.00,'ACADEMIA':965.97,
+    'RESTAURANTE':965.54,'TAXAS BUROCRÁTICAS':900.00,'EDUCAÇÃO':789.93,
+    'P/TERCEIROS':658.79,'JANTAS':543.58,'VESTUÁRIO':398.48,
+    'LAZER':365.00,'PET':328.94,'PLANO INT':300.00,
+    'COMPRAS AVULSAS':195.00,'FARMÁCIA':173.90,'PRESENTES':159.30,
+    'INTERNET':100.00,'ELETRÔNICOS':83.25,'BELEZA':60.00,
+    'MULTAS':42.45,'DOAÇÃO':20.00,'CASA E DECOR':-1826.69
+  },
+  '2026-03':{
+    'EMPRESA':35896.84,'VIAGENS':10885.88,'FINANCIAMENTO':7280.33,
+    'P/TERCEIROS':3718.74,'VESTUÁRIO':3491.34,'COMPRAS AVULSAS':2386.96,
+    'MORADIA':2061.86,'JANTAS':1521.00,'CASA E DECOR':1102.83,
+    'ACADEMIA':965.96,'BELEZA':902.79,'ALIMENTAÇÃO':892.84,
+    'LAZER':862.42,'RESTAURANTE':760.77,'FARMÁCIA':462.82,
+    'EDUCAÇÃO':450.00,'PET':412.15,'COMBUSTÍVEL':380.31,
+    'ASSINATURAS':334.92,'NÃO IDENT.':311.33,'PLANO INT':300.00,
+    'APT ALUGADO':193.77,'VESTUÁRIO2':160.00,'PRESENTES':159.30,
+    'MULTAS':151.64,'TRANSPORTE':126.17,'INTERNET':100.00
+  },
+  '2026-04':{
+    'INVESTIMENTOS':113500,'VIAGENS':48562.73,'EMPRESA':33333.25,
+    'FINANCIAMENTO':9342.44,'NÃO IDENT.':7355.20,'IPVA':2605.44,
+    'MORADIA':2532.20,'ACADEMIA':965.96,'PRESENTES':859.30,
+    'LAZER':671.49,'P/TERCEIROS':658.79,'ALIMENTAÇÃO':637.65,
+    'COMPRAS AVULSAS':626.96,'RESTAURANTE':592.38,'TAXAS BUROCRÁTICAS':410.74,
+    'BELEZA':370.77,'FARMÁCIA':341.38,'PET':308.50,'PLANO INT':300.00,
+    'ASSINATURAS':253.90,'VESTUÁRIO':203.35,'JANTAS':177.00,
+    'APT ALUGADO':176.31,'INTERNET':100.00,'DOAÇÃO':40.00,
+    'TRANSPORTE':4.90,'MULTAS':2.87,'CASA E DECOR':-126.35
+  },
+  '2026-05':{
+    'EMPRESA':32087.71,'FINANCIAMENTO':8273.73,'EMPRESTADO':5000.00,
+    'VIAGENS':3149.08,'NÃO IDENT.':2596.60,'RESTAURANTE':1047.52,
+    'ACADEMIA':1003.04,'ALIMENTAÇÃO':881.64,'P/TERCEIROS':658.79,
+    'MORADIA':652.82,'LAZER':595.40,'COMBUSTÍVEL':504.00,
+    'ASSINATURAS':406.01,'FARMÁCIA':335.87,'PLANO INT':300.00,
+    'APT ALUGADO':210.38,'VESTUÁRIO':203.35,'BELEZA':190.77,
+    'CASA E DECOR':180.31,'PET':138.94,'COMPRAS AVULSAS':125.98,
+    'INTERNET':100.00,'MULTAS':31.00,'TRANSPORTE':1.50
+  }
+};
+
+// Mapeamento de chaves FULL_DESP → chaves usadas no CC
+const CC_KEY_MAP={
+  'MORADIA':['MORADIA','APT ALUGADO'],
+  'ALIMENTAÇÃO':['ALIMENTAÇÃO'],
+  'FARMÁCIA':['FARMÁCIA'],
+  'INTERNET':['INTERNET'],
+  'COMBUSTÍVEL':['COMBUSTÍVEL'],
+  'TRANSPORTE':['TRANSPORTE'],
+  'PLANO INT':['PLANO INT'],
+  'FINANCIAMENTO':['FINANCIAMENTO'],
+  'IPVA':['IPVA','TAXAS BUROCRÁTICAS'],
+  'INVESTIMENTOS':['INVESTIMENTOS'],
+  'AQUISIÇÃO BENS':['AQUISIÇÃO BENS'],
+  'VIAGENS':['VIAGENS'],
+  'LAZER':['LAZER'],
+  'ACADEMIA':['ACADEMIA'],
+  'BELEZA':['BELEZA'],
+  'PET':['PET'],
+  'VESTUÁRIO':['VESTUÁRIO'],
+  'ASSINATURAS':['ASSINATURAS'],
+  'EDUCAÇÃO':['EDUCAÇÃO'],
+  'CASA E DECOR':['CASA E DECOR'],
+  'RESTAURANTE':['RESTAURANTE'],
+  'JANTAS':['JANTAS'],
+  'COMPRAS AVULSAS':['COMPRAS AVULSAS'],
+  'JOGOS':['JOGOS'],
+  'PRESENTES':['PRESENTES'],
+  'EMPRESA':['EMPRESA'],
+  'EMPRESTADO':['EMPRESTADO'],
+  'P/TERCEIROS':['P/TERCEIROS'],
+  'NÃO IDENT.':['NÃO IDENT.'],
+  'MULTAS':['MULTAS','TAXAS BANCÁRIAS']
+};
+
+function processMonth(key) {
+  const mn = RAW[key];
+  const rTotal = Object.values(mn.r).reduce((a,b)=>a+b,0);
+  const dTotal = Object.values(mn.d).reduce((a,b)=>a+b,0);
+  const shared = Object.keys(mn.r).filter(c => mn.d[c] !== undefined);
+  const netAmt = shared.reduce((a,c) => a + Math.min(mn.r[c]||0, mn.d[c]||0), 0);
+  // Empresa parcial: receita empresa vs despesa empresa
+  const empR = mn.r['EMPRESA'] || 0;
+  const empD = mn.d['EMPRESA'] || 0;
+  const tercD = (mn.d['P/TERCEIROS'] || 0);
+  return { label:mn.label, r:rTotal, d:dTotal, s:rTotal-dTotal, empR, empD, tercD, netAmt, shared, top_r:mn.r, top_d:mn.d };
+}
+
+const MONTHS_ALL = Object.keys(RAW);
+const MONTHS_2026 = MONTHS_ALL.filter(m=>m.startsWith('2026'));
+const DATA = {};
+MONTHS_ALL.forEach(k => { DATA[k] = processMonth(k); });
+
+// ════════ HELPERS ════════
+const fmt = v => 'R$ ' + Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+const fmtS = v => (v>=0?'':'-') + fmt(v);
+const GREEN='#4AA834',RED='#D94F4F',AMBER='#E8943A',LGREEN='#C9DAAB';
+const CAT_COLORS_R=['#4AA834','#6BAA55','#C9DAAB','#2D9E6B','#8BC47A','#A8D89A','#E8943A','#74724F','#1E2320','#2E3830'];
+const CAT_COLORS_D=['#D94F4F','#E8943A','#B5563B','#2E3830','#74724F','#6B6B5E','#4AA834','#C9DAAB','#A8C97A','#8B9A7B'];
+let charts={};
+function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+function donut(id,labels,vals,colors){
+  dc(id);const ctx=document.getElementById(id);if(!ctx)return;
+  charts[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data:vals,backgroundColor:colors,borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:10},padding:8}},
+    tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.parsed)}`}}}}});
+}
+
+// ════════ NAV ════════
+let inited={};
+function show(p){
+  document.querySelectorAll('.panel').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(e=>e.classList.remove('active'));
+  var panel=document.getElementById('panel-'+p);
+  var tab=document.getElementById('tab-'+p);
+  if(panel) panel.classList.add('active');
+  if(tab) tab.classList.add('active');
+  window.scrollTo(0,0);
+  document.querySelector('.main')&&(document.querySelector('.main').scrollTop=0);
+  document.documentElement.scrollTop=0;
+  document.body.scrollTop=0;
+  if(p==='dashboard')initDashboard();
+  if(p==='mensal')initMensal();
+  if(p==='orcamento')initOrcamento();
+  if(p==='metas')initMetas();
+  if(p==='historico')initHistorico();
+  if(p==='distribuicao')initDistribuicao();
+  if(p==='evolucao')initEvolucao();
+  if(p==='resultado')initResultado();
+  if(p==='alertas')initAlertas();
+  if(p==='projecao')initProjecao();
+  if(p==='chile'){}
+  if(p==='dubai'){}
+}
+
+// ════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════
+let dashFilter='2026-04';
+
+function setDashFilter(m){
+  dashFilter=m;
+  document.querySelectorAll('[id^="dbtn-"]').forEach(b=>b.classList.remove('active'));
+  document.getElementById('dbtn-'+m)?.classList.add('active');
+  renderDashKPIs();
+  renderDashPies();
+}
+
+function initDashboard(){
+  renderDashKPIs();
+  renderEvoChart();
+  renderSaldoChart();
+  renderDashPies();
+}
+
+function getAnual(){
+  const r=MONTHS_2026.reduce((a,m)=>a+DATA[m].r,0);
+  const d=MONTHS_2026.reduce((a,m)=>a+DATA[m].d,0);
+  const empR=MONTHS_2026.reduce((a,m)=>a+DATA[m].empR,0);
+  const empD=MONTHS_2026.reduce((a,m)=>a+DATA[m].empD,0);
+  const tercD=MONTHS_2026.reduce((a,m)=>a+DATA[m].tercD,0);
+  const net=MONTHS_2026.reduce((a,m)=>a+DATA[m].netAmt,0);
+  return {r,d,s:r-d,empR,empD,tercD,netAmt:net,label:'Jan–Mai/26'};
+}
+
+function renderDashKPIs(){
+  const box=document.getElementById('dash-kpis');if(!box)return;
+  let mn;
+  if(dashFilter==='anual') mn=getAnual();
+  else mn=DATA[dashFilter];
+  const rLiq=mn.r-mn.empR;
+  const sClass=mn.s>=0?'':'red';
+  const parcial=dashFilter==='2026-05'?' <span class="badge parcial">Parcial</span>':'';
+
+  box.innerHTML=`
+    <div class="kpi">
+      <div class="kpi-label">Receita Total${parcial}</div>
+      <div class="kpi-value green count-anim">${fmt(mn.r)}</div>
+      <div class="kpi-deducao">Empresa: ${fmt(mn.empR)} · Terc: ${fmt(mn.tercD)}<br>→ Líquida: <strong>${fmt(rLiq)}</strong></div>
+      <div class="kpi-tag neutral">${mn.label||dashFilter}</div>
+    </div>
+    <div class="kpi ${sClass}">
+      <div class="kpi-label">Despesa Total${parcial}</div>
+      <div class="kpi-value red count-anim">${fmt(mn.d)}</div>
+      <div class="kpi-deducao">Empresa: ${fmt(mn.empD)} · Terc: ${fmt(mn.tercD)}<br>→ Compensações cat.: <strong>${fmt(mn.netAmt)}</strong></div>
+      <div class="kpi-tag neutral">${mn.label||dashFilter}</div>
+    </div>
+    <div class="kpi ${sClass}">
+      <div class="kpi-label">Saldo do Período${parcial}</div>
+      <div class="kpi-value ${mn.s>=0?'green':'red'} count-anim">${fmtS(mn.s)}</div>
+      <div class="kpi-deducao">Receita líq.: ${fmt(rLiq)}<br>Compensações: ${fmt(mn.netAmt)}</div>
+      <div class="kpi-tag ${mn.s>=0?'up':'down'}">${mn.s>=0?'▲ Positivo':'▼ Negativo'}</div>
+    </div>
+    <div class="kpi neutral">
+      <div class="kpi-label">Saldo Acum. 2026</div>
+      <div class="kpi-value count-anim">${fmtS(getAnual().s)}</div>
+      <div class="kpi-deducao">Jan a Mai/26<br>5 meses de dados</div>
+      <div class="kpi-tag neutral">Jan–Mai/26</div>
+    </div>`;
+}
+
+function renderEvoChart(){
+  dc('chartEvo');const ctx=document.getElementById('chartEvo');if(!ctx)return;
+  charts['chartEvo']=new Chart(ctx,{type:'bar',data:{
+    labels:MONTHS_2026.map(m=>DATA[m].label),
+    datasets:[
+      {label:'Receita',data:MONTHS_2026.map(m=>DATA[m].r),backgroundColor:'rgba(74,168,52,0.6)',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+      {label:'Despesa',data:MONTHS_2026.map(m=>DATA[m].d),backgroundColor:'rgba(217,79,79,0.5)',borderColor:RED,borderWidth:1.5,borderRadius:4}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+    scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}});
+}
+
+function renderSaldoChart(){
+  dc('chartSaldo');const ctx=document.getElementById('chartSaldo');if(!ctx)return;
+  charts['chartSaldo']=new Chart(ctx,{type:'line',data:{
+    labels:MONTHS_2026.map(m=>DATA[m].label),
+    datasets:[{label:'Saldo',data:MONTHS_2026.map(m=>DATA[m].s),
+      borderColor:GREEN,backgroundColor:'rgba(74,168,52,0.08)',fill:true,tension:0.4,
+      pointBackgroundColor:MONTHS_2026.map(m=>DATA[m].s>=0?GREEN:RED),pointRadius:5,pointHoverRadius:7}]},
+    options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` Saldo: ${fmtS(c.parsed.y)}`}}},
+    scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}});
+}
+
+function renderDashPies(){
+  const isAnual = dashFilter==='anual';
+  // Build data for selected filter
+  let rec={}, desp={};
+  if(isAnual){
+    for(const m of MONTHS_2026){
+      const mn=RAW[m]; if(!mn) continue;
+      for(const[k,v]of Object.entries(mn.r)) rec[k]=(rec[k]||0)+v;
+      for(const[k,v]of Object.entries(mn.d)) desp[k]=(desp[k]||0)+v;
+    }
+  } else {
+    const fd=FULL_DESP[dashFilter]||{};
+    const mn=DATA[dashFilter]; if(!mn) return;
+    // Use top_r/top_d from DATA plus FULL_DESP for completeness
+    rec = {...mn.top_r};
+    // merge FULL_DESP for despesas
+    for(const[k,v]of Object.entries(fd)) desp[k]=(desp[k]||0)+v;
+    if(Object.keys(desp).length===0) desp={...mn.top_d};
+  }
+
+  // Sort and slice top categories
+  const topR = Object.entries(rec).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,9);
+  const topD = Object.entries(desp).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,9);
+
+  // OPERATIONAL: exclude EMPRESA, EMPRÉSTIMO, VENDA BENS from revenues
+  const EXCL_REC = ['EMPRESA','EMPRÉSTIMO','FINANCIAMENTO','VENDA BENS'];
+  const topROp = Object.entries(rec)
+    .filter(([k,v])=>v>0 && !EXCL_REC.some(e=>k.toUpperCase().includes(e)))
+    .sort((a,b)=>b[1]-a[1]).slice(0,9);
+
+  // OPERATIONAL expenses: exclude EMPRESA, INVESTIMENTOS, AQUISIÇÃO BENS
+  const EXCL_DESP = ['EMPRESA','INVESTIMENTOS','AQUISIÇÃO'];
+  const topDOp = Object.entries(desp)
+    .filter(([k,v])=>v>0 && !EXCL_DESP.some(e=>k.toUpperCase().includes(e)))
+    .sort((a,b)=>b[1]-a[1]).slice(0,9);
+
+  const label = isAnual ? 'Acumulado Jan–Mai/26' : DATA[dashFilter].label;
+
+  // Update subtitles
+  const rs = document.getElementById('dash-r-sub');
+  const ds = document.getElementById('dash-d-sub');
+  const r2s = document.getElementById('dash-r2-sub');
+  const d2s = document.getElementById('dash-d2-sub');
+  if(rs) rs.textContent = `Todas as categorias — ${label}`;
+  if(ds) ds.textContent = `Todas as categorias — ${label}`;
+  if(r2s) r2s.textContent = `Excl. Empresa · Empréstimo · Venda Bens — ${label}`;
+  if(d2s) d2s.textContent = `Excl. Investimentos · Aquisição · Empresa — ${label}`;
+
+  donut('chartRec', topR.map(([k])=>k), topR.map(([,v])=>v), CAT_COLORS_R);
+  donut('chartDesp', topD.map(([k])=>k), topD.map(([,v])=>v), CAT_COLORS_D);
+  donut('chartRecOp', topROp.map(([k])=>k), topROp.map(([,v])=>v), CAT_COLORS_R);
+  donut('chartDespOp', topDOp.map(([k])=>k), topDOp.map(([,v])=>v), CAT_COLORS_D);
+}
+
+// ════════════════════════════════════════
+// MENSAL / ANUAL
+// ════════════════════════════════════════
+let mensalMode='mensal';
+function setMensalMode(m){
+  mensalMode=m;
+  document.getElementById('mbtn-mensal').classList.toggle('active',m==='mensal');
+  document.getElementById('mbtn-anual').classList.toggle('active',m==='anual');
+  document.getElementById('mes-select').disabled=m==='anual';
+  renderMensal();
+}
+function initMensal(){renderMensal();}
+function renderMensal(){
+  if(mensalMode==='anual') renderAnual(document.getElementById('mensal-content'));
+  else renderMensalDetail(document.getElementById('mes-select').value,document.getElementById('mensal-content'));
+}
+
+function renderMensalDetail(key,container){
+  const mn=DATA[key];if(!mn)return;
+  const rL=Object.keys(mn.top_r),rV=Object.values(mn.top_r);
+  const dL=Object.keys(mn.top_d),dV=Object.values(mn.top_d);
+  const rT=rV.reduce((a,b)=>a+b,0),dT=dV.reduce((a,b)=>a+b,0);
+  const parcialBadge=key==='2026-05'?'<span class="badge parcial" style="margin-left:8px;">Parcial</span>':'';
+  const netPill='';
+
+  container.innerHTML=`
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi"><div class="kpi-label">Receita Bruta ${parcialBadge}</div>
+        <div class="kpi-value green">${fmt(mn.r)}</div>
+        <div class="kpi-deducao">Empresa: ${fmt(mn.empR)}<br>Líquida: <strong>${fmt(mn.r-mn.empR)}</strong></div></div>
+      <div class="kpi ${mn.s<0?'red':''}"><div class="kpi-label">Despesa Total ${parcialBadge}</div>
+        <div class="kpi-value red">${fmt(mn.d)}</div>
+        <div class="kpi-deducao">Empresa: ${fmt(mn.empD)} · P/Terc: ${fmt(mn.tercD)}</div></div>
+      <div class="kpi ${mn.s<0?'red':''}"><div class="kpi-label">Saldo Mês</div>
+        <div class="kpi-value ${mn.s>=0?'green':'red'}">${fmtS(mn.s)}</div>
+        <div class="kpi-deducao">${netPill}</div></div>
+      <div class="kpi neutral"><div class="kpi-label">% Comprometimento</div>
+        <div class="kpi-value">${(mn.d/mn.r*100).toFixed(1)}%</div>
+        <div class="kpi-deducao">Despesa / Receita</div></div>
+    </div>
+    <div class="mes-grid">
+      <div class="mes-box">
+        <div class="mes-box-title">Receitas por categoria</div>
+        ${rL.map((c,i)=>`<div class="cat-row">
+          <div class="cat-dot" style="background:${CAT_COLORS_R[i%CAT_COLORS_R.length]}"></div>
+          <div class="cat-name">${c}</div>
+          <div class="cat-val">${fmt(rV[i])}</div>
+          <div class="cat-pct">${(rV[i]/rT*100).toFixed(1)}%</div>
+        </div>`).join('')}
+      </div>
+      <div class="mes-box">
+        <div class="mes-box-title">Despesas por categoria</div>
+        ${dL.map((c,i)=>`<div class="cat-row">
+          <div class="cat-dot" style="background:${CAT_COLORS_D[i%CAT_COLORS_D.length]}"></div>
+          <div class="cat-name">${c}</div>
+          <div class="cat-val">${fmt(dV[i])}</div>
+          <div class="cat-pct">${(dV[i]/dT*100).toFixed(1)}%</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="chart-row c2eq">
+      <div class="chart-card"><div class="chart-title">Composição Receitas · ${mn.label}</div>
+        <div class="canvas-wrap" style="height:200px"><canvas id="mc-rec"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Composição Despesas · ${mn.label}</div>
+        <div class="canvas-wrap" style="height:200px"><canvas id="mc-desp"></canvas></div></div>
+    </div>`;
+  setTimeout(()=>{
+    donut('mc-rec',rL,rV,CAT_COLORS_R);
+    donut('mc-desp',dL,dV,CAT_COLORS_D);
+  },50);
+}
+
+function renderAnual(container){
+  const r26=MONTHS_2026.reduce((a,m)=>a+DATA[m].r,0);
+  const d26=MONTHS_2026.reduce((a,m)=>a+DATA[m].d,0);
+  const s26=r26-d26;
+  const bestM=MONTHS_2026.reduce((a,b)=>DATA[a].s>DATA[b].s?a:b);
+  container.innerHTML=`
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi"><div class="kpi-label">Receita Total 2026</div><div class="kpi-value green">${fmt(r26)}</div><div class="kpi-deducao">Jan a Mai/26</div></div>
+      <div class="kpi ${s26<0?'red':''}"><div class="kpi-label">Despesa Total 2026</div><div class="kpi-value red">${fmt(d26)}</div><div class="kpi-deducao">Jan a Mai/26</div></div>
+      <div class="kpi ${s26<0?'red':''}"><div class="kpi-label">Saldo 2026</div>
+        <div class="kpi-value ${s26>=0?'green':'red'}">${fmtS(s26)}</div><div class="kpi-deducao">Acumulado</div></div>
+      <div class="kpi neutral"><div class="kpi-label">Melhor Mês</div>
+        <div class="kpi-value">${DATA[bestM].label}</div>
+        <div class="kpi-deducao">Saldo ${fmtS(DATA[bestM].s)}</div></div>
+    </div>
+    <div class="chart-card" style="margin-top:0">
+      <div class="chart-title">Receita × Despesa × Saldo — 2026 completo</div>
+      <div class="canvas-wrap" style="height:260px"><canvas id="anual-chart"></canvas></div>
+    </div>
+    <div class="chart-card" style="margin-top:18px;">
+      <table class="ov-table">
+        <thead><tr><th>Mês</th><th>Receita</th><th>Deduções</th><th>Despesa</th><th>Cat. Compensadas</th><th>Saldo</th><th>Status</th></tr></thead>
+        <tbody>
+        ${MONTHS_2026.map(m=>{const mn=DATA[m];const parcial=m==='2026-05'?'<span class="badge parcial" style="font-size:9px;padding:1px 6px;margin-left:4px;">Parcial</span>':'';
+          return`<tr>
+          <td><strong>${mn.label}</strong>${parcial}</td>
+          <td style="color:var(--green)">${fmt(mn.r)}</td>
+          <td style="color:var(--muted);font-size:12px;">Emp: ${fmt(mn.empR)}</td>
+          <td style="color:var(--red)">${fmt(mn.d)}</td>
+          <td style="color:var(--amber);font-size:12px;">${fmt(mn.netAmt)}</td>
+          <td style="color:${mn.s>=0?'var(--green)':'var(--red)'};font-weight:700;">${fmtS(mn.s)}</td>
+          <td><span class="badge ${mn.s>=0?'pos':'neg'}">${mn.s>=0?'▲':'▼'}</span></td>
+        </tr>`;}).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  setTimeout(()=>{
+    dc('anual-chart');const ctx=document.getElementById('anual-chart');if(!ctx)return;
+    charts['anual-chart']=new Chart(ctx,{type:'bar',data:{
+      labels:MONTHS_2026.map(m=>DATA[m].label),
+      datasets:[
+        {label:'Receita',data:MONTHS_2026.map(m=>DATA[m].r),backgroundColor:'rgba(74,168,52,0.6)',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+        {label:'Despesa',data:MONTHS_2026.map(m=>DATA[m].d),backgroundColor:'rgba(217,79,79,0.5)',borderColor:RED,borderWidth:1.5,borderRadius:4},
+        {label:'Saldo',data:MONTHS_2026.map(m=>DATA[m].s),type:'line',borderColor:AMBER,backgroundColor:'transparent',pointRadius:5,tension:0.3,
+          pointBackgroundColor:MONTHS_2026.map(m=>DATA[m].s>=0?GREEN:RED)}
+      ]},options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+      scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}});
+  },50);
+}
+
+// ════════════════════════════════════════
+// ORÇAMENTO
+// ════════════════════════════════════════
+function initOrcamento(){
+  dc('chartOrc');const ctx=document.getElementById('chartOrc');
+  if(ctx){charts['chartOrc']=new Chart(ctx,{type:'bar',data:{
+    labels:MONTHS_ALL.map(m=>DATA[m].label),
+    datasets:[
+      {label:'Receita',data:MONTHS_ALL.map(m=>DATA[m].r),backgroundColor:'rgba(74,168,52,0.55)',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+      {label:'Despesa',data:MONTHS_ALL.map(m=>DATA[m].d),backgroundColor:'rgba(217,79,79,0.45)',borderColor:RED,borderWidth:1.5,borderRadius:4},
+      {label:'Saldo',data:MONTHS_ALL.map(m=>DATA[m].s),type:'line',borderColor:AMBER,
+        pointBackgroundColor:MONTHS_ALL.map(m=>DATA[m].s>=0?GREEN:RED),pointRadius:4,tension:0.4,fill:false}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+    scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}});}
+  
+  const tbody=document.getElementById('orc-tbody');
+  if(tbody){tbody.innerHTML=MONTHS_ALL.map(m=>{
+    const mn=DATA[m];
+    const deducao=mn.empR+mn.tercD;
+    const rLiq=mn.r-mn.empR;
+    const parcial=m==='2026-05'?'<span class="badge parcial" style="font-size:9px;padding:1px 4px;margin-left:4px;">★</span>':'';
+    return`<tr>
+      <td><strong>${mn.label}</strong>${parcial}</td>
+      <td style="color:var(--green)">${fmt(mn.r)}</td>
+      <td style="color:var(--muted);font-size:12px;">${fmt(deducao)}</td>
+      <td>${fmt(rLiq)}</td>
+      <td style="color:var(--red)">${fmt(mn.d)}</td>
+      <td style="color:var(--amber);font-size:12px;">${mn.netAmt>0?fmt(mn.netAmt):'—'}</td>
+      <td style="color:${mn.s>=0?'var(--green)':'var(--red)'};font-weight:700;">${fmtS(mn.s)}</td>
+      <td><span class="badge ${mn.s>=0?'pos':'neg'}">${mn.s>=0?'✓':'✗'}</span></td>
+    </tr>`;}).join('');}
+  renderOrcDetalhe();
+}
+
+// ════════════════════════════════════════
+// METAS
+// ════════════════════════════════════════
+function initMetas(){
+  dc('chartMeta');const ctx=document.getElementById('chartMeta');if(!ctx)return;
+  const meses=['Mai/26','Jun/26','Jul/26','Ago/26','Set/26','Out/26','Nov/26','Dez/26','Jan/27','Fev/27','Mar/27','Abr/27','Mai/27','Jun/27','Jul/27','Ago/27','Set/27','Out/27','Nov/27','Dez/27','Jan/28','Fev/28'];
+  let base=102000,comLote=102000;
+  const baseD=[base],loteD=[comLote];
+  for(let i=0;i<meses.length-1;i++){
+    base+=20000; comLote+=20000;
+    if(i===4) comLote+=70000;
+    baseD.push(Math.min(base,500000));
+    loteD.push(Math.min(comLote,500000));
+  }
+  charts['chartMeta']=new Chart(ctx,{type:'line',data:{labels:meses,datasets:[
+    {label:'Cenário Base (R$ 20K/mês)',data:baseD,borderColor:GREEN,backgroundColor:'rgba(74,168,52,0.07)',fill:true,tension:0.3,pointRadius:3},
+    {label:'Com Venda do Lote (+R$ 70K)',data:loteD,borderColor:AMBER,backgroundColor:'rgba(232,148,58,0.07)',fill:true,tension:0.3,pointRadius:3,borderDash:[5,3]},
+    {label:'Meta R$ 500K',data:Array(meses.length).fill(500000),borderColor:RED,borderDash:[4,4],pointRadius:0,borderWidth:1.5}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+    scales:{y:{min:0,max:550000,ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}});}
+
+// ════════════════════════════════════════
+// HISTÓRICO
+// ════════════════════════════════════════
+function initHistorico(){
+  dc('chartHist');const ctx=document.getElementById('chartHist');
+  if(ctx){charts['chartHist']=new Chart(ctx,{type:'line',data:{
+    labels:MONTHS_ALL.map(m=>DATA[m].label),
+    datasets:[
+      {label:'Receita',data:MONTHS_ALL.map(m=>DATA[m].r),borderColor:GREEN,fill:false,tension:0.3,pointRadius:4},
+      {label:'Despesa',data:MONTHS_ALL.map(m=>DATA[m].d),borderColor:RED,fill:false,tension:0.3,pointRadius:4}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+    scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}});}
+
+  const tbody=document.getElementById('hist-tbody');
+  if(tbody){tbody.innerHTML=MONTHS_ALL.map(m=>{const mn=DATA[m];const parcial=m==='2026-05'?'<span class="badge parcial" style="font-size:9px;margin-left:4px;">★</span>':'';
+    return`<tr>
+      <td><strong>${mn.label}</strong>${parcial}</td>
+      <td style="color:var(--green)">${fmt(mn.r)}</td>
+      <td style="color:var(--red)">${fmt(mn.d)}</td>
+      <td style="color:var(--amber);font-size:12px;">${mn.netAmt>0?fmt(mn.netAmt):'—'}</td>
+      <td style="color:${mn.s>=0?'var(--green)':'var(--red)'};font-weight:700;">${fmtS(mn.s)}</td>
+      <td><span class="badge ${mn.s>=0?'pos':'neg'}">${mn.s>=0?'▲ Positivo':'▼ Negativo'}</span></td>
+    </tr>`;}).join('');}
+
+  // Histórico de Viagens via IA (Anthropic API)
+  loadTripHistory();
+}
+
+async function loadTripHistory(){
+  const loading=document.getElementById('hist-trips-loading');
+  const container=document.getElementById('hist-trips');
+
+  const TRIPS_DATA=[
+    {name:'Europa — Julho/25',flag:'🇬🇧🇫🇷',mes:'Jul/25',total:18286,
+     gastos:[
+      'Câmbio/Wise GBP/EUR: R$ 10.196',
+      'Passagens aéreas e trens: R$ 3.317',
+      'Hospedagem (hotéis): R$ 2.450',
+      'Transporte local Uber/ônibus: R$ 1.000',
+      'Alimentação e restaurantes: R$ 823',
+      'Compras e souvenirs: R$ 500'
+    ]},
+    {name:'Europa II — Outubro/25',flag:'🌍',mes:'Out/25',total:13335,
+     gastos:[
+      'Adiantamento José Felipe: R$ 9.500',
+      'Western Union (remessa internacional): R$ 1.065',
+      'Passagens e conexões: R$ 1.072',
+      'Hospedagem: R$ 1.000',
+      'Transporte e extras: R$ 698'
+    ]},
+    {name:'Portugal & Dubai — Novembro/25',flag:'🇵🇹🇦🇪',mes:'Nov/25',total:6875,
+     gastos:[
+      'Aluguel de carro Hertz Lisboa: R$ 1.654',
+      'Passagens e conexões: R$ 1.230',
+      'Hospedagem: R$ 1.000',
+      'Alimentação e restaurantes: R$ 814',
+      'Ônibus e Uber Amsterdam/Lisboa: R$ 778',
+      'Pontos LATAM e extras: R$ 760',
+      'eSIM Mobimatter Dubai/UAE: R$ 162',
+      'Diversas: R$ 477'
+    ]},
+    {name:'Argentina — Dezembro/25',flag:'🇦🇷',mes:'Dez/25',total:4194,
+     gastos:[
+      'Air China (pré-compra próxima viagem): R$ 1.201',
+      'Extras e eSIM: R$ 1.580',
+      'Passagens aéreas Buenos Aires: R$ 501',
+      'Alimentação e experiências: R$ 390',
+      'Hospedagem Recoleta: R$ 452',
+      'Transporte e pedágio: R$ 70'
+    ]},
+    {name:'EUA — Miami & Orlando — Abril/26',flag:'🇺🇸',mes:'Abr/26',total:48563,
+     gastos:[
+      'Transferência José Felipe (adiantamento): R$ 15.000',
+      'Compras (outlets, marcas, roupas): R$ 12.200',
+      'Aluguel de carro Avis + GM Luxe: R$ 4.952',
+      'Alimentação e restaurantes: R$ 4.800',
+      'Hospedagem Miami Beach + Orlando: R$ 4.200',
+      'Atrações Disney, Universal, parques: R$ 3.200',
+      'Combustível e pedágios: R$ 1.600',
+      'Passagens e extras: R$ 2.611'
+    ]}
+  ];
+
+  try{
+    const prompt=`Você é um analista financeiro especializado. Analise os gastos das seguintes viagens de José Felipe Bazzanella e para cada viagem:
+1. Classifique cada gasto em categoria (Hospedagem, Transporte, Alimentação, Compras, Câmbio/Remessas, Atrações, Documentação, Extras)
+2. Calcule o percentual de cada categoria sobre o total
+3. Dê um insight breve (1 frase) sobre o padrão de gasto daquela viagem
+4. Sugira uma dica de economia para a próxima viagem similar
+
+Dados das viagens:
+${TRIPS_DATA.map(t=>`\n## ${t.flag} ${t.name} (${t.mes}) - Total: R$ ${t.total.toLocaleString('pt-BR')}\n${t.gastos.join('\n')}`).join('\n')}
+
+Responda APENAS em JSON no formato:
+{
+  "viagens": [
+    {
+      "nome": "nome da viagem",
+      "flag": "emoji",
+      "mes": "mês",
+      "total": 0,
+      "insight": "frase de insight",
+      "dica": "dica de economia",
+      "categorias": [
+        {"nome": "categoria", "valor": 0, "pct": 0.0, "emoji": "emoji"}
+      ]
+    }
+  ]
+}`;
+
+    const resp=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,
+        messages:[{role:"user",content:prompt}]})});
+    const data=await resp.json();
+    const txt=data.content.map(i=>i.text||'').join('');
+    const clean=txt.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    
+    loading.style.display='none';
+    container.style.display='block';
+    container.innerHTML=parsed.viagens.map(v=>`
+      <div class="hist-trip-card">
+        <div class="hist-trip-header">
+          <div>
+            <div class="hist-trip-name">${v.flag} ${v.nome}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px;">${v.mes} · <em>${v.insight}</em></div>
+          </div>
+          <div class="hist-trip-total">${fmt(v.total)}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
+          ${v.categorias.map(c=>`<div style="background:var(--cream);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;">${c.emoji} ${c.nome}</span>
+            <div style="text-align:right;">
+              <div style="font-weight:700;font-size:12px;">${fmt(c.valor)}</div>
+              <div style="font-size:10px;color:var(--muted);">${c.pct.toFixed(1)}%</div>
+            </div>
+          </div>`).join('')}
+        </div>
+        <div style="background:#FEF3E7;border-radius:8px;padding:8px 12px;font-size:12px;color:var(--amber);">
+          💡 <strong>Dica:</strong> ${v.dica}
+        </div>
+      </div>`).join('');
+  }catch(e){
+    loading.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px;">⚠️ Análise offline — exibindo dados estruturados</div>';
+    // Fallback sem IA
+    setTimeout(()=>{
+      loading.style.display='none';container.style.display='block';
+      container.innerHTML=TRIPS_DATA.map(t=>`
+        <div class="hist-trip-card">
+          <div class="hist-trip-header">
+            <div><div class="hist-trip-name">${t.flag} ${t.name}</div>
+              <div style="font-size:11px;color:var(--muted);">${t.mes}</div></div>
+            <div class="hist-trip-total">${fmt(t.total)}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            ${t.gastos.map(g=>`<div class="hist-cat-row"><span>${g}</span></div>`).join('')}
+          </div>
+        </div>`).join('');
+    },300);
+  }
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+
+// ════ ORÇAMENTO DETALHADO ════
+// ════ ORÇAMENTO DETALHADO — orçamentos reais por mês ════
+// Valores oficiais de planejamento por mês de fechamento
+const MONTHLY_BUDGET={
+  '2026-01':{ACADEMIA:966,ALIMENTAÇÃO:1200,RESTAURANTE:1000,MORADIA:5000,ASSINATURAS:400,BELEZA:150,COMBUSTÍVEL:300,'COMPRAS AVULSAS':400,EDUCAÇÃO:500,FARMÁCIA:600,FINANCIAMENTO:2200,INTERNET:100,JANTAS:500,LAZER:500,PET:400,'PLANO INT':300,PRESENTES:200,VESTUÁRIO:700,VIAGENS:2000,INVESTIMENTOS:15000,'CASA E DECOR':400,TRANSPORTE:100},
+  '2026-02':{ACADEMIA:966,ALIMENTAÇÃO:1200,RESTAURANTE:1000,MORADIA:5000,ASSINATURAS:400,BELEZA:150,COMBUSTÍVEL:300,'COMPRAS AVULSAS':400,EDUCAÇÃO:500,FARMÁCIA:600,FINANCIAMENTO:2200,INTERNET:100,JANTAS:500,LAZER:500,PET:400,'PLANO INT':300,PRESENTES:200,VESTUÁRIO:700,VIAGENS:2000,INVESTIMENTOS:15000,'CASA E DECOR':400,IPVA:9523},
+  '2026-03':{ACADEMIA:966,ALIMENTAÇÃO:1200,RESTAURANTE:1000,MORADIA:5000,ASSINATURAS:400,BELEZA:150,COMBUSTÍVEL:300,'COMPRAS AVULSAS':400,EDUCAÇÃO:500,FARMÁCIA:600,FINANCIAMENTO:7280,INTERNET:100,JANTAS:500,LAZER:500,PET:400,'PLANO INT':300,PRESENTES:200,VESTUÁRIO:700,VIAGENS:3000,INVESTIMENTOS:15000,'CASA E DECOR':400,'P/TERCEIROS':3719},
+  '2026-04':{ACADEMIA:966,ALIMENTAÇÃO:1200,RESTAURANTE:1000,MORADIA:2500,ASSINATURAS:400,BELEZA:200,COMBUSTÍVEL:300,'COMPRAS AVULSAS':400,EDUCAÇÃO:500,FARMÁCIA:600,FINANCIAMENTO:9342,INTERNET:100,JANTAS:500,LAZER:500,PET:400,'PLANO INT':300,PRESENTES:200,VESTUÁRIO:700,VIAGENS:2000,INVESTIMENTOS:15000,'CASA E DECOR':400,IPVA:2605},
+  '2026-05':{ACADEMIA:966,ALIMENTAÇÃO:1200,RESTAURANTE:1000,MORADIA:2500,ASSINATURAS:400,BELEZA:200,COMBUSTÍVEL:500,'COMPRAS AVULSAS':400,EDUCAÇÃO:500,FARMÁCIA:600,FINANCIAMENTO:8274,INTERNET:100,JANTAS:500,LAZER:600,PET:400,'PLANO INT':300,PRESENTES:200,VESTUÁRIO:700,VIAGENS:3000,'CASA E DECOR':400}
+};
+const BUDGET_DEFAULT={ACADEMIA:966,ALIMENTAÇÃO:1200,RESTAURANTE:1000,MORADIA:2500,ASSINATURAS:400,BELEZA:200,COMBUSTÍVEL:400,'COMPRAS AVULSAS':400,EDUCAÇÃO:500,FARMÁCIA:600,FINANCIAMENTO:8274,INTERNET:100,JANTAS:500,LAZER:600,PET:400,'PLANO INT':300,PRESENTES:200,VESTUÁRIO:700,VIAGENS:2000,'CASA E DECOR':400};
+function getBudgetForMonth(m){return MONTHLY_BUDGET[m]||BUDGET_DEFAULT;}
+function getBudgetCat(m,cat){return(getBudgetForMonth(m)[cat])||0;}
+
+let orcFilter='2026-04';
+function setOrcFilter(m){
+  orcFilter=m;
+  document.querySelectorAll('[id^="ofbtn-"]').forEach(b=>b.classList.remove('active'));
+  document.getElementById('ofbtn-'+m)?.classList.add('active');
+  renderOrcDetalhe();
+}
+function renderOrcDetalhe(){
+  const title=document.getElementById('orc-detalhe-title');
+  const tbody=document.getElementById('orc-detalhe-tbody');
+  if(!tbody)return;
+  const meses=orcFilter==='anual'?MONTHS_2026:[orcFilter];
+  const label=orcFilter==='anual'?'Acumulado Jan–Mai/26':DATA[orcFilter]?.label;
+  if(title)title.textContent='Orçado vs Realizado — '+label;
+  const allCats=new Set();
+  for(const m of meses){Object.keys(getBudgetForMonth(m)).forEach(c=>allCats.add(c));const mn=RAW[m];if(mn)Object.keys(mn.d).forEach(c=>allCats.add(c));}
+  let rows='';let totOrc=0,totReal=0;
+  for(const cat of allCats){
+    let orcM=0,real=0;
+    for(const m of meses){orcM+=getBudgetCat(m,cat);const mn=RAW[m];if(mn)real+=(mn.d[cat]||0);}
+    if(orcM===0&&real===0)continue;
+    const dif=real-orcM;
+    const pctOver=orcM>0?((dif/orcM)*100).toFixed(0):0;
+    let status,rowBg='';
+    if(real===0&&orcM>0){status='✅ Não utilizado';}
+    else if(dif<=0){status='✅ OK';}
+    else if(pctOver<=20){status='⚠️ +'+pctOver+'%';rowBg='background:#FFF8F2';}
+    else{status='🚨 +'+pctOver+'%';rowBg='background:#FFF5F5';}
+    totOrc+=orcM;totReal+=real;
+    const isEmp=cat==='EMPRESA';
+    rows+=`<tr style="${rowBg}${isEmp?';opacity:.65':''}"><td>${cat}${isEmp?' <em style="font-size:10px;color:var(--muted)">(pass-through)</em>':''}</td>
+      <td style="text-align:right;color:var(--muted)">${orcM>0?fmt(orcM):'—'}</td>
+      <td style="text-align:right;color:${real>orcM&&orcM>0?'var(--red)':'var(--green)'}">${real>0?fmt(real):'—'}</td>
+      <td style="text-align:right;color:${dif>0?'var(--red)':'#2D9E6B'};font-weight:600">${real>0||orcM>0?(dif>0?'+':'')+fmt(Math.abs(dif)):'—'}</td>
+      <td style="text-align:center">${status}</td></tr>`;
+  }
+  const totDif=totReal-totOrc;
+  rows+=`<tr class="total-row"><td><strong>TOTAL</strong></td><td style="text-align:right">${fmt(totOrc)}</td><td style="text-align:right">${fmt(totReal)}</td><td style="text-align:right;color:${totDif>0?'var(--red)':'#2D9E6B'}">${totDif>0?'+':''} ${fmt(Math.abs(totDif))}</td><td style="text-align:center">${totDif>0?'🔴 Acima':'✅ Dentro'}</td></tr>`;
+  tbody.innerHTML=rows;
+}
+
+
+// ════ DISTRIBUIÇÃO ════
+let distFilter='2026-04';
+function setDistFilter(m){distFilter=m;document.querySelectorAll('[id^="dfbtn-"]').forEach(b=>b.classList.remove('active'));var el=document.getElementById('dfbtn-'+m);if(el)el.classList.add('active');initDistribuicao();}
+function initDistribuicao(){var _t=document.getElementById("dist-rec-list");if(_t)_t.insertAdjacentHTML("afterbegin","<div style='padding:8px;background:#e8f4e8;border-radius:6px;margin-bottom:12px;font-size:12px;'>✅ Distribuição carregada</div>");
+  var meses=distFilter==='anual'?MONTHS_2026:[distFilter];
+  var r={},d={};
+  for(var i=0;i<meses.length;i++){var mn=RAW[meses[i]];if(!mn)continue;for(var k in mn.r)r[k]=(r[k]||0)+mn.r[k];for(var k in mn.d)d[k]=(d[k]||0)+mn.d[k];}
+  var label=distFilter==='anual'?'Acumulado 2026':(DATA[distFilter]?DATA[distFilter].label:distFilter);
+  var topR=Object.entries(r).filter(function(x){return x[1]>0;}).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+  var topD=Object.entries(d).filter(function(x){return x[1]>0&&x[0]!=='EMPRESA'&&x[0]!=='P/TERCEIROS';}).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+  var rT=topR.reduce(function(a,x){return a+x[1];},0);
+  var dT=topD.reduce(function(a,x){return a+x[1];},0);
+  var el1=document.getElementById('dist-r-title');if(el1)el1.textContent='Receitas — '+label;
+  var el2=document.getElementById('dist-d-title');if(el2)el2.textContent='Despesas — '+label;
+  var COLS=['#4AA834','#1A3A5C','#E8943A','#7F77DD','#D94F4F','#C9DAAB','#2D9E6B','#87CEEB','#B5563B','#6B6B5E'];
+  var rl=document.getElementById('dist-rec-list');
+  if(rl)rl.innerHTML=topR.map(function(x,i){var pct=(x[1]/rT*100).toFixed(1);return'<div class="cat-row"><div class="cat-dot" style="background:'+COLS[i%10]+'"></div><div class="cat-name">'+x[0]+'</div><div style="margin-left:auto;font-weight:700;font-size:13px;">'+fmt(x[1])+'</div><div class="cat-pct" style="margin-left:8px;color:var(--muted);">'+pct+'%</div></div>';}).join('');
+  var dl=document.getElementById('dist-desp-list');
+  if(dl)dl.innerHTML=topD.map(function(x,i){var pct=(x[1]/dT*100).toFixed(1);return'<div class="cat-row"><div class="cat-dot" style="background:'+COLS[i%10]+'"></div><div class="cat-name">'+x[0]+'</div><div style="margin-left:auto;font-weight:700;font-size:13px;">'+fmt(x[1])+'</div><div class="cat-pct" style="margin-left:8px;color:var(--muted);">'+pct+'%</div></div>';}).join('');
+  renderParcelamentos();renderTipoDespesa();
+  setTimeout(function(){donut('chartDistR',topR.map(function(x){return x[0];}),topR.map(function(x){return x[1];}),CAT_COLORS_R);donut('chartDistD',topD.map(function(x){return x[0];}),topD.map(function(x){return x[1];}),CAT_COLORS_D);},100);
+}
+
+// ════ EVOLUÇÃO MENSAL ════
+function initEvolucao(){
+  if(typeof evolFilter==='undefined'||!evolFilter)evolFilter='anual';
+  renderEvolMedias();
+  renderEvolCharts();
+}
+
+// ════ RESULTADO / MARGEM ════
+function initResultado(){var _t=document.getElementById("res-kpis");if(_t)_t.insertAdjacentHTML("afterbegin","<div style='padding:8px;background:#e8f4e8;border-radius:6px;margin-bottom:12px;font-size:12px;'>✅ Resultado carregado</div>");
+  var rLiq=MONTHS_2026.map(function(m){return DATA[m].r-DATA[m].empR;});
+  var dLiq=MONTHS_2026.map(function(m){return DATA[m].d-DATA[m].empD-DATA[m].tercD;});
+  var sLiq=rLiq.map(function(r,i){return r-dLiq[i];});
+  var sBruto=MONTHS_2026.map(function(m){return DATA[m].s;});
+  var totRL=rLiq.reduce(function(a,b){return a+b;},0);
+  var totDL=dLiq.reduce(function(a,b){return a+b;},0);
+  var totSL=totRL-totDL;
+  var avgM=totRL>0?((totSL/totRL)*100).toFixed(1):0;
+  var bestI=sLiq.indexOf(Math.max.apply(null,sLiq));
+  var kpis=document.getElementById('res-kpis');
+  if(kpis)kpis.innerHTML='<div class="kpi"><div class="kpi-label">Receita Pessoal Jan–Mai</div><div class="kpi-value green">'+fmt(totRL)+'</div><div class="kpi-deducao">Ex-Empresa · Ex-P.Terceiros</div></div><div class="kpi '+(totSL<0?'red':'')+'"><div class="kpi-label">Saldo Pessoal Acum.</div><div class="kpi-value '+(totSL>=0?'green':'red')+'">'+fmtS(totSL)+'</div><div class="kpi-deducao">Jan a Mai/26</div></div><div class="kpi neutral"><div class="kpi-label">Margem Média</div><div class="kpi-value">'+avgM+'%</div></div><div class="kpi"><div class="kpi-label">Melhor Mês</div><div class="kpi-value green">'+DATA[MONTHS_2026[bestI]].label+'</div><div class="kpi-deducao">Saldo: '+fmtS(sLiq[bestI])+'</div></div>';
+  var tbody=document.getElementById('res-tbody');
+  if(tbody)tbody.innerHTML=MONTHS_2026.map(function(m,i){
+    var mn=DATA[m],sb=mn.s,sp=sLiq[i],rp=rLiq[i],dp=dLiq[i],mg=rp>0?((sp/rp)*100).toFixed(1):0;
+    return'<tr><td><strong>'+mn.label+'</strong></td><td><span class="badge '+(sb>=0?'pos':'neg')+'">'+(sb>=0?'▲':'▼')+'</span></td><td style="text-align:right;color:var(--green)">'+fmt(mn.r)+'</td><td style="text-align:right;color:var(--green)">'+fmt(rp)+'</td><td style="text-align:right;color:var(--red)">'+fmt(mn.d)+'</td><td style="text-align:right;color:var(--red)">'+fmt(dp)+'</td><td style="text-align:right;color:'+(sb>=0?'var(--green)':'var(--red)')+';font-weight:700">'+fmtS(sb)+'</td><td style="text-align:right;color:'+(sp>=0?'var(--green)':'var(--red)')+';font-weight:700">'+fmtS(sp)+'</td><td style="text-align:right;color:'+(parseFloat(mg)>=0?'var(--green)':'var(--red)')+';font-weight:600">'+mg+'%</td></tr>';
+  }).join('');
+  renderCentroCustos();
+  setTimeout(function(){
+    dc('chartResBruto');dc('chartMargem');
+    var lab=MONTHS_2026.map(function(m){return DATA[m].label;});
+    var c1=document.getElementById('chartResBruto');
+    if(c1)charts['chartResBruto']=new Chart(c1,{type:'bar',data:{labels:lab,datasets:[{label:'Saldo Bruto',data:sBruto,backgroundColor:sBruto.map(function(s){return s>=0?'rgba(74,168,52,0.6)':'rgba(217,79,79,0.6)';}),borderRadius:4},{label:'Saldo Pessoal',data:sLiq,backgroundColor:sLiq.map(function(s){return s>=0?'rgba(45,110,200,0.55)':'rgba(232,148,58,0.6)';}),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11}}}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{callback:function(v){return'R$'+(v/1000).toFixed(0)+'K';},font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}}}});
+    var margens=rLiq.map(function(r,i){return r>0?parseFloat((sLiq[i]/r*100).toFixed(1)):0;});
+    var c2=document.getElementById('chartMargem');
+    if(c2)charts['chartMargem']=new Chart(c2,{type:'bar',data:{labels:lab,datasets:[
+      {label:'Margem %',data:margens,backgroundColor:margens.map(function(m){return m>=20?'rgba(74,168,52,0.7)':m>=0?'rgba(232,148,58,0.7)':'rgba(217,79,79,0.7)';}),borderColor:margens.map(function(m){return m>=20?'#4AA834':m>=0?'#E8943A':'#D94F4F';}),borderWidth:1.5,borderRadius:4},
+      {label:'Média',data:Array(lab.length).fill(parseFloat(avgM)),type:'line',borderColor:'rgba(127,119,221,0.8)',borderDash:[6,3],pointRadius:0,borderWidth:2}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:function(c){return' '+c.dataset.label+': '+c.parsed.y.toFixed(1)+'%';}}}},
+      scales:{x:{ticks:{font:{size:10}}},y:{ticks:{callback:function(v){return v+'%';},font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'},suggestedMin:Math.min.apply(null,margens)-5}}}});
+  },100);
+}
+
+// ════ ALERTAS ════
+let alertFilter='2026-04';
+function setAlertFilter(m){alertFilter=m;document.querySelectorAll('[id^="afbtn-"]').forEach(function(b){b.classList.remove('active');});var el=document.getElementById('afbtn-'+m);if(el)el.classList.add('active');initAlertas();}
+function initAlertas(){var _t=document.getElementById("alertas-content");if(_t)_t.insertAdjacentHTML("afterbegin","<div style='padding:8px;background:#e8f4e8;border-radius:6px;margin-bottom:12px;font-size:12px;'>✅ Alertas carregados</div>");renderAlertas();}
+function renderAlertas(){
+  var meses=alertFilter==='anual'?MONTHS_2026:[alertFilter];
+  var label=alertFilter==='anual'?'Acumulado Jan–Mai/26':(DATA[alertFilter]?DATA[alertFilter].label:alertFilter);
+  var nM=meses.length;
+  var d={};
+  for(var i=0;i<meses.length;i++){var fd=FULL_DESP[meses[i]];if(fd)for(var k in fd)d[k]=(d[k]||0)+fd[k];}
+  var cont=document.getElementById('alertas-content');if(!cont)return;
+  var html='<div class="alert ok"><div class="alert-icon">📅</div><div><div class="alert-title">Período: '+label+'</div><div class="alert-body">Alertas com base nos lançamentos · Comparativo contra orçamento mensal.</div></div></div>';
+  var exts=[{m:'2026-01',v:75000,t:'Aquisição de bens – Jan/26'},{m:'2026-02',v:119200,t:'Aquisição de bens – Fev/26'},{m:'2026-04',v:113500,t:'Aportes investimentos – Abr/26'},{m:'2026-04',v:48563,t:'Viagem EUA – Abr/26'}];
+  for(var i=0;i<exts.length;i++){if(meses.indexOf(exts[i].m)>=0)html+='<div class="alert" style="background:#EEF4E3;border-color:#4AA834"><div class="alert-icon">📌</div><div><div class="alert-title">Item Extraordinário — '+fmt(exts[i].v)+'</div><div class="alert-body">'+exts[i].t+' · Impacto não recorrente.</div></div></div>';}
+  var CHECKS=[{c:'VIAGENS',l:'Viagens',o:2000},{c:'RESTAURANTE',l:'Restaurante',o:1000},{c:'LAZER',l:'Lazer',o:500},{c:'VESTUÁRIO',l:'Vestuário',o:700},{c:'ACADEMIA',l:'Academia',o:966},{c:'FARMÁCIA',l:'Farmácia',o:600},{c:'INVESTIMENTOS',l:'Investimentos',o:15000},{c:'FINANCIAMENTO',l:'Financiamento',o:2200},{c:'MORADIA',l:'Moradia',o:5000},{c:'ALIMENTAÇÃO',l:'Alimentação',o:1200},{c:'BELEZA',l:'Beleza',o:150},{c:'JANTAS',l:'Jantas',o:500}];
+  var posA=[];
+  for(var i=0;i<CHECKS.length;i++){var ck=CHECKS[i],real=d[ck.c]||0,orcM=ck.o*nM,dif=real-orcM,pct=orcM>0?((dif/orcM)*100).toFixed(0):0;
+    if(real===0&&orcM>0){posA.push({tp:'ok',ic:'✅',t:ck.l+' — zerado',b:'Nenhum gasto · Orçado: '+fmt(orcM)});}
+    else if(ck.c==='INVESTIMENTOS'&&real<orcM*0.8){posA.push({tp:'warn',ic:'📉',t:ck.l+' — abaixo da meta',b:'Realizado: '+fmt(real)+' · Meta: '+fmt(orcM)});}
+    else if(dif>0&&pct>50){posA.push({tp:'danger',ic:'🚨',t:ck.l+' — +'+pct+'% acima',b:'Realizado: '+fmt(real)+' · Orçado: '+fmt(orcM)+' · Excedente: '+fmt(dif)});}
+    else if(dif>0&&pct>15){posA.push({tp:'warn',ic:'⚠️',t:ck.l+' — +'+pct+'% acima',b:'Realizado: '+fmt(real)+' · Orçado: '+fmt(orcM)});}
+    else if(real>0){posA.push({tp:'ok',ic:'✅',t:ck.l+' — dentro do orçado',b:'Realizado: '+fmt(real)+' · '+Math.round(real/orcM*100)+'% utilizado'});}}
+  posA.sort(function(a,b){return ({danger:0,warn:1,ok:2}[a.tp])-({danger:0,warn:1,ok:2}[b.tp]);});
+  for(var i=0;i<posA.length;i++)html+='<div class="alert '+posA[i].tp+'"><div class="alert-icon">'+posA[i].ic+'</div><div><div class="alert-title">'+posA[i].t+'</div><div class="alert-body">'+posA[i].b+'</div></div></div>';
+  cont.innerHTML=html;
+}
+
+
+// ════════════════════════════════════════
+// DADOS ESTÁTICOS — Centro de Custos / Parcelamentos / Tipo Despesa
+// ════════════════════════════════════════
+
+// Mapeamento de centros de custo (usa chaves do RAW)
+const CC = {
+  'ESSENCIAIS':{
+    cats:['MORADIA','ALIMENTAÇÃO','FARMÁCIA','INTERNET','COMBUSTÍVEL','TRANSPORTE','PLANO INT'],
+    color:'#1b5e38',bg:'#EEF4E3',
+    desc:'Moradia, Alimentação, Farmácia, Internet, Combustível, Transporte'
+  },
+  'DÍVIDAS E OBRIGAÇÕES FINANCEIRAS':{
+    cats:['FINANCIAMENTO','IPVA','MULTAS'],
+    color:'#8b1f1f',bg:'#FDECEA',
+    desc:'Financiamentos, empréstimos, taxas bancárias, multas/juros'
+  },
+  'INVESTIMENTOS E CONSTRUÇÃO DE PATRIMÔNIO':{
+    cats:['INVESTIMENTOS','AQUISIÇÃO BENS'],
+    color:'#1a2e5c',bg:'#E8F0F8',
+    desc:'Aportes para investimentos + Aquisição de veículos/bens'
+  },
+  'QUALIDADE DE VIDA / NÃO ESSENCIAL':{
+    cats:['VIAGENS','LAZER','ACADEMIA','BELEZA','PET','VESTUÁRIO','ASSINATURAS','EDUCAÇÃO','CASA E DECOR','RESTAURANTE','JANTAS','COMPRAS AVULSAS','JOGOS','PRESENTES'],
+    color:'#4a2080',bg:'#F0EEF8',
+    desc:'Viagens, lazer, academia, beleza, pet, vestuário, assinaturas, educação, casa e decor'
+  },
+  'EMPRESARIAL / PROFISSIONAL':{
+    cats:['EMPRESA'],
+    color:'#3a5c20',bg:'#EEF4E3',
+    desc:'Despesas profissionais classificadas como empresariais'
+  },
+  'TRANSFERÊNCIAS E APOIO A TERCEIROS':{
+    cats:['EMPRESTADO','P/TERCEIROS'],
+    color:'#1a5a5c',bg:'#E0F4F4',
+    desc:'Pagamentos feitos para terceiros, familiares ou colaboradores'
+  },
+  'DESPESAS NÃO IDENTIFICADAS / DESORGANIZAÇÃO':{
+    cats:['NÃO IDENT.'],
+    color:'#5c3a1a',bg:'#FEF0EC',
+    desc:'Transações sem categoria definida — meta é zerar este grupo'
+  }
+};
+
+function getCCVal(ccCats,month){
+  // Use FULL_DESP if available (more complete data)
+  const fd=FULL_DESP[month];
+  if(fd){
+    return ccCats.reduce((a,cat)=>{
+      // direct match
+      if(fd[cat]!==undefined)return a+(fd[cat]||0);
+      // try key map
+      const mapped=CC_KEY_MAP[cat];
+      if(mapped)return a+mapped.reduce((s,k)=>s+(fd[k]||0),0);
+      return a;
+    },0);
+  }
+  // Fallback to RAW (for 2025 months)
+  const mn=RAW[month];if(!mn)return 0;
+  return ccCats.reduce((a,c)=>a+(mn.d[c]||0),0);
+}
+
+// Novos Parcelamentos por mês
+// Lógica: apenas parcelas INICIADAS no mês (sem repetições/continuações)
+// Financiamento Caminhonete excluído conforme instrução
+const PARCELAMENTOS={
+  '2026-01':{label:'Janeiro 2026',note:'',
+    items:[
+      {desc:'Móveis Kappesberg',det:'6x',val:180.32,cor:'#7F77DD'},
+      {desc:'Amazon BR (presentes)',det:'4x',val:159.33,cor:'#1A3A5C'},
+      {desc:'Pb Weasy (pet)',det:'5x',val:138.94,cor:'#E8943A'},
+      {desc:'Vlt Bazar Ltda (vestuário)',det:'2x',val:88.00,cor:'#6B6B5E'},
+    ],total:566.59},
+  '2026-02':{label:'Fevereiro 2026',note:'',
+    items:[
+      {desc:'Allianz Segu (empresa)',det:'10x',val:503.38,cor:'#E8943A'},
+      {desc:'Acelerador de Pontos (viagens)',det:'fixo',val:390.87,cor:'#1A3A5C'},
+      {desc:'Ec Growthsupplemen (academia)',det:'3x',val:97.93,cor:'#2D9E6B'},
+      {desc:'Farmácia São João',det:'3x',val:87.01,cor:'#4AA834'},
+    ],total:1079.19},
+  '2026-03':{label:'Março 2026',note:'',
+    items:[
+      {desc:'Jim Com Sammy By Ba (farmácia)',det:'4x',val:97.93,cor:'#4AA834'},
+      {desc:'Cursoaskjackie (educação)',det:'10x',val:72.60,cor:'#2D9E6B'},
+      {desc:'Mercadopago Mwrodri (vestuário)',det:'12x',val:86.86,cor:'#E8943A'},
+    ],total:257.39},
+  '2026-04':{label:'Abril 2026 ✅ Fechamento',note:'Mês de fechamento real',
+    items:[
+      {desc:'Arena Society (lazer)',det:'2x',val:441.50,cor:'#4AA834'},
+      {desc:'Mercadolivre 2 Produtos',det:'2x',val:69.63,cor:'#1A3A5C'},
+    ],total:511.13},
+  '2026-05':{label:'Maio 2026 ★',note:'Parcial',
+    items:[
+      {desc:'Mp Skyairlines (viagens)',det:'6x',val:415.35,cor:'#7F77DD'},
+      {desc:'Mercadolivre 3 Produtos',det:'2x',val:214.95,cor:'#E8943A'},
+    ],total:630.30}
+};
+
+// Tipo de Despesa por mês
+const TIPO_DESP={
+  '2026-01':{eventual:68192.86,variavel:41212.23,parcelamento:4265.09,fixa:0,obs:'',total:119877.58},
+  '2026-02':{eventual:138083.90,variavel:1202.31,parcelamento:3495.65,fixa:7057.05,obs:'Eventual alto: R$119.200 veículo',total:149838.91},
+  '2026-03':{eventual:23062.11,variavel:1919.50,parcelamento:4702.03,fixa:9880.61,obs:'Sem aquisição de bens ✓',total:39564.25},
+  '2026-04':{eventual:191650,variavel:5200,parcelamento:9342,fixa:3966,obs:'Invest.+Viagens EUA extraordinários',total:210158},
+  '2026-05':{eventual:36685,variavel:7900,parcelamento:8274,fixa:2462,obs:'Parcial Mai/26',total:55321}
+};
+
+// ════ EVOLUÇÃO MENSAL — com filtro de período + médias ════
+const EVOL_PERIODS={
+  'anual':{label:'Anual 2026',months:['2026-01','2026-02','2026-03','2026-04','2026-05']},
+  'trimestre':{label:'Trimestre (Jan–Mar/26)',months:['2026-01','2026-02','2026-03']},
+  'semestre':{label:'Últimos 6 meses',months:['2025-12','2026-01','2026-02','2026-03','2026-04','2026-05']},
+  'historico':{label:'Histórico Completo',months:['2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05']}
+};
+let evolFilter='anual';
+
+function setEvolFilter(p){
+  evolFilter=p;
+  document.querySelectorAll('[id^="efbtn-"]').forEach(b=>b.classList.remove('active'));
+  document.getElementById('efbtn-'+p)?.classList.add('active');
+  renderEvolMedias();
+  renderEvolCharts();
+}
+
+// Receita "operacional" = rec - EMPRESA - EMPRESTIMO
+function getRecOp(m){const d=RAW[m];if(!d)return 0;const t=Object.values(d.r).reduce((a,b)=>a+b,0);return t-(d.r['EMPRESA']||0)-(d.r['EMPRÉSTIMO']||0)-(d.r['FINANCIAMENTO']||0);}
+// Despesa "operacional" = desp - EMPRESA - P/TERCEIROS - INVESTIMENTOS - AQUISIÇÃO BENS
+function getDespOp(m){const d=RAW[m];if(!d)return 0;const t=Object.values(d.d).reduce((a,b)=>a+b,0);return t-(d.d['EMPRESA']||0)-(d.d['P/TERCEIROS']||0)-(d.d['INVESTIMENTOS']||0)-(d.d['AQUISIÇÃO BENS']||0);}
+
+function renderEvolMedias(){
+  const months=EVOL_PERIODS[evolFilter].months.filter(m=>RAW[m]);
+  const label=EVOL_PERIODS[evolFilter].label;
+  const n=months.length;
+  const avgRec=months.reduce((a,m)=>a+getRecOp(m),0)/n;
+  const avgDesp=months.reduce((a,m)=>a+getDespOp(m),0)/n;
+  const avgRes=avgRec-avgDesp;
+  const avgRecBruta=months.reduce((a,m)=>a+DATA[m].r,0)/n;
+  const box=document.getElementById('evol-medias');
+  if(!box)return;
+  box.innerHTML=`
+    <div class="kpi"><div class="kpi-label">Receita Op. Média</div>
+      <div class="kpi-value green">${fmt(avgRec)}</div>
+      <div class="kpi-deducao">${label} · ${n} meses · ex-Empresa/Empréstimo</div></div>
+    <div class="kpi ${avgDesp>avgRec?'red':''}"><div class="kpi-label">Despesa Op. Média</div>
+      <div class="kpi-value red">${fmt(avgDesp)}</div>
+      <div class="kpi-deducao">ex-Empresa / P.Terc / Invest. / Bens</div></div>
+    <div class="kpi ${avgRes<0?'red':''}"><div class="kpi-label">Result. Op. Médio</div>
+      <div class="kpi-value ${avgRes>=0?'green':'red'}">${fmtS(avgRes)}</div>
+      <div class="kpi-deducao">Receita op. − Despesa op. / mês</div></div>
+    <div class="kpi neutral"><div class="kpi-label">Receita Bruta Média</div>
+      <div class="kpi-value">${fmt(avgRecBruta)}</div>
+      <div class="kpi-deducao">Incluindo passagens empresa</div></div>`;
+}
+
+function renderEvolCharts(){
+  const months=EVOL_PERIODS[evolFilter].months.filter(m=>RAW[m]);
+  const lab=months.map(m=>DATA[m].label);
+  const rec=months.map(m=>DATA[m].r);
+  const des=months.map(m=>DATA[m].d);
+  const sal=months.map(m=>DATA[m].s);
+  const rLiq=months.map(m=>DATA[m].r-DATA[m].empR);
+  const dLiq=months.map(m=>DATA[m].d-DATA[m].empD-DATA[m].tercD);
+  const sLiq=rLiq.map((r,i)=>r-dLiq[i]);
+  const n=months.length;
+  const avgRec=rLiq.reduce((a,b)=>a+b,0)/n;
+  const avgDesp=dLiq.reduce((a,b)=>a+b,0)/n;
+
+  dc('chartEvol2026');dc('chartEvolSaldo');dc('chartEvolPessoal');dc('chartEvolHist');
+  setTimeout(()=>{
+    const c1=document.getElementById('chartEvol2026');
+    if(c1){charts['chartEvol2026']=new Chart(c1,{type:'bar',data:{labels:lab,datasets:[
+      {label:'Receita',data:rec,backgroundColor:'rgba(74,168,52,0.6)',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+      {label:'Despesa',data:des,backgroundColor:'rgba(217,79,79,0.5)',borderColor:RED,borderWidth:1.5,borderRadius:4},
+      {label:'Saldo',data:sal,type:'line',borderColor:AMBER,backgroundColor:'transparent',tension:0.3,pointRadius:5,pointBackgroundColor:sal.map(s=>s>=0?GREEN:RED)},
+      {label:'Média Rec. Liq.',data:Array(n).fill(avgRec),type:'line',borderColor:'rgba(74,168,52,0.4)',borderDash:[6,4],pointRadius:0,borderWidth:1.5},
+      {label:'Média Desp. Liq.',data:Array(n).fill(avgDesp),type:'line',borderColor:'rgba(217,79,79,0.4)',borderDash:[6,4],pointRadius:0,borderWidth:1.5}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:10}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+    scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}})}
+
+    const c2=document.getElementById('chartEvolSaldo');
+    if(c2){charts['chartEvolSaldo']=new Chart(c2,{type:'bar',data:{labels:lab,datasets:[
+      {label:'Saldo',data:sal,backgroundColor:sal.map(s=>s>=0?'rgba(74,168,52,0.65)':'rgba(217,79,79,0.6)'),borderColor:sal.map(s=>s>=0?GREEN:RED),borderWidth:1.5,borderRadius:4}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}})}
+
+    const c3=document.getElementById('chartEvolPessoal');
+    if(c3){charts['chartEvolPessoal']=new Chart(c3,{type:'line',data:{labels:lab,datasets:[
+      {label:'Rec. Pessoal',data:rLiq,borderColor:GREEN,backgroundColor:'rgba(74,168,52,0.07)',fill:true,tension:0.3,pointRadius:4},
+      {label:'Desp. Pessoal',data:dLiq,borderColor:RED,backgroundColor:'rgba(217,79,79,0.07)',fill:true,tension:0.3,pointRadius:4},
+      {label:'Saldo Pessoal',data:sLiq,borderColor:AMBER,backgroundColor:'transparent',tension:0.3,pointRadius:4,borderDash:[5,3]}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}})}
+
+    const c4=document.getElementById('chartEvolHist');
+    if(c4){const allM=months.length>5?months:MONTHS_ALL;charts['chartEvolHist']=new Chart(c4,{type:'line',data:{
+      labels:allM.map(m=>DATA[m].label),
+      datasets:[
+        {label:'Receita',data:allM.map(m=>DATA[m].r),borderColor:GREEN,backgroundColor:'rgba(74,168,52,0.06)',fill:true,tension:0.3,pointRadius:4},
+        {label:'Despesa',data:allM.map(m=>DATA[m].d),borderColor:RED,backgroundColor:'rgba(217,79,79,0.06)',fill:true,tension:0.3,pointRadius:4}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}})}
+  },80);
+}
+
+// ════ CENTRO DE CUSTOS ════
+function renderCentroCustos(){
+  const meses=MONTHS_2026;
+  // Variação entre os dois últimos meses fechados (Mar→Abr)
+  const varM1='2026-03',varM2='2026-04',varLabel='MAR→ABR';
+  const cont=document.getElementById('centro-custos-content');
+  if(!cont)return;
+
+  const nCols=meses.length;
+  const grid=`2.2fr repeat(${nCols},1fr) 1.5fr`;
+
+  let html=`
+  <div style="font-size:11px;color:var(--muted);margin-bottom:10px;font-style:italic;">
+    Agrupamento estratégico por natureza de despesa — ${meses.map(m=>DATA[m].label).join(' · ')}
+    · Variação calculada entre os dois últimos meses fechados (${varLabel})
+  </div>
+  <div style="border-radius:14px;border:1px solid var(--border);overflow:hidden;">
+    <div style="background:var(--dark);color:white;display:grid;grid-template-columns:${grid};padding:11px 18px;gap:6px;align-items:center;">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2.5px;color:rgba(255,255,255,.4);font-weight:700;">Categoria</div>
+      ${meses.map(m=>`<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);text-align:right;line-height:1.4;">${DATA[m].label.replace('★','')}<br>${m==='2026-05'?'<span style="color:rgba(255,255,255,.3)">★</span>':''}</div>`).join('')}
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);text-align:right;">Variação<br>${varLabel}</div>
+    </div>`;
+
+  // Colors from image
+  const BG={
+    'ESSENCIAIS':'#1b5e38',
+    'DÍVIDAS E OBRIGAÇÕES FINANCEIRAS':'#8b1f1f',
+    'INVESTIMENTOS E CONSTRUÇÃO DE PATRIMÔNIO':'#1a2e5c',
+    'QUALIDADE DE VIDA / NÃO ESSENCIAL':'#4a2080',
+    'EMPRESARIAL / PROFISSIONAL':'#3a5c20',
+    'TRANSFERÊNCIAS E APOIO A TERCEIROS':'#1a5a5c',
+    'DESPESAS NÃO IDENTIFICADAS / DESORGANIZAÇÃO':'#5c3a1a'
+  };
+
+  for(const [name,cfg] of Object.entries(CC)){
+    const vals=meses.map(m=>getCCVal(cfg.cats,m));
+    const v1=getCCVal(cfg.cats,varM1);
+    const v2=getCCVal(cfg.cats,varM2);
+    const varPct=v1!==0?((v2-v1)/Math.abs(v1)*100):(v2>0?100:0);
+    const isUp=varPct>0;
+    const absP=Math.abs(varPct);
+
+    // Variation color/icon logic (down = good for most categories)
+    const catBg=BG[name]||cfg.color;
+    let varColor,varSuffix;
+    if(name.includes('ESSENCIAIS')){
+      varColor=absP>20?'#E8943A':'rgba(255,255,255,.95)';
+      varSuffix=absP>20?' ⚠️':absP<8?' ✓':'';
+    } else if(name.includes('TRANSFERÊNCIAS')){
+      varColor='rgba(255,255,255,.8)';varSuffix=!isUp?' ✓':'';
+    } else {
+      // Less is better
+      varColor=isUp?(absP>50?'#ff8080':absP>20?'#E8943A':'rgba(255,255,255,.95)'):'#a8e6a0';
+      varSuffix=!isUp?' ✓':(absP>50?' ⚠️':'');
+    }
+    const varStr=(isUp?'↑ +':'↓ ')+absP.toFixed(1)+'%'+varSuffix;
+    const insight=buildCCInsight(name,cfg,vals,meses,varPct,v1,v2);
+    const insightColor=getInsightColor(name,varPct);
+
+    html+=`
+    <div style="display:grid;grid-template-columns:${grid};padding:13px 18px;gap:6px;background:${catBg};align-items:center;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="width:10px;height:10px;background:rgba(255,255,255,.75);border-radius:50%;border:2px solid rgba(255,255,255,.4);flex-shrink:0;"></span>
+        <span style="font-size:12.5px;font-weight:700;color:white;text-transform:uppercase;letter-spacing:.5px;line-height:1.3;">${name}</span>
+      </div>
+      ${vals.map(v=>`<div style="text-align:right;font-weight:700;font-size:13px;color:white;white-space:nowrap;">${v===0?'R$ 0,00':(v<0?'−':'')+fmt(Math.abs(v))}</div>`).join('')}
+      <div style="text-align:right;font-size:11.5px;font-weight:700;background:rgba(0,0,0,.25);border-radius:8px;padding:4px 10px;color:${varColor};white-space:nowrap;">${varStr}</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 18px;background:white;border-bottom:2px solid ${cfg.bg};">
+      <div style="font-size:11px;color:var(--muted);font-style:italic;max-width:40%;line-height:1.5;">${cfg.desc}</div>
+      <div style="font-size:11.5px;color:${insightColor};text-align:right;max-width:58%;line-height:1.5;">${insight}</div>
+    </div>`;
+  }
+
+  html+=`</div>`;
+  cont.innerHTML=html;
+}
+
+function getInsightColor(name,varPct){
+  const isUp=varPct>0,absP=Math.abs(varPct);
+  if(name.includes('ESSENCIAIS'))return absP>20?'#E8943A':'#2D9E6B';
+  if(name.includes('DÍVIDAS'))return!isUp?'#2D9E6B':absP>30?'#D94F4F':'#E8943A';
+  if(name.includes('INVESTIMENTOS'))return!isUp&&varPct<-50?'#2D9E6B':'#E8943A';
+  if(name.includes('QUALIDADE'))return isUp&&absP>30?'#E8943A':!isUp?'#2D9E6B':'var(--muted)';
+  if(name.includes('EMPRESARIAL'))return!isUp?'#2D9E6B':'#E8943A';
+  if(name.includes('TRANSFERÊNCIAS'))return'var(--muted)';
+  if(name.includes('NÃO IDENT'))return isUp&&absP>50?'#D94F4F':isUp?'#E8943A':'#2D9E6B';
+  return'var(--muted)';
+}
+
+function buildCCInsight(name,cfg,vals,meses,varPct,v1,v2){
+  const absP=Math.abs(varPct).toFixed(1);
+  const isUp=varPct>0;
+  const lastLbl=DATA[meses[meses.length-1]].label;
+  const lastVal=vals[vals.length-1];
+  const avgVal=vals.filter(v=>v>0).reduce((a,b)=>a+b,0)/Math.max(vals.filter(v=>v>0).length,1);
+
+  if(name.includes('ESSENCIAIS')){
+    const trend=vals.every((v,i)=>i===0||v>=vals[i-1])?'Crescimento gradual':
+                vals.every((v,i)=>i===0||v<=vals[i-1])?'Redução consistente':'Estável no período';
+    return`${trend} — despesas do dia a dia controladas ✓`;
+  }
+
+  if(name.includes('DÍVIDAS')){
+    const hasNeg=vals.some(v=>v<0);
+    const hasIPVA=(RAW['2026-02']?.d['IPVA']||0)>0||(RAW['2026-04']?.d['IPVA']||0)>0;
+    const parts=[];
+    if(hasNeg)parts.push('Mês negativo = crédito/estorno de taxas');
+    if(hasIPVA)parts.push('IPVA lançado em Fev e Abr');
+    parts.push(lastVal===0?'Último mês zerou ✓':`${fmt(lastVal)} no último mês`);
+    return parts.join(' · ');
+  }
+
+  if(name.includes('INVESTIMENTOS')){
+    const maxIdx=vals.indexOf(Math.max(...vals));
+    const maxLbl=DATA[meses[maxIdx]].label;
+    const hasAcq=vals.some(v=>v>50000);
+    if(hasAcq)return`${maxLbl}: ${fmt(vals[maxIdx])} (invest+aquisição) · ${lastVal<1000?'Meses recentes: zerou ✓':'Monitorar recorrência'}`;
+    return`${isUp?'↑ Retomada de aportes':'↓ Menor alocação'} — ${fmt(lastVal)} no último mês`;
+  }
+
+  if(name.includes('QUALIDADE')){
+    const lastRaw=RAW[meses[meses.length-1]];
+    if(lastRaw){
+      const top=cfg.cats.map(c=>({c,v:lastRaw.d[c]||0})).filter(x=>x.v>500).sort((a,b)=>b.v-a.v).slice(0,3);
+      if(top.length>0){
+        const pref=isUp&&parseFloat(absP)>30?`⚠️ +${absP}% — `:'';
+        return`${pref}Puxado por ${top.map(x=>`${x.c} ${fmt(x.v)}`).join(' + ')} em ${lastLbl}`;
+      }
+    }
+    return`${isUp?`⚠️ Crescendo +${absP}%`:`✓ Reduzindo −${absP}%`} — acompanhar viagens e lazer`;
+  }
+
+  if(name.includes('EMPRESARIAL')){
+    return lastVal===0?`✓ Zerou em ${lastLbl} — separação PF/PJ em andamento`:
+           `⚠️ ${fmt(lastVal)} em despesas empresariais — verificar classificação`;
+  }
+
+  if(name.includes('TRANSFERÊNCIAS')){
+    const hasVal=vals.some(v=>v>0);
+    return hasVal?`Valores pontuais registrados — acompanhar devoluções e empréstimos`:
+           `Zerado nos meses relevantes — manter controle`;
+  }
+
+  if(name.includes('NÃO IDENT')){
+    const maxIdx=vals.indexOf(Math.max(...vals));
+    const maxLbl=DATA[meses[maxIdx]].label;
+    const maxVal=vals[maxIdx];
+    if(maxVal>3000)return`🚨 ${maxLbl}: ${fmt(maxVal)} — classificar urgente. Meta = zerar este grupo`;
+    if(lastVal>1000)return`⚠️ ${fmt(lastVal)} sem categoria em ${lastLbl} — revisar lançamentos`;
+    return`✓ Abaixo de R$1.000 — continuar classificando as transações`;
+  }
+
+  return`Variação de ${absP}% entre ${varM1.slice(5,7)+'/'+varM1.slice(2,4)} e ${varM2.slice(5,7)+'/'+varM2.slice(2,4)}`;
+}
+
+
+// ════ NOVOS PARCELAMENTOS ════
+function renderParcelamentos(){
+  const cont=document.getElementById('parcelamentos-content');
+  if(!cont)return;
+  const meses=['2026-01','2026-02','2026-03','2026-04','2026-05'];
+  cont.innerHTML=meses.map(m=>{
+    const p=PARCELAMENTOS[m];
+    const isLast=m==='2026-04'; // Abril é o mês de fechamento real
+    const isParcial=m==='2026-05';
+    const border=isLast?'border:2px solid #4AA834;':'';
+    const titleColor=isLast?'color:#4AA834;':'color:var(--dark);';
+    return`<div style="background:white;border-radius:12px;padding:18px;${border}">
+      <div style="font-weight:700;font-size:14px;${titleColor}margin-bottom:4px;">${p.label}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">+${fmt(p.total)} adicionados ao orçamento${isParcial?' (estimativa)':''}</div>
+      ${p.items.map(it=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.05);">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="width:10px;height:10px;border-radius:2px;background:${it.cor};display:inline-block;flex-shrink:0;"></span>
+          <span style="font-size:12px;color:var(--dark);">${it.desc}</span>
+        </div>
+        <div style="text-align:right;">
+          <span style="font-size:11px;color:var(--muted);margin-right:6px;">${it.det}</span>
+          <strong style="font-size:12px;">${fmt(it.val)}/mês</strong>
+        </div>
+      </div>`).join('')}
+      <div style="margin-top:10px;padding:8px;background:${isLast?'#EEF4E3':'var(--cream)'};border-radius:6px;font-size:12px;">
+        <strong>Total gerado: ${fmt(p.total)}/mês</strong>${p.note?` · <span style="color:var(--amber);">${p.note}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════ TIPO DE DESPESA ════
+function renderTipoDespesa(){
+  const tbody=document.getElementById('tipo-desp-tbody');if(!tbody)return;
+  const meses=MONTHS_2026;
+  tbody.innerHTML=meses.map(m=>{
+    const td=TIPO_DESP[m];if(!td)return'';
+    const parcial=m==='2026-05'?'<span class="badge parcial" style="font-size:9px;margin-left:4px;">★</span>':'';
+    return`<tr>
+      <td><strong>${DATA[m].label}</strong>${parcial}</td>
+      <td style="text-align:right;color:var(--red)">${td.eventual>0?fmt(td.eventual):'—'}</td>
+      <td style="text-align:right;color:var(--amber)">${td.variavel>0?fmt(td.variavel):'—'}</td>
+      <td style="text-align:right;color:#1A3A5C">${td.parcelamento>0?fmt(td.parcelamento):'—'}</td>
+      <td style="text-align:right;color:var(--green)">${td.fixa>0?fmt(td.fixa):'—'}</td>
+      <td style="text-align:right;font-weight:700">${fmt(td.total)}</td>
+      <td style="font-size:11px;color:var(--muted)">${td.obs}</td>
+    </tr>`;
+  }).join('');
+
+  dc('chartTipoDesp');dc('chartTipoPct');
+  setTimeout(()=>{
+    const labs=meses.map(m=>DATA[m].label);
+    const ev=meses.map(m=>TIPO_DESP[m]?.eventual||0);
+    const va=meses.map(m=>TIPO_DESP[m]?.variavel||0);
+    const pa=meses.map(m=>TIPO_DESP[m]?.parcelamento||0);
+    const fi=meses.map(m=>TIPO_DESP[m]?.fixa||0);
+    const tots=meses.map((_,i)=>ev[i]+va[i]+pa[i]+fi[i]);
+
+    const c1=document.getElementById('chartTipoDesp');
+    if(c1){charts['chartTipoDesp']=new Chart(c1,{type:'bar',data:{labels:labs,datasets:[
+      {label:'🔴 Eventual',data:ev,backgroundColor:'rgba(217,79,79,0.75)',borderRadius:2},
+      {label:'🟠 Mensal Variável',data:va,backgroundColor:'rgba(232,148,58,0.75)',borderRadius:2},
+      {label:'🔵 Parcelamento',data:pa,backgroundColor:'rgba(26,58,92,0.75)',borderRadius:2},
+      {label:'🟢 Fixa',data:fi,backgroundColor:'rgba(74,168,52,0.75)',borderRadius:2}
+    ]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{font:{size:10}}},y:{stacked:true,ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}},plugins:{legend:{labels:{font:{size:10}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}}}})}
+
+    const c2=document.getElementById('chartTipoPct');
+    const evP=ev.map((v,i)=>tots[i]?+(v/tots[i]*100).toFixed(1):0);
+    const vaP=va.map((v,i)=>tots[i]?+(v/tots[i]*100).toFixed(1):0);
+    const paP=pa.map((v,i)=>tots[i]?+(v/tots[i]*100).toFixed(1):0);
+    const fiP=fi.map((v,i)=>tots[i]?+(v/tots[i]*100).toFixed(1):0);
+    if(c2){charts['chartTipoPct']=new Chart(c2,{type:'bar',data:{labels:labs,datasets:[
+      {label:'🔴 Eventual %',data:evP,backgroundColor:'rgba(217,79,79,0.75)',borderRadius:2},
+      {label:'🟠 Variável %',data:vaP,backgroundColor:'rgba(232,148,58,0.75)',borderRadius:2},
+      {label:'🔵 Parcelamento %',data:paP,backgroundColor:'rgba(26,58,92,0.75)',borderRadius:2},
+      {label:'🟢 Fixa %',data:fiP,backgroundColor:'rgba(74,168,52,0.75)',borderRadius:2}
+    ]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{font:{size:10}}},y:{stacked:true,max:100,ticks:{callback:v=>v+'%',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}},plugins:{legend:{labels:{font:{size:10}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}}}})}
+  },80);
+}
+
+
+// ════════════════════════════════════════════
+// PROJEÇÃO MENSAL — dados e renderização
+// ════════════════════════════════════════════
+
+// Parcelamentos comprometidos no cartão (start → end inclusive)
+const PARC_ITEMS = [
+  // Financiamento Caminhonete excluído da projeção conforme instrução (tratado separadamente)
+  {desc:'Allianz Segu (empresa)', val:503.38, start:'2026-02', end:'2026-11', cor:'#E8943A', cat:'EMPRESA'},
+  {desc:'Acelerador de Pontos (viagens)', val:390.87, start:'2026-02', end:'2030-12', cor:'#1A3A5C', cat:'VIAGENS'},
+  {desc:'Cursoaskjackie (educação)', val:72.60, start:'2026-03', end:'2026-12', cor:'#2D9E6B', cat:'EDUCAÇÃO'},
+  {desc:'Mercadopago Mwrodri (vestuário)', val:86.86, start:'2026-03', end:'2027-02', cor:'#E8943A', cat:'VESTUÁRIO'},
+  {desc:'Jim Com Sammy By Ba (farmácia)', val:97.93, start:'2026-03', end:'2026-06', cor:'#4AA834', cat:'FARMÁCIA'},
+  {desc:'Móveis Kappesberg', val:180.32, start:'2026-01', end:'2026-06', cor:'#7F77DD', cat:'CASA E DECOR'},
+  {desc:'Amazon BR (presentes)', val:159.33, start:'2026-01', end:'2026-04', cor:'#1A3A5C', cat:'PRESENTES'},
+  {desc:'Pb Weasy (pet)', val:138.94, start:'2026-01', end:'2026-05', cor:'#E8943A', cat:'PET'},
+  {desc:'Ec Growthsupplemen (academia)', val:97.93, start:'2026-02', end:'2026-04', cor:'#2D9E6B', cat:'ACADEMIA'},
+  {desc:'Farmácia São João', val:87.01, start:'2026-02', end:'2026-04', cor:'#4AA834', cat:'FARMÁCIA'},
+  // Novos de Abril/26 (fechamento real)
+  {desc:'Arena Society (lazer)', val:441.50, start:'2026-04', end:'2026-05', cor:'#4AA834', cat:'LAZER'},
+  {desc:'Mercadolivre 2 Produtos', val:69.63, start:'2026-04', end:'2026-05', cor:'#1A3A5C', cat:'NÃO IDENT.'},
+  // Novos de Maio/26
+  {desc:'Mp Skyairlines (viagens)', val:415.35, start:'2026-05', end:'2026-10', cor:'#7F77DD', cat:'VIAGENS'},
+  {desc:'Mercadolivre 3 Produtos', val:214.95, start:'2026-05', end:'2026-06', cor:'#E8943A', cat:'NÃO IDENT.'},
+];
+
+// Fixas mensais (sem parcelamentos — já mapeados acima)
+const FIXAS_MENSAIS = [
+  {desc:'Moradia (aluguel + cond.)', val:2400, cor:'#353434', cat:'MORADIA'},
+  {desc:'Academia e Bem-Estar', val:966, cor:'#4AA834', cat:'ACADEMIA'},
+  {desc:'Plano Int Capital', val:300, cor:'#74724F', cat:'PLANO INT'},
+  {desc:'Internet / Celular', val:100, cor:'#6B6B5E', cat:'INTERNET'},
+  {desc:'Assinaturas diversas', val:400, cor:'#7F77DD', cat:'ASSINATURAS'},
+];
+
+// Médias variáveis (base histórica Jan-Abr/26 excluindo outliers)
+const VARIAVEIS_MEDIA = [
+  {desc:'Alimentação e Mercado', val:900, cor:'#4AA834', cat:'ALIMENTAÇÃO'},
+  {desc:'Fast Food e Restaurante', val:750, cor:'#E8943A', cat:'RESTAURANTE'},
+  {desc:'Jantas', val:450, cor:'#E8943A', cat:'JANTAS'},
+  {desc:'Farmácia / Saúde', val:350, cor:'#2D9E6B', cat:'FARMÁCIA'},
+  {desc:'Pet', val:350, cor:'#4AA834', cat:'PET'},
+  {desc:'Vestuário / Calçado', val:400, cor:'#1A3A5C', cat:'VESTUÁRIO'},
+  {desc:'Lazer', val:400, cor:'#7F77DD', cat:'LAZER'},
+  {desc:'Beleza', val:200, cor:'#D94F4F', cat:'BELEZA'},
+  {desc:'Combustível', val:300, cor:'#74724F', cat:'COMBUSTÍVEL'},
+  {desc:'Compras Avulsas', val:350, cor:'#B5563B', cat:'COMPRAS AVULSAS'},
+  {desc:'Presentes / Doações', val:200, cor:'#6B6B5E', cat:'PRESENTES'},
+  {desc:'Casa e Decoração', val:300, cor:'#353434', cat:'CASA E DECOR'},
+];
+
+// Entradas projetadas mensais
+const ENTRADAS_PROJ = {
+  'Pró-labore (base conservador)': 25000,
+  'Distribuição de Lucro': 15000,
+  'Aluguéis': 1500,
+};
+
+// Função: parcelamentos ativos para um dado mês (YYYY-MM)
+function getParcAtivos(ym){
+  return PARC_ITEMS.filter(p=>ym>=p.start&&ym<=p.end);
+}
+
+// Gera lista de meses YYYY-MM entre start e end
+function genMonths(start,end){
+  const res=[];let[y,m]=[parseInt(start.slice(0,4)),parseInt(start.slice(5,7))];
+  const[ey,em]=[parseInt(end.slice(0,4)),parseInt(end.slice(5,7))];
+  while(y<ey||(y===ey&&m<=em)){res.push(`${y}-${String(m).padStart(2,'0')}`);m++;if(m>12){m=1;y++;}}
+  return res;
+}
+
+const MESES_LABELS = {
+  '2026-01':'Jan/26','2026-02':'Fev/26','2026-03':'Mar/26','2026-04':'Abr/26','2026-05':'Mai/26',
+  '2026-06':'Jun/26','2026-07':'Jul/26','2026-08':'Ago/26','2026-09':'Set/26',
+  '2026-10':'Out/26','2026-11':'Nov/26','2026-12':'Dez/26',
+  '2027-01':'Jan/27','2027-02':'Fev/27'
+};
+
+function initProjecao(){
+  const TOTAL_ENTRADAS = Object.values(ENTRADAS_PROJ).reduce((a,b)=>a+b,0);
+  const TOTAL_FIXAS = FIXAS_MENSAIS.reduce((a,b)=>a+b.val,0);
+  const TOTAL_VAR = VARIAVEIS_MEDIA.reduce((a,b)=>a+b.val,0);
+
+  // KPIs
+  const kpis=document.getElementById('proj-kpis');
+  if(kpis){
+    const parcJun=getParcAtivos('2026-06').reduce((a,b)=>a+b.val,0);
+    const totalSaidaJun=TOTAL_FIXAS+parcJun+TOTAL_VAR;
+    const saldoJun=TOTAL_ENTRADAS-totalSaidaJun;
+    kpis.innerHTML=`
+      <div class="kpi"><div class="kpi-label">Entradas Projetadas/mês</div>
+        <div class="kpi-value green">${fmt(TOTAL_ENTRADAS)}</div>
+        <div class="kpi-deducao">Pró-labore + Dist. Lucro + Aluguéis · base conservadora</div></div>
+      <div class="kpi"><div class="kpi-label">Fixas + Parcel. (Jun/26)</div>
+        <div class="kpi-value red">${fmt(TOTAL_FIXAS+parcJun)}</div>
+        <div class="kpi-deducao">Fixas ${fmt(TOTAL_FIXAS)} + Parcel. comprometidas ${fmt(parcJun)}</div></div>
+      <div class="kpi"><div class="kpi-label">Variáveis (média histórica)</div>
+        <div class="kpi-value red">${fmt(TOTAL_VAR)}</div>
+        <div class="kpi-deducao">Base Jan–Abr/26 excluindo outliers</div></div>
+      <div class="kpi ${saldoJun<0?'red':''}"><div class="kpi-label">Saldo Projetado Jun/26</div>
+        <div class="kpi-value ${saldoJun>=0?'green':'red'}">${fmtS(saldoJun)}</div>
+        <div class="kpi-deducao">Entradas − (Fixas + Parcel. + Variáveis)</div></div>`;
+  }
+
+  // Tabela de projeção + charts
+  const futMonths=genMonths('2026-06','2026-12');
+  const allMonths=['2026-01','2026-02','2026-03','2026-04','2026-05',...futMonths];
+  let acumCaixa=102000; // caixa inicial Mai/26
+
+  const tbody=document.getElementById('proj-tbody');
+  let rows='';
+  const fluxoLabs=[];const fluxoEnt=[];const fluxoSai=[];const fluxoSal=[];const fluxoAcum=[];
+  const saiFixas=[];const saiParc=[];const saiVar=[];
+
+  for(const ym of futMonths){
+    const lbl=MESES_LABELS[ym]||ym;
+    const ativos=getParcAtivos(ym);
+    const totParc=ativos.reduce((a,b)=>a+b.val,0);
+    const totFixas=TOTAL_FIXAS;
+    const totVar=TOTAL_VAR;
+    const totSaidas=totFixas+totParc+totVar;
+    const saldo=TOTAL_ENTRADAS-totSaidas;
+    acumCaixa+=saldo;
+    rows+=`<tr style="${saldo<0?'background:#FFF5F5':''}">
+      <td><strong>${lbl}</strong></td>
+      <td style="color:var(--green);text-align:right">${fmt(TOTAL_ENTRADAS)}</td>
+      <td style="text-align:right">${fmt(totFixas)}</td>
+      <td style="text-align:right">${fmt(totParc)}</td>
+      <td style="text-align:right">${fmt(totVar)}</td>
+      <td style="color:var(--red);font-weight:600;text-align:right">${fmt(totSaidas)}</td>
+      <td style="color:${saldo>=0?'var(--green)':'var(--red)'};font-weight:700;text-align:right">${fmtS(saldo)}</td>
+      <td style="color:${acumCaixa>=0?'var(--green)':'var(--red)'};font-weight:700;text-align:right">${fmt(acumCaixa)}</td>
+    </tr>`;
+    fluxoLabs.push(lbl);fluxoEnt.push(TOTAL_ENTRADAS);fluxoSai.push(totSaidas);
+    fluxoSal.push(saldo);fluxoAcum.push(acumCaixa);
+    saiFixas.push(totFixas);saiParc.push(totParc);saiVar.push(totVar);
+  }
+  if(tbody)tbody.innerHTML=rows;
+
+  // Parcelamentos detail
+  const parcDiv=document.getElementById('proj-parc-detail');
+  if(parcDiv){
+    const uniqueAtivosJun=getParcAtivos('2026-06');
+    parcDiv.innerHTML=uniqueAtivosJun.map(p=>`<div class="cat-row">
+      <div class="cat-dot" style="background:${p.cor}"></div>
+      <div class="cat-name">${p.desc} <span style="font-size:10px;color:var(--muted);">(até ${MESES_LABELS[p.end]||p.end})</span></div>
+      <div class="cat-val">${fmt(p.val)}/mês</div>
+    </div>`).join('')+
+    `<div style="margin-top:10px;padding:8px;background:var(--cream);border-radius:6px;font-size:12px;font-weight:600;">
+      Total comprometido Jun/26: ${fmt(getParcAtivos('2026-06').reduce((a,b)=>a+b.val,0))}/mês
+    </div>`;
+  }
+
+  // Variáveis detail
+  const varDiv=document.getElementById('proj-var-detail');
+  if(varDiv){
+    varDiv.innerHTML=VARIAVEIS_MEDIA.map((v,i)=>`<div class="cat-row">
+      <div class="cat-dot" style="background:${v.cor}"></div>
+      <div class="cat-name">${v.desc}</div>
+      <div class="cat-val">${fmt(v.val)}/mês</div>
+    </div>`).join('')+
+    `<div style="margin-top:10px;padding:8px;background:var(--cream);border-radius:6px;font-size:12px;font-weight:600;">
+      Total variáveis: ${fmt(VARIAVEIS_MEDIA.reduce((a,b)=>a+b.val,0))}/mês
+    </div>`;
+  }
+
+  // Histórico anual Jan-Dez/26 table
+  const anualDiv=document.getElementById('proj-anual-table');
+  if(anualDiv){
+    let totalEntAnual=0,totalSaiAnual=0;
+    let aRows='';
+    for(const ym of allMonths){
+      const isFut=!RAW[ym];
+      const lbl=MESES_LABELS[ym]||ym;
+      let ent,sai,sal,tip;
+      if(!isFut){
+        ent=DATA[ym].r;sai=DATA[ym].d;sal=DATA[ym].s;tip='Realizado';
+      } else {
+        ent=TOTAL_ENTRADAS;
+        const ativos=getParcAtivos(ym);
+        sai=TOTAL_FIXAS+ativos.reduce((a,b)=>a+b.val,0)+TOTAL_VAR;
+        sal=ent-sai;tip='Projetado';
+      }
+      totalEntAnual+=ent;totalSaiAnual+=sai;
+      aRows+=`<tr style="${isFut?'background:var(--cream)':''}">
+        <td><strong>${lbl}</strong></td>
+        <td style="text-align:center"><span class="badge ${isFut?'neutral':'pos'}">${tip}</span></td>
+        <td style="color:var(--green);text-align:right">${fmt(ent)}</td>
+        <td style="color:var(--red);text-align:right">${fmt(sai)}</td>
+        <td style="color:${sal>=0?'var(--green)':'var(--red)'};font-weight:700;text-align:right">${fmtS(sal)}</td>
+      </tr>`;
+    }
+    aRows+=`<tr class="total-row"><td><strong>TOTAL 2026</strong></td><td></td>
+      <td style="text-align:right">${fmt(totalEntAnual)}</td>
+      <td style="text-align:right">${fmt(totalSaiAnual)}</td>
+      <td style="color:${(totalEntAnual-totalSaiAnual)>=0?'var(--green)':'var(--red)'};font-weight:700;text-align:right">${fmtS(totalEntAnual-totalSaiAnual)}</td>
+    </tr>`;
+    anualDiv.innerHTML=`<table class="orc-table"><thead><tr style="background:var(--cream)">
+      <th>Mês</th><th>Tipo</th><th style="text-align:right">Entradas</th><th style="text-align:right">Saídas</th><th style="text-align:right">Saldo</th>
+    </tr></thead><tbody>${aRows}</tbody></table>`;
+  }
+
+  // Charts
+  dc('chartProjFluxo');dc('chartProjSaidas');dc('chartProjAnual');
+  setTimeout(()=>{
+    const c1=document.getElementById('chartProjFluxo');
+    if(c1){charts['chartProjFluxo']=new Chart(c1,{type:'bar',data:{labels:fluxoLabs,datasets:[
+      {label:'Entradas Previstas',data:fluxoEnt,backgroundColor:'rgba(74,168,52,0.6)',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+      {label:'Total Saídas',data:fluxoSai,backgroundColor:'rgba(217,79,79,0.5)',borderColor:RED,borderWidth:1.5,borderRadius:4},
+      {label:'Saldo Mensal',data:fluxoSal,type:'line',borderColor:AMBER,backgroundColor:'transparent',tension:0.3,pointRadius:5,pointBackgroundColor:fluxoSal.map(s=>s>=0?GREEN:RED)},
+      {label:'Caixa Acumulado',data:fluxoAcum,type:'line',borderColor:'#7F77DD',backgroundColor:'transparent',tension:0.3,pointRadius:4,borderDash:[4,3]}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:10}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+    scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}})}
+
+    const c2=document.getElementById('chartProjSaidas');
+    if(c2){charts['chartProjSaidas']=new Chart(c2,{type:'bar',data:{labels:fluxoLabs,datasets:[
+      {label:'Fixas',data:saiFixas,backgroundColor:'rgba(53,52,52,0.7)',borderRadius:3},
+      {label:'Parcelamentos',data:saiParc,backgroundColor:'rgba(217,79,79,0.65)',borderRadius:3},
+      {label:'Variáveis (média)',data:saiVar,backgroundColor:'rgba(232,148,58,0.65)',borderRadius:3}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+    scales:{x:{stacked:true,ticks:{font:{size:10}}},y:{stacked:true,ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}},
+    plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}}}})}
+
+    // Histórico anual chart
+    const allL=allMonths.map(m=>MESES_LABELS[m]||m);
+    const allEnt=allMonths.map(ym=>{
+      if(RAW[ym])return DATA[ym].r;
+      return TOTAL_ENTRADAS;
+    });
+    const allSai=allMonths.map(ym=>{
+      if(RAW[ym])return DATA[ym].d;
+      const at=getParcAtivos(ym);
+      return TOTAL_FIXAS+at.reduce((a,b)=>a+b.val,0)+TOTAL_VAR;
+    });
+    const allSal=allEnt.map((e,i)=>e-allSai[i]);
+    const c3=document.getElementById('chartProjAnual');
+    if(c3){charts['chartProjAnual']=new Chart(c3,{type:'bar',data:{labels:allL,datasets:[
+      {label:'Entradas',data:allEnt,backgroundColor:allMonths.map(m=>RAW[m]?'rgba(74,168,52,0.7)':'rgba(74,168,52,0.35)'),borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+      {label:'Saídas',data:allSai,backgroundColor:allMonths.map(m=>RAW[m]?'rgba(217,79,79,0.6)':'rgba(217,79,79,0.3)'),borderColor:RED,borderWidth:1.5,borderRadius:4},
+      {label:'Saldo',data:allSal,type:'line',borderColor:AMBER,backgroundColor:'transparent',tension:0.3,pointRadius:5,
+        pointBackgroundColor:allSal.map(s=>s>=0?GREEN:RED),
+        segment:{borderDash:(ctx)=>allMonths[ctx.p1DataIndex]&&!RAW[allMonths[ctx.p1DataIndex]]?[6,4]:[]}}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:10}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+    scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}})}
+  },100);
+}
+initDashboard();
+</script>
+</body>
+</html>
