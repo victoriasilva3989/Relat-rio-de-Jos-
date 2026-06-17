@@ -2700,8 +2700,9 @@ function buildRawFromCSV(text){
   for(const line of lines){
     const cols = parseCSVLine(line);
     if(!headerSeen){
-      // Header real começa com "#" e tem "Mês Caixa" na 2ª coluna
-      if(cols[0]==='#' || (cols[1]||'').toLowerCase().includes('caixa')){ headerSeen = true; }
+      // Header real: primeira coluna é "#" E segunda contém "caixa"
+      const isRealHeader = cols[0].trim()==='#' && (cols[1]||'').toLowerCase().includes('caixa');
+      if(isRealHeader){ headerSeen = true; }
       continue;
     }
     // Linha precisa começar com número de lançamento
