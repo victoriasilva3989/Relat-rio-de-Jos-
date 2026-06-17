@@ -241,7 +241,9 @@ html,body{scroll-behavior:auto;}
   <button class="nav-tab" onclick="show('dubai')" id="tab-dubai">
     <span class="ti">🇦🇪🇨🇳</span><span class="tab-lbl">✈️ Dubai & China</span>
   </button>
-  <div class="sb-bottom">José Felipe Bazzanella Lírio<br>Fechamento: <strong style="color:#4AA834;">Abril/26</strong> · Parcial: Maio/26</div>
+  <div class="sb-bottom">José Felipe Bazzanella Lírio<br>Fechamento: <strong style="color:#4AA834;">Abril/26</strong> · Parcial: Maio/26
+    <div id="last-sync-indicator" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);font-size:10px;color:rgba(255,255,255,0.55);"></div>
+  </div>
 </nav>
 
 <div class="main">
@@ -252,13 +254,11 @@ html,body{scroll-behavior:auto;}
   <div class="sec-title">Visão Geral 2026</div>
   <div class="sec-sub">Fechamento confirmado: Abril/26 · Dados parciais de Maio/26 incluídos</div>
 
+  <div id="sheets-status-banner" style="display:none;border-radius:10px;padding:10px 16px;margin-bottom:16px;font-size:12px;border:1px solid;"></div>
+
   <div class="filter-bar">
     <span class="filter-label">Período:</span>
-    <button class="filter-btn active" onclick="setDashFilter('2026-04')" id="dbtn-2026-04">Abril/26</button>
-    <button class="filter-btn" onclick="setDashFilter('2026-03')" id="dbtn-2026-03">Março/26</button>
-    <button class="filter-btn" onclick="setDashFilter('2026-02')" id="dbtn-2026-02">Fev/26</button>
-    <button class="filter-btn" onclick="setDashFilter('2026-01')" id="dbtn-2026-01">Jan/26</button>
-    <button class="filter-btn" onclick="setDashFilter('2026-05')" id="dbtn-2026-05">Mai/26 ★</button>
+    <span id="dash-filter-buttons"></span>
     <button class="filter-btn" onclick="setDashFilter('anual')" id="dbtn-anual">Acumulado 2026</button>
   </div>
 
@@ -309,15 +309,11 @@ html,body{scroll-behavior:auto;}
 <div class="page">
   <div class="sec-ey">Análise — Composição</div>
   <div class="sec-title">Distribuição de Gastos</div>
-  <div class="sec-sub">Participação percentual de cada categoria · filtro por mês ou acumulado 2026</div>
+  <div class="sec-sub">Participação percentual de cada categoria · filtro por mês ou acumulado 2026 · <em>valores brutos por categoria (sem neutralização)</em></div>
 
   <div class="filter-bar">
     <span class="filter-label">Período:</span>
-    <button class="filter-btn active" onclick="setDistFilter('2026-04')" id="dfbtn-2026-04">Abril/26</button>
-    <button class="filter-btn" onclick="setDistFilter('2026-03')" id="dfbtn-2026-03">Março/26</button>
-    <button class="filter-btn" onclick="setDistFilter('2026-02')" id="dfbtn-2026-02">Fev/26</button>
-    <button class="filter-btn" onclick="setDistFilter('2026-01')" id="dfbtn-2026-01">Jan/26</button>
-    <button class="filter-btn" onclick="setDistFilter('2026-05')" id="dfbtn-2026-05">Mai/26 ★</button>
+    <span id="dist-filter-buttons"></span>
     <button class="filter-btn" onclick="setDistFilter('anual')" id="dfbtn-anual">Acumulado</button>
   </div>
 
@@ -483,11 +479,7 @@ html,body{scroll-behavior:auto;}
 
   <div class="filter-bar">
     <span class="filter-label">Período:</span>
-    <button class="filter-btn active" onclick="setAlertFilter('2026-04')" id="afbtn-2026-04">Abril/26</button>
-    <button class="filter-btn" onclick="setAlertFilter('2026-03')" id="afbtn-2026-03">Março/26</button>
-    <button class="filter-btn" onclick="setAlertFilter('2026-02')" id="afbtn-2026-02">Fev/26</button>
-    <button class="filter-btn" onclick="setAlertFilter('2026-01')" id="afbtn-2026-01">Jan/26</button>
-    <button class="filter-btn" onclick="setAlertFilter('2026-05')" id="afbtn-2026-05">Mai/26 ★</button>
+    <span id="alert-filter-buttons"></span>
     <button class="filter-btn" onclick="setAlertFilter('anual')" id="afbtn-anual">Acumulado</button>
   </div>
 
@@ -530,7 +522,7 @@ html,body{scroll-behavior:auto;}
 <div class="page">
   <div class="sec-ey">Controle Orçamentário</div>
   <div class="sec-title">Orçamento 2026</div>
-  <div class="sec-sub">Baseado nos dados reais de cada Mês Caixa · Parcial Maio/26 incluído</div>
+  <div class="sec-sub">Baseado nos dados reais de cada Mês Caixa · Parcial Maio/26 incluído · <em>tabela de categorias abaixo usa valores brutos de despesa (controle orçamentário por categoria)</em></div>
 
   <div class="chart-card" style="margin-bottom:20px;">
     <div class="chart-title">Evolução Receita × Despesa × Saldo</div>
@@ -563,11 +555,7 @@ html,body{scroll-behavior:auto;}
 
   <div class="filter-bar" style="margin-bottom:16px;">
     <span class="filter-label">Mês:</span>
-    <button class="filter-btn active" onclick="setOrcFilter('2026-04')" id="ofbtn-2026-04">Abril/26</button>
-    <button class="filter-btn" onclick="setOrcFilter('2026-03')" id="ofbtn-2026-03">Março/26</button>
-    <button class="filter-btn" onclick="setOrcFilter('2026-02')" id="ofbtn-2026-02">Fev/26</button>
-    <button class="filter-btn" onclick="setOrcFilter('2026-01')" id="ofbtn-2026-01">Jan/26</button>
-    <button class="filter-btn" onclick="setOrcFilter('2026-05')" id="ofbtn-2026-05">Mai/26 ★</button>
+    <span id="orc-filter-buttons"></span>
     <button class="filter-btn" onclick="setOrcFilter('anual')" id="ofbtn-anual">Acumulado</button>
   </div>
 
@@ -1067,10 +1055,14 @@ html,body{scroll-behavior:auto;}
 
 <script>
 // ════════════════════════════════════════════════════════
-// BASE DE DADOS — Mês Caixa · Valores exatos do Excel
-// Compensação: categorias que aparecem em R e D são deduzidas
+// INTEGRAÇÃO COM GOOGLE SHEETS — Aba 🧾 Lançamentos
+// O RAW abaixo é o FALLBACK (usado só se a planilha não carregar).
+// Quando a planilha carrega com sucesso, RAW é reconstruído
+// dinamicamente a partir do CSV publicado, no mesmo formato.
 // ════════════════════════════════════════════════════════
-const RAW = {
+const SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8RjHOJf85VL-xR6kik3-OcjYSgFoaKas8dOJZ6oFTSm5vz2zMswDfn0H6PX6OH-wMoc41yuE86L90/pub?gid=781798875&single=true&output=csv";
+
+let RAW = {
   "2025-07":{ label:"Jul/25",
     r:{  "DISTRIBUIÇÃO DE LUCRO":24300,"PRÓ-LABORE":15000,"INVESTIMENTOS":13717,"EMPRESA":12843,"ALUGUEIS":2167,"OUTRAS ENTRADAS":1675 },
     d:{  "INVESTIMENTOS":20670,"VIAGENS":18286,"EMPRESA":8965,"CASA E DECOR":2247,"FINANCIAMENTO":2094,"MORADIA":1102,"EMPRESTADO":1000,"ACADEMIA":908,"RESTAURANTE":890,"ALIMENTAÇÃO":878 }
@@ -1213,21 +1205,75 @@ const CC_KEY_MAP={
   'MULTAS':['MULTAS','TAXAS BANCÁRIAS']
 };
 
+// ════════════════════════════════════════════════════════
+// NEUTRALIZAÇÃO POR CATEGORIA
+// Regra: se uma categoria aparece em r (receita) E d (despesa)
+// com o MESMO nome, só a DIFERENÇA entra no resultado do mês.
+//   saldo = r[cat] - d[cat]
+//   saldo > 0  → soma em receita líquida daquela categoria
+//   saldo < 0  → soma em despesa líquida daquela categoria
+//   saldo = 0  → desconsiderado por completo (não conta dos dois lados)
+// Categorias que aparecem só de um lado entram 100% normalmente.
+// ════════════════════════════════════════════════════════
 function processMonth(key) {
   const mn = RAW[key];
-  const rTotal = Object.values(mn.r).reduce((a,b)=>a+b,0);
-  const dTotal = Object.values(mn.d).reduce((a,b)=>a+b,0);
-  const shared = Object.keys(mn.r).filter(c => mn.d[c] !== undefined);
-  const netAmt = shared.reduce((a,c) => a + Math.min(mn.r[c]||0, mn.d[c]||0), 0);
-  // Empresa parcial: receita empresa vs despesa empresa
+  const allCats = new Set([...Object.keys(mn.r), ...Object.keys(mn.d)]);
+
+  let rTotal = 0, dTotal = 0;          // totais líquidos (após neutralização)
+  let rTotalBruto = 0, dTotalBruto = 0; // totais brutos (referência/transparência)
+  const shared = [];                    // categorias neutralizadas (aparecem nos 2 lados)
+  const catNet = {};                    // saldo líquido por categoria compartilhada
+  let netAmt = 0;                       // total efetivamente neutralizado (min dos dois lados)
+
+  // top_r / top_d líquidos: usados pelos gráficos de composição/categoria
+  const top_r = {};
+  const top_d = {};
+
+  allCats.forEach(cat => {
+    const rv = mn.r[cat] || 0;
+    const dv = mn.d[cat] || 0;
+    rTotalBruto += rv;
+    dTotalBruto += dv;
+
+    if (rv > 0 && dv > 0) {
+      // Categoria presente nos dois lados → NEUTRALIZA, só a diferença conta
+      const saldo = rv - dv;
+      shared.push(cat);
+      catNet[cat] = saldo;
+      netAmt += Math.min(rv, dv); // quanto foi efetivamente cancelado
+      if (saldo > 0) {
+        rTotal += saldo;
+        top_r[cat] = saldo;
+      } else if (saldo < 0) {
+        dTotal += Math.abs(saldo);
+        top_d[cat] = Math.abs(saldo);
+      }
+      // saldo === 0 → não entra em nenhum dos dois lados
+    } else if (rv > 0) {
+      rTotal += rv;
+      top_r[cat] = rv;
+    } else if (dv > 0) {
+      dTotal += dv;
+      top_d[cat] = dv;
+    }
+  });
+
+  // Empresa parcial: receita empresa vs despesa empresa (mantido para os cards de detalhe)
   const empR = mn.r['EMPRESA'] || 0;
   const empD = mn.d['EMPRESA'] || 0;
   const tercD = (mn.d['P/TERCEIROS'] || 0);
-  return { label:mn.label, r:rTotal, d:dTotal, s:rTotal-dTotal, empR, empD, tercD, netAmt, shared, top_r:mn.r, top_d:mn.d };
+
+  return {
+    label: mn.label,
+    r: rTotal, d: dTotal, s: rTotal - dTotal,           // valores LÍQUIDOS (usados em KPIs/gráficos)
+    rBruto: rTotalBruto, dBruto: dTotalBruto,            // valores BRUTOS (referência)
+    empR, empD, tercD, netAmt, shared, catNet,
+    top_r, top_d                                         // já neutralizados, prontos para os gráficos de categoria
+  };
 }
 
-const MONTHS_ALL = Object.keys(RAW);
-const MONTHS_2026 = MONTHS_ALL.filter(m=>m.startsWith('2026'));
+let MONTHS_ALL = Object.keys(RAW);
+let MONTHS_2026 = MONTHS_ALL.filter(m=>m.startsWith('2026'));
 const DATA = {};
 MONTHS_ALL.forEach(k => { DATA[k] = processMonth(k); });
 
@@ -1296,11 +1342,13 @@ function initDashboard(){
 function getAnual(){
   const r=MONTHS_2026.reduce((a,m)=>a+DATA[m].r,0);
   const d=MONTHS_2026.reduce((a,m)=>a+DATA[m].d,0);
+  const rBruto=MONTHS_2026.reduce((a,m)=>a+DATA[m].rBruto,0);
+  const dBruto=MONTHS_2026.reduce((a,m)=>a+DATA[m].dBruto,0);
   const empR=MONTHS_2026.reduce((a,m)=>a+DATA[m].empR,0);
   const empD=MONTHS_2026.reduce((a,m)=>a+DATA[m].empD,0);
   const tercD=MONTHS_2026.reduce((a,m)=>a+DATA[m].tercD,0);
   const net=MONTHS_2026.reduce((a,m)=>a+DATA[m].netAmt,0);
-  return {r,d,s:r-d,empR,empD,tercD,netAmt:net,label:'Jan–Mai/26'};
+  return {r,d,s:r-d,rBruto,dBruto,empR,empD,tercD,netAmt:net,label:'Jan–Mai/26'};
 }
 
 function renderDashKPIs(){
@@ -1308,33 +1356,32 @@ function renderDashKPIs(){
   let mn;
   if(dashFilter==='anual') mn=getAnual();
   else mn=DATA[dashFilter];
-  const rLiq=mn.r-mn.empR;
   const sClass=mn.s>=0?'':'red';
   const parcial=dashFilter==='2026-05'?' <span class="badge parcial">Parcial</span>':'';
 
   box.innerHTML=`
     <div class="kpi">
-      <div class="kpi-label">Receita Total${parcial}</div>
+      <div class="kpi-label">Receita Líquida${parcial}</div>
       <div class="kpi-value green count-anim">${fmt(mn.r)}</div>
-      <div class="kpi-deducao">Empresa: ${fmt(mn.empR)} · Terc: ${fmt(mn.tercD)}<br>→ Líquida: <strong>${fmt(rLiq)}</strong></div>
+      <div class="kpi-deducao">Bruto: ${fmt(mn.rBruto)}<br>Categorias neutralizadas já excluídas</div>
       <div class="kpi-tag neutral">${mn.label||dashFilter}</div>
     </div>
     <div class="kpi ${sClass}">
-      <div class="kpi-label">Despesa Total${parcial}</div>
+      <div class="kpi-label">Despesa Líquida${parcial}</div>
       <div class="kpi-value red count-anim">${fmt(mn.d)}</div>
-      <div class="kpi-deducao">Empresa: ${fmt(mn.empD)} · Terc: ${fmt(mn.tercD)}<br>→ Compensações cat.: <strong>${fmt(mn.netAmt)}</strong></div>
+      <div class="kpi-deducao">Bruto: ${fmt(mn.dBruto)}<br>Compensações neutralizadas: <strong>${fmt(mn.netAmt)}</strong></div>
       <div class="kpi-tag neutral">${mn.label||dashFilter}</div>
     </div>
     <div class="kpi ${sClass}">
       <div class="kpi-label">Saldo do Período${parcial}</div>
       <div class="kpi-value ${mn.s>=0?'green':'red'} count-anim">${fmtS(mn.s)}</div>
-      <div class="kpi-deducao">Receita líq.: ${fmt(rLiq)}<br>Compensações: ${fmt(mn.netAmt)}</div>
+      <div class="kpi-deducao">Receita líq. − Despesa líq.<br>Já considera neutralizações por categoria</div>
       <div class="kpi-tag ${mn.s>=0?'up':'down'}">${mn.s>=0?'▲ Positivo':'▼ Negativo'}</div>
     </div>
     <div class="kpi neutral">
       <div class="kpi-label">Saldo Acum. 2026</div>
       <div class="kpi-value count-anim">${fmtS(getAnual().s)}</div>
-      <div class="kpi-deducao">Jan a Mai/26<br>5 meses de dados</div>
+      <div class="kpi-deducao">Jan a Mai/26<br>5 meses de dados (líquidos)</div>
       <div class="kpi-tag neutral">Jan–Mai/26</div>
     </div>`;
 }
@@ -1365,21 +1412,28 @@ function renderSaldoChart(){
 
 function renderDashPies(){
   const isAnual = dashFilter==='anual';
-  // Build data for selected filter
+  // Build data for selected filter — sempre a partir dos valores já NEUTRALIZADOS (DATA / top_r / top_d)
   let rec={}, desp={};
   if(isAnual){
     for(const m of MONTHS_2026){
-      const mn=RAW[m]; if(!mn) continue;
-      for(const[k,v]of Object.entries(mn.r)) rec[k]=(rec[k]||0)+v;
-      for(const[k,v]of Object.entries(mn.d)) desp[k]=(desp[k]||0)+v;
+      const mn=DATA[m]; if(!mn) continue;
+      for(const[k,v]of Object.entries(mn.top_r)) rec[k]=(rec[k]||0)+v;
+      for(const[k,v]of Object.entries(mn.top_d)) desp[k]=(desp[k]||0)+v;
     }
   } else {
     const fd=FULL_DESP[dashFilter]||{};
     const mn=DATA[dashFilter]; if(!mn) return;
-    // Use top_r/top_d from DATA plus FULL_DESP for completeness
+    // Use top_r/top_d from DATA (já neutralizados) plus FULL_DESP for completeness
     rec = {...mn.top_r};
-    // merge FULL_DESP for despesas
-    for(const[k,v]of Object.entries(fd)) desp[k]=(desp[k]||0)+v;
+    // merge FULL_DESP for despesas — mas remove o que já foi neutralizado nas categorias compartilhadas
+    for(const[k,v]of Object.entries(fd)){
+      if(mn.shared && mn.shared.includes(k)){
+        // categoria neutralizada: usa o valor líquido já calculado em top_d, não o bruto do FULL_DESP
+        if(mn.top_d[k] !== undefined) desp[k]=mn.top_d[k];
+      } else {
+        desp[k]=(desp[k]||0)+v;
+      }
+    }
     if(Object.keys(desp).length===0) desp={...mn.top_d};
   }
 
@@ -2600,7 +2654,188 @@ function initProjecao(){
     scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}})}
   },100);
 }
-initDashboard();
+// ════════════════════════════════════════════════════════
+// CARREGAMENTO DA PLANILHA (Google Sheets publicado em CSV)
+// Reconstrói RAW{} no mesmo formato {label, r:{cat:val}, d:{cat:val}}
+// a partir das linhas reais da aba 🧾 Lançamentos, agrupando por
+// "Mês Caixa" + Tipo (Receita/Despesa) + Categoria.
+// ════════════════════════════════════════════════════════
+const MESES_NOME = {'01':'Jan','02':'Fev','03':'Mar','04':'Abr','05':'Mai','06':'Jun','07':'Jul','08':'Ago','09':'Set','10':'Out','11':'Nov','12':'Dez'};
+
+function parseCSVLine(line){
+  const out=[]; let cur='', inQ=false;
+  for(const ch of line){
+    if(ch==='"'){ inQ=!inQ; }
+    else if(ch===','&&!inQ){ out.push(cur); cur=''; }
+    else { cur+=ch; }
+  }
+  out.push(cur);
+  return out.map(s=>s.trim());
+}
+
+function parseValorBR(raw){
+  if(!raw) return 0;
+  let s = String(raw).replace(/R\$\s*/g,'').replace(/\s/g,'').replace(/\./g,'').replace(',', '.');
+  if(s.startsWith('(') && s.endsWith(')')) s = '-' + s.slice(1,-1);
+  const v = parseFloat(s);
+  return isNaN(v) ? 0 : v;
+}
+
+// Converte "07/2025" → chave "2025-07" + label "Jul/25"
+function mesCaixaToKey(mesCaixa){
+  const m = mesCaixa.trim().match(/^(\d{2})\/(\d{4})$/);
+  if(!m) return null;
+  const [, mm, yyyy] = m;
+  const key = `${yyyy}-${mm}`;
+  const label = `${MESES_NOME[mm]||mm}/${yyyy.slice(2)}`;
+  return { key, label };
+}
+
+function buildRawFromCSV(text){
+  const lines = text.split('\n').map(l=>l.replace(/\r$/,'')).filter(l=>l.trim().length>0);
+  const newRaw = {};
+  let headerSeen = false;
+
+  for(const line of lines){
+    const cols = parseCSVLine(line);
+    if(!headerSeen){
+      // Header real começa com "#" e tem "Mês Caixa" na 2ª coluna
+      if(cols[0]==='#' || (cols[1]||'').toLowerCase().includes('caixa')){ headerSeen = true; }
+      continue;
+    }
+    // Linha precisa começar com número de lançamento
+    if(!cols[0] || isNaN(parseInt(cols[0]))) continue;
+
+    const mesCaixaRaw = cols[1] || '';
+    const tipo = (cols[2]||'').trim();         // Receita / Despesa
+    const categoria = (cols[8]||'').trim();    // coluna Categoria
+    const valorRaw = cols[11] || '';           // coluna Valor (R$)
+
+    if(!categoria) continue;
+    const mesInfo = mesCaixaToKey(mesCaixaRaw);
+    if(!mesInfo) continue;
+
+    const valor = Math.abs(parseValorBR(valorRaw));
+    if(!valor) continue;
+
+    if(!newRaw[mesInfo.key]) newRaw[mesInfo.key] = { label: mesInfo.label, r:{}, d:{} };
+
+    if(tipo === 'Receita'){
+      newRaw[mesInfo.key].r[categoria] = (newRaw[mesInfo.key].r[categoria]||0) + valor;
+    } else if(tipo === 'Despesa'){
+      newRaw[mesInfo.key].d[categoria] = (newRaw[mesInfo.key].d[categoria]||0) + valor;
+    }
+  }
+  return newRaw;
+}
+
+function rebuildDashboardData(){
+  // Recalcula tudo que depende de RAW, mantendo os mesmos nomes globais
+  MONTHS_ALL = Object.keys(RAW).sort();
+  MONTHS_2026 = MONTHS_ALL.filter(m=>m.startsWith('2026'));
+  for(const k of Object.keys(DATA)) delete DATA[k];
+  MONTHS_ALL.forEach(k => { DATA[k] = processMonth(k); });
+  buildAllMonthFilterButtons();
+}
+
+// ════════════════════════════════════════════════════════
+// BOTÕES DE MÊS DINÂMICOS
+// Gera os botões "Jan/26", "Fev/26"... automaticamente a
+// partir dos meses realmente presentes em MONTHS_ALL/2026,
+// nos 4 painéis que tinham botões fixos em HTML.
+// O mês mais recente vira o botão ativo por padrão e ganha
+// a estrela ★ se for o mês mais novo (provavelmente parcial).
+// ════════════════════════════════════════════════════════
+function buildMonthButtons(containerId, idPrefix, setFnName, months){
+  const box = document.getElementById(containerId);
+  if(!box) return null;
+  if(!months.length){ box.innerHTML=''; return null; }
+
+  const lastMonth = months[months.length-1];
+  const ordered = [...months].reverse(); // mês mais recente primeiro, igual ao padrão original
+
+  box.innerHTML = ordered.map(m=>{
+    const isLast = m===lastMonth;
+    const label = (DATA[m]?.label || m) + (isLast ? ' ★' : '');
+    const activeCls = isLast ? ' active' : '';
+    return `<button class="filter-btn${activeCls}" onclick="${setFnName}('${m}')" id="${idPrefix}${m}">${label}</button>`;
+  }).join('');
+
+  return lastMonth;
+}
+
+function buildAllMonthFilterButtons(){
+  const lastDash  = buildMonthButtons('dash-filter-buttons','dbtn-','setDashFilter', MONTHS_2026);
+  const lastDist  = buildMonthButtons('dist-filter-buttons','dfbtn-','setDistFilter', MONTHS_2026);
+  const lastAlert = buildMonthButtons('alert-filter-buttons','afbtn-','setAlertFilter', MONTHS_2026);
+  const lastOrc   = buildMonthButtons('orc-filter-buttons','ofbtn-','setOrcFilter', MONTHS_2026);
+
+  // Os filtros internos (dashFilter, distFilter, alertFilter, orcFilter) acompanham
+  // automaticamente o mês mais recente disponível na planilha.
+  if(lastDash)  dashFilter  = lastDash;
+  if(lastDist)  distFilter  = lastDist;
+  if(lastAlert) alertFilter = lastAlert;
+  if(lastOrc)   orcFilter   = lastOrc;
+}
+
+let LAST_SYNC_TIME = null;
+let LAST_SYNC_OK = false;
+
+function renderSyncIndicator(){
+  const el = document.getElementById('last-sync-indicator');
+  if(!el) return;
+  if(!LAST_SYNC_TIME){
+    el.innerHTML = `<span style="opacity:.6">⏳ Carregando dados…</span>`;
+    return;
+  }
+  const dataStr = LAST_SYNC_TIME.toLocaleString('pt-BR', { dateStyle:'short', timeStyle:'short' });
+  const icon = LAST_SYNC_OK ? '🟢' : '🟠';
+  const txt  = LAST_SYNC_OK ? 'Última atualização' : 'Última tentativa (falhou)';
+  el.innerHTML = `${icon} <strong>${txt}:</strong> ${dataStr}
+    <button onclick="loadFromGoogleSheets()" style="margin-left:8px;border:none;background:none;cursor:pointer;color:var(--green);font-size:11px;text-decoration:underline;font-family:'DM Sans',sans-serif;">🔄 Atualizar agora</button>`;
+}
+
+async function loadFromGoogleSheets(){
+  const banner = document.getElementById('sheets-status-banner');
+  try{
+    const resp = await fetch(SHEETS_CSV_URL, { cache:'no-store' });
+    if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    const newRaw = buildRawFromCSV(text);
+    const monthCount = Object.keys(newRaw).length;
+    if(monthCount === 0) throw new Error('Nenhum mês encontrado no CSV');
+
+    RAW = newRaw;
+    rebuildDashboardData();
+
+    LAST_SYNC_TIME = new Date();
+    LAST_SYNC_OK = true;
+    renderSyncIndicator();
+
+    if(banner){
+      banner.style.display='block';
+      banner.style.background='#EEF4E3'; banner.style.color='#2D9E6B'; banner.style.borderColor='#4AA834';
+      banner.innerHTML = `✅ Planilha conectada — ${monthCount} meses · ${Object.keys(RAW).reduce((a,k)=>a+Object.keys(RAW[k].r).length+Object.keys(RAW[k].d).length,0)} categorias carregadas.`;
+      setTimeout(()=>{ if(banner) banner.style.display='none'; }, 6000);
+    }
+  } catch(e){
+    console.warn('Falha ao carregar planilha, usando dados de fallback:', e.message);
+    rebuildDashboardData(); // garante que DATA é calculado a partir do RAW de fallback
+
+    LAST_SYNC_TIME = new Date();
+    LAST_SYNC_OK = false;
+    renderSyncIndicator();
+
+    if(banner){
+      banner.style.display='block';
+      banner.style.background='#FDECEA'; banner.style.color='#D94F4F'; banner.style.borderColor='#D94F4F';
+      banner.innerHTML = `⚠️ Não foi possível carregar a planilha (${e.message}). Exibindo dados de exemplo/fallback.`;
+    }
+  }
+  initDashboard();
+}
+
+loadFromGoogleSheets();
 </script>
 </body>
-</html>
+</html>Integração Google Sheets + indicador de atualização
