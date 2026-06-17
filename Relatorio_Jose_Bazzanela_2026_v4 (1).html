@@ -241,8 +241,8 @@ html,body{scroll-behavior:auto;}
   <button class="nav-tab" onclick="show('dubai')" id="tab-dubai">
     <span class="ti">🇦🇪🇨🇳</span><span class="tab-lbl">✈️ Dubai & China</span>
   </button>
-  <div class="sb-bottom">José Felipe Bazzanella Lírio<br>Fechamento: <strong style="color:#4AA834;">Abril/26</strong> · Parcial: Maio/26
-    <div id="last-sync-indicator" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);font-size:10px;color:rgba(255,255,255,0.55);"></div>
+  <div class="sb-bottom">José Felipe Bazzanella Lírio<br><span id="sb-fechamento-info">Fechamento: <strong style="color:#4AA834;">Abril/26</strong> · Parcial: Maio/26</span>
+    <div id="last-sync-indicator" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.15);font-size:10.5px;color:rgba(255,255,255,0.75);line-height:1.5;"></div>
   </div>
 </nav>
 
@@ -252,7 +252,7 @@ html,body{scroll-behavior:auto;}
 <div class="page">
   <div class="sec-ey">Painel Principal</div>
   <div class="sec-title">Visão Geral 2026</div>
-  <div class="sec-sub">Fechamento confirmado: Abril/26 · Dados parciais de Maio/26 incluídos</div>
+  <div class="sec-sub" id="dash-sec-sub">Fechamento confirmado: Abril/26 · Dados parciais de Maio/26 incluídos</div>
 
   <div id="sheets-status-banner" style="display:none;border-radius:10px;padding:10px 16px;margin-bottom:16px;font-size:12px;border:1px solid;"></div>
 
@@ -1274,6 +1274,7 @@ function processMonth(key) {
 
 let MONTHS_ALL = Object.keys(RAW);
 let MONTHS_2026 = MONTHS_ALL.filter(m=>m.startsWith('2026'));
+let PARTIAL_MONTH = MONTHS_ALL.length ? [...MONTHS_ALL].sort().pop() : null; // mês mais recente = parcial
 const DATA = {};
 MONTHS_ALL.forEach(k => { DATA[k] = processMonth(k); });
 
@@ -1357,7 +1358,7 @@ function renderDashKPIs(){
   if(dashFilter==='anual') mn=getAnual();
   else mn=DATA[dashFilter];
   const sClass=mn.s>=0?'':'red';
-  const parcial=dashFilter==='2026-05'?' <span class="badge parcial">Parcial</span>':'';
+  const parcial=dashFilter===PARTIAL_MONTH?' <span class="badge parcial">Parcial</span>':'';
 
   box.innerHTML=`
     <div class="kpi">
@@ -1493,7 +1494,7 @@ function renderMensalDetail(key,container){
   const rL=Object.keys(mn.top_r),rV=Object.values(mn.top_r);
   const dL=Object.keys(mn.top_d),dV=Object.values(mn.top_d);
   const rT=rV.reduce((a,b)=>a+b,0),dT=dV.reduce((a,b)=>a+b,0);
-  const parcialBadge=key==='2026-05'?'<span class="badge parcial" style="margin-left:8px;">Parcial</span>':'';
+  const parcialBadge=key===PARTIAL_MONTH?'<span class="badge parcial" style="margin-left:8px;">Parcial</span>':'';
   const netPill='';
 
   container.innerHTML=`
@@ -1566,7 +1567,7 @@ function renderAnual(container){
       <table class="ov-table">
         <thead><tr><th>Mês</th><th>Receita</th><th>Deduções</th><th>Despesa</th><th>Cat. Compensadas</th><th>Saldo</th><th>Status</th></tr></thead>
         <tbody>
-        ${MONTHS_2026.map(m=>{const mn=DATA[m];const parcial=m==='2026-05'?'<span class="badge parcial" style="font-size:9px;padding:1px 6px;margin-left:4px;">Parcial</span>':'';
+        ${MONTHS_2026.map(m=>{const mn=DATA[m];const parcial=m===PARTIAL_MONTH?'<span class="badge parcial" style="font-size:9px;padding:1px 6px;margin-left:4px;">Parcial</span>':'';
           return`<tr>
           <td><strong>${mn.label}</strong>${parcial}</td>
           <td style="color:var(--green)">${fmt(mn.r)}</td>
@@ -1615,7 +1616,7 @@ function initOrcamento(){
     const mn=DATA[m];
     const deducao=mn.empR+mn.tercD;
     const rLiq=mn.r-mn.empR;
-    const parcial=m==='2026-05'?'<span class="badge parcial" style="font-size:9px;padding:1px 4px;margin-left:4px;">★</span>':'';
+    const parcial=m===PARTIAL_MONTH?'<span class="badge parcial" style="font-size:9px;padding:1px 4px;margin-left:4px;">★</span>':'';
     return`<tr>
       <td><strong>${mn.label}</strong>${parcial}</td>
       <td style="color:var(--green)">${fmt(mn.r)}</td>
@@ -1666,7 +1667,7 @@ function initHistorico(){
     scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}});}
 
   const tbody=document.getElementById('hist-tbody');
-  if(tbody){tbody.innerHTML=MONTHS_ALL.map(m=>{const mn=DATA[m];const parcial=m==='2026-05'?'<span class="badge parcial" style="font-size:9px;margin-left:4px;">★</span>':'';
+  if(tbody){tbody.innerHTML=MONTHS_ALL.map(m=>{const mn=DATA[m];const parcial=m===PARTIAL_MONTH?'<span class="badge parcial" style="font-size:9px;margin-left:4px;">★</span>':'';
     return`<tr>
       <td><strong>${mn.label}</strong>${parcial}</td>
       <td style="color:var(--green)">${fmt(mn.r)}</td>
@@ -2188,7 +2189,7 @@ function renderCentroCustos(){
   <div style="border-radius:14px;border:1px solid var(--border);overflow:hidden;">
     <div style="background:var(--dark);color:white;display:grid;grid-template-columns:${grid};padding:11px 18px;gap:6px;align-items:center;">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:2.5px;color:rgba(255,255,255,.4);font-weight:700;">Categoria</div>
-      ${meses.map(m=>`<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);text-align:right;line-height:1.4;">${DATA[m].label.replace('★','')}<br>${m==='2026-05'?'<span style="color:rgba(255,255,255,.3)">★</span>':''}</div>`).join('')}
+      ${meses.map(m=>`<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);text-align:right;line-height:1.4;">${DATA[m].label.replace('★','')}<br>${m===PARTIAL_MONTH?'<span style="color:rgba(255,255,255,.3)">★</span>':''}</div>`).join('')}
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);text-align:right;">Variação<br>${varLabel}</div>
     </div>`;
 
@@ -2334,7 +2335,7 @@ function renderParcelamentos(){
   cont.innerHTML=meses.map(m=>{
     const p=PARCELAMENTOS[m];
     const isLast=m==='2026-04'; // Abril é o mês de fechamento real
-    const isParcial=m==='2026-05';
+    const isParcial=m===PARTIAL_MONTH;
     const border=isLast?'border:2px solid #4AA834;':'';
     const titleColor=isLast?'color:#4AA834;':'color:var(--dark);';
     return`<div style="background:white;border-radius:12px;padding:18px;${border}">
@@ -2363,7 +2364,7 @@ function renderTipoDespesa(){
   const meses=MONTHS_2026;
   tbody.innerHTML=meses.map(m=>{
     const td=TIPO_DESP[m];if(!td)return'';
-    const parcial=m==='2026-05'?'<span class="badge parcial" style="font-size:9px;margin-left:4px;">★</span>':'';
+    const parcial=m===PARTIAL_MONTH?'<span class="badge parcial" style="font-size:9px;margin-left:4px;">★</span>':'';
     return`<tr>
       <td><strong>${DATA[m].label}</strong>${parcial}</td>
       <td style="text-align:right;color:var(--red)">${td.eventual>0?fmt(td.eventual):'—'}</td>
@@ -2735,7 +2736,34 @@ function rebuildDashboardData(){
   MONTHS_2026 = MONTHS_ALL.filter(m=>m.startsWith('2026'));
   for(const k of Object.keys(DATA)) delete DATA[k];
   MONTHS_ALL.forEach(k => { DATA[k] = processMonth(k); });
+
+  // O mês "parcial" é sempre o mês mais recente presente na planilha.
+  // Assim que o mês seguinte tiver pelo menos 1 lançamento, ele entra em
+  // MONTHS_ALL e passa a ser o novo PARTIAL_MONTH — o mês anterior deixa
+  // de ser parcial automaticamente, sem precisar editar código.
+  PARTIAL_MONTH = MONTHS_ALL.length ? MONTHS_ALL[MONTHS_ALL.length-1] : null;
+
+  updateFechamentoTexts();
   buildAllMonthFilterButtons();
+}
+
+// Atualiza os textos fixos de "Fechamento: X · Parcial: Y" na sidebar e no
+// painel principal, usando o mês fechado real (o anterior ao PARTIAL_MONTH)
+// em vez de texto hardcoded.
+function updateFechamentoTexts(){
+  if(!PARTIAL_MONTH || MONTHS_ALL.length < 2) return;
+  const idx = MONTHS_ALL.indexOf(PARTIAL_MONTH);
+  const closedMonth = idx > 0 ? MONTHS_ALL[idx-1] : null;
+  if(!closedMonth) return;
+
+  const closedLabel = (DATA[closedMonth]?.label || closedMonth).replace('★','').trim();
+  const partialLabel = (DATA[PARTIAL_MONTH]?.label || PARTIAL_MONTH).replace('★','').trim();
+
+  const sb = document.getElementById('sb-fechamento-info');
+  if(sb) sb.innerHTML = `Fechamento: <strong style="color:#4AA834;">${closedLabel}</strong> · Parcial: ${partialLabel}`;
+
+  const sub = document.getElementById('dash-sec-sub');
+  if(sub) sub.textContent = `Fechamento confirmado: ${closedLabel} · Dados parciais de ${partialLabel} incluídos`;
 }
 
 // ════════════════════════════════════════════════════════
@@ -2838,4 +2866,4 @@ async function loadFromGoogleSheets(){
 loadFromGoogleSheets();
 </script>
 </body>
-</html>Integração Google Sheets + indicador de atualização
+</html>
