@@ -375,6 +375,7 @@ html,body{scroll-behavior:auto;}
         <th style="text-align:right">🟠 Mensal Variável</th>
         <th style="text-align:right">🔵 Parcelamento</th>
         <th style="text-align:right">🟢 Fixa</th>
+        <th style="text-align:right">🟣 Empresa</th>
         <th style="text-align:right">Total</th>
         <th>Destaque</th>
       </tr></thead>
@@ -1111,67 +1112,7 @@ let RAW = {
 
 // Calcula totais e compensações para cada mês
 
-// Dados completos de despesas por categoria (todos os lançamentos por Mês Caixa)
-// Usado pelo Centro de Custos para cálculos precisos
-const FULL_DESP={
-  '2026-01':{
-    'AQUISIÇÃO BENS':75000,'INVESTIMENTOS':55297.50,'EMPRESA':23748.33,
-    'MORADIA':2506.45,'VIAGENS':2277.61,'FINANCIAMENTO':2090.16,
-    'ALIMENTAÇÃO':1230.26,'ACADEMIA':868.04,'RESTAURANTE':754.92,
-    'NÃO IDENT.':684.90,'P/TERCEIROS':658.82,'EDUCAÇÃO':579.93,
-    'VESTUÁRIO':525.48,'APT ALUGADO':444.62,'JOGOS':415.00,
-    'CASA E DECOR':390.31,'ASSINATURAS':368.08,'PET':322.94,
-    'PLANO INT':300.00,'COMPRAS AVULSAS':176.54,'PRESENTES':159.33,
-    'BELEZA':140.00,'JANTAS':126.88,'COMBUSTÍVEL':125.97,
-    'INTERNET':100.00,'ELETRÔNICOS':83.25,'FARMÁCIA':75.00,
-    'LAZER':29.00,'MULTAS':2.91,'TAXAS BANCÁRIAS':-197.50
-  },
-  '2026-02':{
-    'AQUISIÇÃO BENS':119200,'EMPRESA':28630.29,'IPVA':9522.98,
-    'VIAGENS':3069.42,'MORADIA':2250.32,'FINANCIAMENTO':2109.87,
-    'ALIMENTAÇÃO':1221.07,'NÃO IDENT.':1130.00,'ACADEMIA':965.97,
-    'RESTAURANTE':965.54,'TAXAS BUROCRÁTICAS':900.00,'EDUCAÇÃO':789.93,
-    'P/TERCEIROS':658.79,'JANTAS':543.58,'VESTUÁRIO':398.48,
-    'LAZER':365.00,'PET':328.94,'PLANO INT':300.00,
-    'COMPRAS AVULSAS':195.00,'FARMÁCIA':173.90,'PRESENTES':159.30,
-    'INTERNET':100.00,'ELETRÔNICOS':83.25,'BELEZA':60.00,
-    'MULTAS':42.45,'DOAÇÃO':20.00,'CASA E DECOR':-1826.69
-  },
-  '2026-03':{
-    'EMPRESA':35896.84,'VIAGENS':10885.88,'FINANCIAMENTO':7280.33,
-    'P/TERCEIROS':3718.74,'VESTUÁRIO':3491.34,'COMPRAS AVULSAS':2386.96,
-    'MORADIA':2061.86,'JANTAS':1521.00,'CASA E DECOR':1102.83,
-    'ACADEMIA':965.96,'BELEZA':902.79,'ALIMENTAÇÃO':892.84,
-    'LAZER':862.42,'RESTAURANTE':760.77,'FARMÁCIA':462.82,
-    'EDUCAÇÃO':450.00,'PET':412.15,'COMBUSTÍVEL':380.31,
-    'ASSINATURAS':334.92,'NÃO IDENT.':311.33,'PLANO INT':300.00,
-    'APT ALUGADO':193.77,'VESTUÁRIO2':160.00,'PRESENTES':159.30,
-    'MULTAS':151.64,'TRANSPORTE':126.17,'INTERNET':100.00
-  },
-  '2026-04':{
-    'INVESTIMENTOS':113500,'VIAGENS':48562.73,'EMPRESA':33333.25,
-    'FINANCIAMENTO':9342.44,'NÃO IDENT.':7355.20,'IPVA':2605.44,
-    'MORADIA':2532.20,'ACADEMIA':965.96,'PRESENTES':859.30,
-    'LAZER':671.49,'P/TERCEIROS':658.79,'ALIMENTAÇÃO':637.65,
-    'COMPRAS AVULSAS':626.96,'RESTAURANTE':592.38,'TAXAS BUROCRÁTICAS':410.74,
-    'BELEZA':370.77,'FARMÁCIA':341.38,'PET':308.50,'PLANO INT':300.00,
-    'ASSINATURAS':253.90,'VESTUÁRIO':203.35,'JANTAS':177.00,
-    'APT ALUGADO':176.31,'INTERNET':100.00,'DOAÇÃO':40.00,
-    'TRANSPORTE':4.90,'MULTAS':2.87,'CASA E DECOR':-126.35
-  },
-  '2026-05':{
-    'EMPRESA':32087.71,'FINANCIAMENTO':8273.73,'EMPRESTADO':5000.00,
-    'VIAGENS':3149.08,'NÃO IDENT.':2596.60,'RESTAURANTE':1047.52,
-    'ACADEMIA':1003.04,'ALIMENTAÇÃO':881.64,'P/TERCEIROS':658.79,
-    'MORADIA':652.82,'LAZER':595.40,'COMBUSTÍVEL':504.00,
-    'ASSINATURAS':406.01,'FARMÁCIA':335.87,'PLANO INT':300.00,
-    'APT ALUGADO':210.38,'VESTUÁRIO':203.35,'BELEZA':190.77,
-    'CASA E DECOR':180.31,'PET':138.94,'COMPRAS AVULSAS':125.98,
-    'INTERNET':100.00,'MULTAS':31.00,'TRANSPORTE':1.50
-  }
-};
-
-// Mapeamento de chaves FULL_DESP → chaves usadas no CC
+// Mapeamento de nomes alternativos de categoria → chaves usadas no CC
 const CC_KEY_MAP={
   'MORADIA':['MORADIA','APT ALUGADO'],
   'ALIMENTAÇÃO':['ALIMENTAÇÃO'],
@@ -1273,6 +1214,7 @@ function processMonth(key) {
 }
 
 let MONTHS_ALL = Object.keys(RAW);
+let LANCAMENTOS = []; // lançamentos individuais (linha a linha) extraídos do CSV — alimenta Parcelamentos e Tipo de Despesa
 let MONTHS_2026 = MONTHS_ALL.filter(m=>m.startsWith('2026'));
 const DATA = {};
 MONTHS_ALL.forEach(k => { DATA[k] = processMonth(k); });
@@ -1421,14 +1363,14 @@ function renderDashPies(){
       for(const[k,v]of Object.entries(mn.top_d)) desp[k]=(desp[k]||0)+v;
     }
   } else {
-    const fd=FULL_DESP[dashFilter]||{};
+    const fd=RAW[dashFilter]?.d||{};
     const mn=DATA[dashFilter]; if(!mn) return;
-    // Use top_r/top_d from DATA (já neutralizados) plus FULL_DESP for completeness
+    // Use top_r/top_d from DATA (já neutralizados) plus RAW para completude
     rec = {...mn.top_r};
-    // merge FULL_DESP for despesas — mas remove o que já foi neutralizado nas categorias compartilhadas
+    // merge despesas brutas — mas remove o que já foi neutralizado nas categorias compartilhadas
     for(const[k,v]of Object.entries(fd)){
       if(mn.shared && mn.shared.includes(k)){
-        // categoria neutralizada: usa o valor líquido já calculado em top_d, não o bruto do FULL_DESP
+        // categoria neutralizada: usa o valor líquido já calculado em top_d, não o bruto
         if(mn.top_d[k] !== undefined) desp[k]=mn.top_d[k];
       } else {
         desp[k]=(desp[k]||0)+v;
@@ -1946,10 +1888,10 @@ function setAlertFilter(m){alertFilter=m;document.querySelectorAll('[id^="afbtn-
 function initAlertas(){var _t=document.getElementById("alertas-content");if(_t)_t.insertAdjacentHTML("afterbegin","<div style='padding:8px;background:#e8f4e8;border-radius:6px;margin-bottom:12px;font-size:12px;'>✅ Alertas carregados</div>");renderAlertas();}
 function renderAlertas(){
   var meses=alertFilter==='anual'?MONTHS_2026:[alertFilter];
-  var label=alertFilter==='anual'?'Acumulado Jan–Mai/26':(DATA[alertFilter]?DATA[alertFilter].label:alertFilter);
+  var label=alertFilter==='anual'?('Acumulado '+(MONTHS_2026[0]?DATA[MONTHS_2026[0]].label:'')+'–'+(MONTHS_2026[MONTHS_2026.length-1]?DATA[MONTHS_2026[MONTHS_2026.length-1]].label:'')):(DATA[alertFilter]?DATA[alertFilter].label:alertFilter);
   var nM=meses.length;
   var d={};
-  for(var i=0;i<meses.length;i++){var fd=FULL_DESP[meses[i]];if(fd)for(var k in fd)d[k]=(d[k]||0)+fd[k];}
+  for(var i=0;i<meses.length;i++){var fd=RAW[meses[i]]?.d;if(fd)for(var k in fd)d[k]=(d[k]||0)+fd[k];}
   var cont=document.getElementById('alertas-content');if(!cont)return;
   var html='<div class="alert ok"><div class="alert-icon">📅</div><div><div class="alert-title">Período: '+label+'</div><div class="alert-body">Alertas com base nos lançamentos · Comparativo contra orçamento mensal.</div></div></div>';
   var exts=[{m:'2026-01',v:75000,t:'Aquisição de bens – Jan/26'},{m:'2026-02',v:119200,t:'Aquisição de bens – Fev/26'},{m:'2026-04',v:113500,t:'Aportes investimentos – Abr/26'},{m:'2026-04',v:48563,t:'Viagem EUA – Abr/26'}];
@@ -2012,75 +1954,74 @@ const CC = {
 };
 
 function getCCVal(ccCats,month){
-  // Use FULL_DESP if available (more complete data)
-  const fd=FULL_DESP[month];
-  if(fd){
-    return ccCats.reduce((a,cat)=>{
-      // direct match
-      if(fd[cat]!==undefined)return a+(fd[cat]||0);
-      // try key map
-      const mapped=CC_KEY_MAP[cat];
-      if(mapped)return a+mapped.reduce((s,k)=>s+(fd[k]||0),0);
-      return a;
-    },0);
-  }
-  // Fallback to RAW (for 2025 months)
-  const mn=RAW[month];if(!mn)return 0;
-  return ccCats.reduce((a,c)=>a+(mn.d[c]||0),0);
+  const fd=RAW[month]?.d;
+  if(!fd) return 0;
+  return ccCats.reduce((a,cat)=>{
+    // direct match
+    if(fd[cat]!==undefined)return a+(fd[cat]||0);
+    // try key map (nomes alternativos de categoria usados no passado)
+    const mapped=CC_KEY_MAP[cat];
+    if(mapped)return a+mapped.reduce((s,k)=>s+(fd[k]||0),0);
+    return a;
+  },0);
 }
 
-// Novos Parcelamentos por mês
-// Lógica: apenas parcelas INICIADAS no mês (sem repetições/continuações)
-// Financiamento Caminhonete excluído conforme instrução
-const PARCELAMENTOS={
-  '2026-01':{label:'Janeiro 2026',note:'',
-    items:[
-      {desc:'Móveis Kappesberg',det:'6x',val:180.32,cor:'#7F77DD'},
-      {desc:'Amazon BR (presentes)',det:'4x',val:159.33,cor:'#1A3A5C'},
-      {desc:'Pb Weasy (pet)',det:'5x',val:138.94,cor:'#E8943A'},
-      {desc:'Vlt Bazar Ltda (vestuário)',det:'2x',val:88.00,cor:'#6B6B5E'},
-    ],total:566.59},
-  '2026-02':{label:'Fevereiro 2026',note:'',
-    items:[
-      {desc:'Allianz Segu (empresa)',det:'10x',val:503.38,cor:'#E8943A'},
-      {desc:'Acelerador de Pontos (viagens)',det:'fixo',val:390.87,cor:'#1A3A5C'},
-      {desc:'Ec Growthsupplemen (academia)',det:'3x',val:97.93,cor:'#2D9E6B'},
-      {desc:'Farmácia São João',det:'3x',val:87.01,cor:'#4AA834'},
-    ],total:1079.19},
-  '2026-03':{label:'Março 2026',note:'',
-    items:[
-      {desc:'Jim Com Sammy By Ba (farmácia)',det:'4x',val:97.93,cor:'#4AA834'},
-      {desc:'Cursoaskjackie (educação)',det:'10x',val:72.60,cor:'#2D9E6B'},
-      {desc:'Mercadopago Mwrodri (vestuário)',det:'12x',val:86.86,cor:'#E8943A'},
-    ],total:257.39},
-  '2026-04':{label:'Abril 2026 ✅ Fechamento',note:'Mês de fechamento real',
-    items:[
-      {desc:'Arena Society (lazer)',det:'2x',val:441.50,cor:'#4AA834'},
-      {desc:'Mercadolivre 2 Produtos',det:'2x',val:69.63,cor:'#1A3A5C'},
-    ],total:511.13},
-  '2026-05':{label:'Maio 2026',note:'',
-    items:[
-      {desc:'Mp Skyairlines (viagens)',det:'6x',val:415.35,cor:'#7F77DD'},
-      {desc:'Mercadolivre 3 Produtos',det:'2x',val:214.95,cor:'#E8943A'},
-    ],total:630.30}
-};
+// Detecta parcelamentos NOVOS iniciados em cada mês (primeira parcela "01/XX"
+// ou "1/XX" lançada naquele Mês Caixa), a partir dos lançamentos reais da
+// planilha — substitui a lista fixa anterior.
+const PARC_CORES = ['#7F77DD','#1A3A5C','#E8943A','#4AA834','#2D9E6B','#D94F4F','#6B6B5E','#74724F'];
+function calcParcelamentosDoMes(mes){
+  const candidatos = LANCAMENTOS.filter(l =>
+    l.mes === mes && l.tipo === 'Despesa' && l.parcela && /^0?1\//.test(l.parcela) && l.valor > 0
+  );
+  const items = candidatos.map((l, i) => {
+    const totalParcelas = parseInt(l.parcela.split('/')[1]) || 1;
+    return {
+      desc: `${l.transacao} (${l.categoria.toLowerCase()})`,
+      det: `${totalParcelas}x`,
+      val: l.valor,
+      cor: PARC_CORES[i % PARC_CORES.length]
+    };
+  });
+  const total = items.reduce((a,it)=>a+it.val, 0);
+  return { label: DATA[mes]?.label || mes, note:'', items, total };
+}
 
-// Tipo de Despesa por mês
-const TIPO_DESP={
-  '2026-01':{eventual:68192.86,variavel:41212.23,parcelamento:4265.09,fixa:0,obs:'',total:119877.58},
-  '2026-02':{eventual:138083.90,variavel:1202.31,parcelamento:3495.65,fixa:7057.05,obs:'Eventual alto: R$119.200 veículo',total:149838.91},
-  '2026-03':{eventual:23062.11,variavel:1919.50,parcelamento:4702.03,fixa:9880.61,obs:'Sem aquisição de bens ✓',total:39564.25},
-  '2026-04':{eventual:191650,variavel:5200,parcelamento:9342,fixa:3966,obs:'Invest.+Viagens EUA extraordinários',total:210158},
-  '2026-05':{eventual:36685,variavel:7900,parcelamento:8274,fixa:2462,obs:'',total:55321}
-};
+// Tipo de Despesa por mês — calculado dinamicamente a partir dos lançamentos
+// individuais da planilha (coluna "Tipo de Despesa"), em vez de valores fixos.
+function calcTipoDespesa(mes){
+  const doMes = LANCAMENTOS.filter(l => l.mes === mes && l.tipo === 'Despesa');
+  const r = { eventual:0, fixa:0, parcelamento:0, variavel:0, empresa:0, total:0, obs:'' };
+  for(const l of doMes){
+    const v = l.valor; // mantém sinal — estornos/ajustes se cancelam naturalmente
+    r.total += v;
+    switch(l.tipoDespesa){
+      case 'EVENTUAL': r.eventual += v; break;
+      case 'FIXA': r.fixa += v; break;
+      case 'PARCELAMENTO': r.parcelamento += v; break;
+      case 'MENSAL VARIÁVEL': r.variavel += v; break;
+      case 'EMPRESA': r.empresa += v; break;
+      default: break; // sem classificação — entra só no total
+    }
+  }
+  return r;
+}
 
 // ════ EVOLUÇÃO MENSAL — com filtro de período + médias ════
-const EVOL_PERIODS={
-  'anual':{label:'Anual 2026',months:['2026-01','2026-02','2026-03','2026-04','2026-05']},
-  'trimestre':{label:'Trimestre (Jan–Mar/26)',months:['2026-01','2026-02','2026-03']},
-  'semestre':{label:'Últimos 6 meses',months:['2025-12','2026-01','2026-02','2026-03','2026-04','2026-05']},
-  'historico':{label:'Histórico Completo',months:['2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05']}
-};
+// Períodos de evolução — meses calculados dinamicamente a partir dos dados
+// reais presentes em MONTHS_ALL/MONTHS_2026, em vez de listas fixas.
+function getEvolPeriods(){
+  const last3 = MONTHS_2026.slice(-3);
+  const last6 = MONTHS_ALL.slice(-6);
+  const anoLabel = MONTHS_2026.length ? `${(DATA[MONTHS_2026[0]]?.label||'').replace('★','').trim()}–${(DATA[MONTHS_2026[MONTHS_2026.length-1]]?.label||'').replace('★','').trim()}` : '';
+  const trimLabel = last3.length ? `${(DATA[last3[0]]?.label||'').replace('★','').trim()}–${(DATA[last3[last3.length-1]]?.label||'').replace('★','').trim()}` : '';
+  return {
+    'anual':{label:`Ano ${anoLabel}`,months:MONTHS_2026},
+    'trimestre':{label:`Trimestre (${trimLabel})`,months:last3},
+    'semestre':{label:'Últimos 6 meses',months:last6},
+    'historico':{label:'Histórico Completo',months:MONTHS_ALL}
+  };
+}
 let evolFilter='anual';
 
 function setEvolFilter(p){
@@ -2097,8 +2038,9 @@ function getRecOp(m){const d=RAW[m];if(!d)return 0;const t=Object.values(d.r).re
 function getDespOp(m){const d=RAW[m];if(!d)return 0;const t=Object.values(d.d).reduce((a,b)=>a+b,0);return t-(d.d['EMPRESA']||0)-(d.d['P/TERCEIROS']||0)-(d.d['INVESTIMENTOS']||0)-(d.d['AQUISIÇÃO BENS']||0);}
 
 function renderEvolMedias(){
-  const months=EVOL_PERIODS[evolFilter].months.filter(m=>RAW[m]);
-  const label=EVOL_PERIODS[evolFilter].label;
+  const periods=getEvolPeriods();
+  const months=periods[evolFilter].months.filter(m=>RAW[m]);
+  const label=periods[evolFilter].label;
   const n=months.length;
   const avgRec=months.reduce((a,m)=>a+getRecOp(m),0)/n;
   const avgDesp=months.reduce((a,m)=>a+getDespOp(m),0)/n;
@@ -2122,7 +2064,7 @@ function renderEvolMedias(){
 }
 
 function renderEvolCharts(){
-  const months=EVOL_PERIODS[evolFilter].months.filter(m=>RAW[m]);
+  const months=getEvolPeriods()[evolFilter].months.filter(m=>RAW[m]);
   const lab=months.map(m=>DATA[m].label);
   const rec=months.map(m=>DATA[m].r);
   const des=months.map(m=>DATA[m].d);
@@ -2330,12 +2272,19 @@ function buildCCInsight(name,cfg,vals,meses,varPct,v1,v2){
 function renderParcelamentos(){
   const cont=document.getElementById('parcelamentos-content');
   if(!cont)return;
-  const meses=['2026-01','2026-02','2026-03','2026-04','2026-05'];
+  const meses=MONTHS_2026;
+  const lastMonth=meses[meses.length-1];
   cont.innerHTML=meses.map(m=>{
-    const p=PARCELAMENTOS[m];
-    const isLast=m==='2026-04'; // Abril é o mês de fechamento real
+    const p=calcParcelamentosDoMes(m);
+    const isLast=m===lastMonth;
     const border=isLast?'border:2px solid #4AA834;':'';
     const titleColor=isLast?'color:#4AA834;':'color:var(--dark);';
+    if(!p.items.length){
+      return`<div style="background:white;border-radius:12px;padding:18px;${border}">
+        <div style="font-weight:700;font-size:14px;${titleColor}margin-bottom:4px;">${p.label}</div>
+        <div style="font-size:12px;color:var(--muted);">Nenhum parcelamento novo iniciado neste mês.</div>
+      </div>`;
+    }
     return`<div style="background:white;border-radius:12px;padding:18px;${border}">
       <div style="font-weight:700;font-size:14px;${titleColor}margin-bottom:4px;">${p.label}</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">+${fmt(p.total)} adicionados ao orçamento</div>
@@ -2361,7 +2310,7 @@ function renderTipoDespesa(){
   const tbody=document.getElementById('tipo-desp-tbody');if(!tbody)return;
   const meses=MONTHS_2026;
   tbody.innerHTML=meses.map(m=>{
-    const td=TIPO_DESP[m];if(!td)return'';
+    const td=calcTipoDespesa(m);
     const parcial='';
     return`<tr>
       <td><strong>${DATA[m].label}</strong>${parcial}</td>
@@ -2369,6 +2318,7 @@ function renderTipoDespesa(){
       <td style="text-align:right;color:var(--amber)">${td.variavel>0?fmt(td.variavel):'—'}</td>
       <td style="text-align:right;color:#1A3A5C">${td.parcelamento>0?fmt(td.parcelamento):'—'}</td>
       <td style="text-align:right;color:var(--green)">${td.fixa>0?fmt(td.fixa):'—'}</td>
+      <td style="text-align:right;color:#7F77DD">${td.empresa>0?fmt(td.empresa):'—'}</td>
       <td style="text-align:right;font-weight:700">${fmt(td.total)}</td>
       <td style="font-size:11px;color:var(--muted)">${td.obs}</td>
     </tr>`;
@@ -2377,18 +2327,21 @@ function renderTipoDespesa(){
   dc('chartTipoDesp');dc('chartTipoPct');
   setTimeout(()=>{
     const labs=meses.map(m=>DATA[m].label);
-    const ev=meses.map(m=>TIPO_DESP[m]?.eventual||0);
-    const va=meses.map(m=>TIPO_DESP[m]?.variavel||0);
-    const pa=meses.map(m=>TIPO_DESP[m]?.parcelamento||0);
-    const fi=meses.map(m=>TIPO_DESP[m]?.fixa||0);
-    const tots=meses.map((_,i)=>ev[i]+va[i]+pa[i]+fi[i]);
+    const tdAll=meses.map(m=>calcTipoDespesa(m));
+    const ev=tdAll.map(td=>td.eventual);
+    const va=tdAll.map(td=>td.variavel);
+    const pa=tdAll.map(td=>td.parcelamento);
+    const fi=tdAll.map(td=>td.fixa);
+    const em=tdAll.map(td=>td.empresa);
+    const tots=meses.map((_,i)=>ev[i]+va[i]+pa[i]+fi[i]+em[i]);
 
     const c1=document.getElementById('chartTipoDesp');
     if(c1){charts['chartTipoDesp']=new Chart(c1,{type:'bar',data:{labels:labs,datasets:[
       {label:'🔴 Eventual',data:ev,backgroundColor:'rgba(217,79,79,0.75)',borderRadius:2},
       {label:'🟠 Mensal Variável',data:va,backgroundColor:'rgba(232,148,58,0.75)',borderRadius:2},
       {label:'🔵 Parcelamento',data:pa,backgroundColor:'rgba(26,58,92,0.75)',borderRadius:2},
-      {label:'🟢 Fixa',data:fi,backgroundColor:'rgba(74,168,52,0.75)',borderRadius:2}
+      {label:'🟢 Fixa',data:fi,backgroundColor:'rgba(74,168,52,0.75)',borderRadius:2},
+      {label:'🟣 Empresa',data:em,backgroundColor:'rgba(127,119,221,0.75)',borderRadius:2}
     ]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{font:{size:10}}},y:{stacked:true,ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}},plugins:{legend:{labels:{font:{size:10}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}}}})}
 
     const c2=document.getElementById('chartTipoPct');
@@ -2396,11 +2349,13 @@ function renderTipoDespesa(){
     const vaP=va.map((v,i)=>tots[i]?+(v/tots[i]*100).toFixed(1):0);
     const paP=pa.map((v,i)=>tots[i]?+(v/tots[i]*100).toFixed(1):0);
     const fiP=fi.map((v,i)=>tots[i]?+(v/tots[i]*100).toFixed(1):0);
+    const emP=em.map((v,i)=>tots[i]?+(v/tots[i]*100).toFixed(1):0);
     if(c2){charts['chartTipoPct']=new Chart(c2,{type:'bar',data:{labels:labs,datasets:[
       {label:'🔴 Eventual %',data:evP,backgroundColor:'rgba(217,79,79,0.75)',borderRadius:2},
       {label:'🟠 Variável %',data:vaP,backgroundColor:'rgba(232,148,58,0.75)',borderRadius:2},
       {label:'🔵 Parcelamento %',data:paP,backgroundColor:'rgba(26,58,92,0.75)',borderRadius:2},
-      {label:'🟢 Fixa %',data:fiP,backgroundColor:'rgba(74,168,52,0.75)',borderRadius:2}
+      {label:'🟢 Fixa %',data:fiP,backgroundColor:'rgba(74,168,52,0.75)',borderRadius:2},
+      {label:'🟣 Empresa %',data:emP,backgroundColor:'rgba(127,119,221,0.75)',borderRadius:2}
     ]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{font:{size:10}}},y:{stacked:true,max:100,ticks:{callback:v=>v+'%',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}},plugins:{legend:{labels:{font:{size:10}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}}}})}
   },80);
 }
@@ -2411,61 +2366,71 @@ function renderTipoDespesa(){
 // ════════════════════════════════════════════
 
 // Parcelamentos comprometidos no cartão (start → end inclusive)
-const PARC_ITEMS = [
-  // Financiamento Caminhonete excluído da projeção conforme instrução (tratado separadamente)
-  {desc:'Allianz Segu (empresa)', val:503.38, start:'2026-02', end:'2026-11', cor:'#E8943A', cat:'EMPRESA'},
-  {desc:'Acelerador de Pontos (viagens)', val:390.87, start:'2026-02', end:'2030-12', cor:'#1A3A5C', cat:'VIAGENS'},
-  {desc:'Cursoaskjackie (educação)', val:72.60, start:'2026-03', end:'2026-12', cor:'#2D9E6B', cat:'EDUCAÇÃO'},
-  {desc:'Mercadopago Mwrodri (vestuário)', val:86.86, start:'2026-03', end:'2027-02', cor:'#E8943A', cat:'VESTUÁRIO'},
-  {desc:'Jim Com Sammy By Ba (farmácia)', val:97.93, start:'2026-03', end:'2026-06', cor:'#4AA834', cat:'FARMÁCIA'},
-  {desc:'Móveis Kappesberg', val:180.32, start:'2026-01', end:'2026-06', cor:'#7F77DD', cat:'CASA E DECOR'},
-  {desc:'Amazon BR (presentes)', val:159.33, start:'2026-01', end:'2026-04', cor:'#1A3A5C', cat:'PRESENTES'},
-  {desc:'Pb Weasy (pet)', val:138.94, start:'2026-01', end:'2026-05', cor:'#E8943A', cat:'PET'},
-  {desc:'Ec Growthsupplemen (academia)', val:97.93, start:'2026-02', end:'2026-04', cor:'#2D9E6B', cat:'ACADEMIA'},
-  {desc:'Farmácia São João', val:87.01, start:'2026-02', end:'2026-04', cor:'#4AA834', cat:'FARMÁCIA'},
-  // Novos de Abril/26 (fechamento real)
-  {desc:'Arena Society (lazer)', val:441.50, start:'2026-04', end:'2026-05', cor:'#4AA834', cat:'LAZER'},
-  {desc:'Mercadolivre 2 Produtos', val:69.63, start:'2026-04', end:'2026-05', cor:'#1A3A5C', cat:'NÃO IDENT.'},
-  // Novos de Maio/26
-  {desc:'Mp Skyairlines (viagens)', val:415.35, start:'2026-05', end:'2026-10', cor:'#7F77DD', cat:'VIAGENS'},
-  {desc:'Mercadolivre 3 Produtos', val:214.95, start:'2026-05', end:'2026-06', cor:'#E8943A', cat:'NÃO IDENT.'},
-];
+// Cores cíclicas usadas para categorias detectadas dinamicamente nos painéis
+// de projeção (Fixas / Variáveis / Entradas).
+const PROJ_CORES = ['#353434','#4AA834','#74724F','#6B6B5E','#7F77DD','#E8943A','#2D9E6B','#1A3A5C','#D94F4F','#B5563B','#8B9A7B','#A8D89A'];
 
-// Fixas mensais (sem parcelamentos — já mapeados acima)
-const FIXAS_MENSAIS = [
-  {desc:'Moradia (aluguel + cond.)', val:2400, cor:'#353434', cat:'MORADIA'},
-  {desc:'Academia e Bem-Estar', val:966, cor:'#4AA834', cat:'ACADEMIA'},
-  {desc:'Plano Int Capital', val:300, cor:'#74724F', cat:'PLANO INT'},
-  {desc:'Internet / Celular', val:100, cor:'#6B6B5E', cat:'INTERNET'},
-  {desc:'Assinaturas diversas', val:400, cor:'#7F77DD', cat:'ASSINATURAS'},
-];
+// Calcula a média histórica real (R$/mês) de cada categoria de despesa que
+// tem o "Tipo de Despesa" indicado na planilha (ex: 'FIXA' ou 'MENSAL VARIÁVEL'),
+// usando os últimos N meses fechados (exclui o mês mais recente, que costuma
+// estar incompleto). Substitui as listas digitadas à mão.
+function calcMediasPorTipoDespesa(tipoDespesa, nMeses=3){
+  const mesesConsiderados = MONTHS_ALL.slice(0,-1).slice(-nMeses);
+  if(!mesesConsiderados.length) return [];
+  const porCategoria = {};
+  for(const m of mesesConsiderados){
+    const doMesTipo = LANCAMENTOS.filter(l => l.mes===m && l.tipo==='Despesa' && l.tipoDespesa===tipoDespesa);
+    for(const l of doMesTipo){
+      porCategoria[l.categoria] = (porCategoria[l.categoria]||0) + l.valor;
+    }
+  }
+  return Object.entries(porCategoria)
+    .map(([cat,total],i)=>({ desc: cat, val: total/mesesConsiderados.length, cor: PROJ_CORES[i%PROJ_CORES.length], cat }))
+    .filter(it=>it.val>0)
+    .sort((a,b)=>b.val-a.val);
+}
 
-// Médias variáveis (base histórica Jan-Abr/26 excluindo outliers)
-const VARIAVEIS_MEDIA = [
-  {desc:'Alimentação e Mercado', val:900, cor:'#4AA834', cat:'ALIMENTAÇÃO'},
-  {desc:'Fast Food e Restaurante', val:750, cor:'#E8943A', cat:'RESTAURANTE'},
-  {desc:'Jantas', val:450, cor:'#E8943A', cat:'JANTAS'},
-  {desc:'Farmácia / Saúde', val:350, cor:'#2D9E6B', cat:'FARMÁCIA'},
-  {desc:'Pet', val:350, cor:'#4AA834', cat:'PET'},
-  {desc:'Vestuário / Calçado', val:400, cor:'#1A3A5C', cat:'VESTUÁRIO'},
-  {desc:'Lazer', val:400, cor:'#7F77DD', cat:'LAZER'},
-  {desc:'Beleza', val:200, cor:'#D94F4F', cat:'BELEZA'},
-  {desc:'Combustível', val:300, cor:'#74724F', cat:'COMBUSTÍVEL'},
-  {desc:'Compras Avulsas', val:350, cor:'#B5563B', cat:'COMPRAS AVULSAS'},
-  {desc:'Presentes / Doações', val:200, cor:'#6B6B5E', cat:'PRESENTES'},
-  {desc:'Casa e Decoração', val:300, cor:'#353434', cat:'CASA E DECOR'},
-];
+function getFixasMensais(){ return calcMediasPorTipoDespesa('FIXA', 3); }
+function getVariaveisMedia(){ return calcMediasPorTipoDespesa('MENSAL VARIÁVEL', 3); }
 
-// Entradas projetadas mensais
-const ENTRADAS_PROJ = {
-  'Pró-labore (base conservador)': 25000,
-  'Distribuição de Lucro': 15000,
-  'Aluguéis': 1500,
-};
+// Entradas projetadas mensais — média histórica real de receita por categoria
+// (últimos 3 meses fechados), em vez de valores digitados manualmente.
+function getEntradasProj(){
+  const mesesConsiderados = MONTHS_ALL.slice(0,-1).slice(-3);
+  if(!mesesConsiderados.length) return {};
+  const porCategoria = {};
+  for(const m of mesesConsiderados){
+    const rec = RAW[m]?.r || {};
+    for(const cat in rec) porCategoria[cat] = (porCategoria[cat]||0) + rec[cat];
+  }
+  const result = {};
+  for(const cat in porCategoria) result[cat] = porCategoria[cat] / mesesConsiderados.length;
+  return result;
+}
 
-// Função: parcelamentos ativos para um dado mês (YYYY-MM)
+// Função: parcelamentos ativos para um dado mês (YYYY-MM) — detectados
+// dinamicamente a partir da coluna "Par. p/ cartão" de cada lançamento
+// (formato "N/T" = parcela N de T). Substitui a lista fixa anterior.
 function getParcAtivos(ym){
-  return PARC_ITEMS.filter(p=>ym>=p.start&&ym<=p.end);
+  const ativos = [];
+  for(const l of LANCAMENTOS){
+    if(l.tipo!=='Despesa' || !l.parcela || l.valor<=0) continue;
+    const partes = l.parcela.split('/');
+    const n = parseInt(partes[0]), t = parseInt(partes[1]);
+    if(!n || !t) continue;
+    // Mês em que a parcela 1 começou = mês do lançamento - (n-1)
+    const inicio = addMonths(l.mes, -(n-1));
+    const fim = addMonths(inicio, t-1);
+    if(ym >= inicio && ym <= fim){
+      ativos.push({
+        desc: `${l.transacao} (${l.categoria.toLowerCase()})`,
+        val: l.valor, start: inicio, end: fim, cor: PROJ_CORES[0], cat: l.categoria
+      });
+    }
+  }
+  // Remove duplicatas (mesma transação pode ter múltiplas linhas referenciando a mesma parcela)
+  const vistos = new Set();
+  return ativos.filter(a => { if(vistos.has(a.desc)) return false; vistos.add(a.desc); return true; });
 }
 
 // Gera lista de meses YYYY-MM entre start e end
@@ -2476,43 +2441,71 @@ function genMonths(start,end){
   return res;
 }
 
-const MESES_LABELS = {
-  '2026-01':'Jan/26','2026-02':'Fev/26','2026-03':'Mar/26','2026-04':'Abr/26','2026-05':'Mai/26',
-  '2026-06':'Jun/26','2026-07':'Jul/26','2026-08':'Ago/26','2026-09':'Set/26',
-  '2026-10':'Out/26','2026-11':'Nov/26','2026-12':'Dez/26',
-  '2027-01':'Jan/27','2027-02':'Fev/27'
-};
+const MESES_NOME = {'01':'Jan','02':'Fev','03':'Mar','04':'Abr','05':'Mai','06':'Jun','07':'Jul','08':'Ago','09':'Set','10':'Out','11':'Nov','12':'Dez'};
+
+// Retorna o mês seguinte (YYYY-MM) a partir de um mês base — usado para
+// calcular dinamicamente qual é "o próximo mês" a projetar, em vez de
+// assumir um valor fixo como '2026-06'.
+function getNextMonth(ym){
+  if(!ym) return null;
+  let [y,m] = [parseInt(ym.slice(0,4)), parseInt(ym.slice(5,7))];
+  m++; if(m>12){m=1;y++;}
+  return `${y}-${String(m).padStart(2,'0')}`;
+}
+
+// Soma N meses a uma data YYYY-MM
+function addMonths(ym, n){
+  let [y,m] = [parseInt(ym.slice(0,4)), parseInt(ym.slice(5,7))];
+  m+=n; while(m>12){m-=12;y++;} while(m<1){m+=12;y--;}
+  return `${y}-${String(m).padStart(2,'0')}`;
+}
+
+// Gera o label "Mmm/AA" para qualquer mês YYYY-MM, sem depender de uma
+// tabela fixa pré-cadastrada (que pararia de funcionar em anos futuros).
+const MESES_LABELS = new Proxy({}, {
+  get(_target, ym){
+    if(typeof ym !== 'string') return undefined;
+    const m = ym.match(/^(\d{4})-(\d{2})$/);
+    if(!m) return undefined;
+    const [, yyyy, mm] = m;
+    return `${MESES_NOME[mm]||mm}/${yyyy.slice(2)}`;
+  }
+});
 
 function initProjecao(){
+  const ENTRADAS_PROJ = getEntradasProj();
+  const FIXAS_MENSAIS = getFixasMensais();
+  const VARIAVEIS_MEDIA = getVariaveisMedia();
   const TOTAL_ENTRADAS = Object.values(ENTRADAS_PROJ).reduce((a,b)=>a+b,0);
   const TOTAL_FIXAS = FIXAS_MENSAIS.reduce((a,b)=>a+b.val,0);
   const TOTAL_VAR = VARIAVEIS_MEDIA.reduce((a,b)=>a+b.val,0);
+  const nextMonth = getNextMonth(MONTHS_ALL[MONTHS_ALL.length-1]);
 
   // KPIs
   const kpis=document.getElementById('proj-kpis');
   if(kpis){
-    const parcJun=getParcAtivos('2026-06').reduce((a,b)=>a+b.val,0);
+    const parcJun=getParcAtivos(nextMonth).reduce((a,b)=>a+b.val,0);
     const totalSaidaJun=TOTAL_FIXAS+parcJun+TOTAL_VAR;
     const saldoJun=TOTAL_ENTRADAS-totalSaidaJun;
     kpis.innerHTML=`
       <div class="kpi"><div class="kpi-label">Entradas Projetadas/mês</div>
         <div class="kpi-value green">${fmt(TOTAL_ENTRADAS)}</div>
-        <div class="kpi-deducao">Pró-labore + Dist. Lucro + Aluguéis · base conservadora</div></div>
-      <div class="kpi"><div class="kpi-label">Fixas + Parcel. (Jun/26)</div>
+        <div class="kpi-deducao">Média histórica de receita · últimos 3 meses fechados</div></div>
+      <div class="kpi"><div class="kpi-label">Fixas + Parcel. (${MESES_LABELS[nextMonth]||nextMonth})</div>
         <div class="kpi-value red">${fmt(TOTAL_FIXAS+parcJun)}</div>
         <div class="kpi-deducao">Fixas ${fmt(TOTAL_FIXAS)} + Parcel. comprometidas ${fmt(parcJun)}</div></div>
       <div class="kpi"><div class="kpi-label">Variáveis (média histórica)</div>
         <div class="kpi-value red">${fmt(TOTAL_VAR)}</div>
-        <div class="kpi-deducao">Base Jan–Abr/26 excluindo outliers</div></div>
-      <div class="kpi ${saldoJun<0?'red':''}"><div class="kpi-label">Saldo Projetado Jun/26</div>
+        <div class="kpi-deducao">Média dos últimos 3 meses fechados</div></div>
+      <div class="kpi ${saldoJun<0?'red':''}"><div class="kpi-label">Saldo Projetado ${MESES_LABELS[nextMonth]||nextMonth}</div>
         <div class="kpi-value ${saldoJun>=0?'green':'red'}">${fmtS(saldoJun)}</div>
         <div class="kpi-deducao">Entradas − (Fixas + Parcel. + Variáveis)</div></div>`;
   }
 
   // Tabela de projeção + charts
-  const futMonths=genMonths('2026-06','2026-12');
-  const allMonths=['2026-01','2026-02','2026-03','2026-04','2026-05',...futMonths];
-  let acumCaixa=102000; // caixa inicial Mai/26
+  const futMonths=genMonths(nextMonth, addMonths(nextMonth,6));
+  const allMonths=[...MONTHS_2026, ...futMonths];
+  let acumCaixa=DATA[MONTHS_ALL[MONTHS_ALL.length-1]]?.s || 0; // saldo do último mês fechado como base do acumulado
 
   const tbody=document.getElementById('proj-tbody');
   let rows='';
@@ -2547,14 +2540,14 @@ function initProjecao(){
   // Parcelamentos detail
   const parcDiv=document.getElementById('proj-parc-detail');
   if(parcDiv){
-    const uniqueAtivosJun=getParcAtivos('2026-06');
+    const uniqueAtivosJun=getParcAtivos(nextMonth);
     parcDiv.innerHTML=uniqueAtivosJun.map(p=>`<div class="cat-row">
       <div class="cat-dot" style="background:${p.cor}"></div>
       <div class="cat-name">${p.desc} <span style="font-size:10px;color:var(--muted);">(até ${MESES_LABELS[p.end]||p.end})</span></div>
       <div class="cat-val">${fmt(p.val)}/mês</div>
     </div>`).join('')+
     `<div style="margin-top:10px;padding:8px;background:var(--cream);border-radius:6px;font-size:12px;font-weight:600;">
-      Total comprometido Jun/26: ${fmt(getParcAtivos('2026-06').reduce((a,b)=>a+b.val,0))}/mês
+      Total comprometido ${MESES_LABELS[nextMonth]||nextMonth}: ${fmt(getParcAtivos(nextMonth).reduce((a,b)=>a+b.val,0))}/mês
     </div>`;
   }
 
@@ -2567,7 +2560,7 @@ function initProjecao(){
       <div class="cat-val">${fmt(v.val)}/mês</div>
     </div>`).join('')+
     `<div style="margin-top:10px;padding:8px;background:var(--cream);border-radius:6px;font-size:12px;font-weight:600;">
-      Total variáveis: ${fmt(VARIAVEIS_MEDIA.reduce((a,b)=>a+b.val,0))}/mês
+      Total variáveis: ${fmt(TOTAL_VAR)}/mês
     </div>`;
   }
 
@@ -2659,7 +2652,7 @@ function initProjecao(){
 // a partir das linhas reais da aba 🧾 Lançamentos, agrupando por
 // "Mês Caixa" + Tipo (Receita/Despesa) + Categoria.
 // ════════════════════════════════════════════════════════
-const MESES_NOME = {'01':'Jan','02':'Fev','03':'Mar','04':'Abr','05':'Mai','06':'Jun','07':'Jul','08':'Ago','09':'Set','10':'Out','11':'Nov','12':'Dez'};
+// MESES_NOME definido mais acima no arquivo (perto de MESES_LABELS)
 
 function parseCSVLine(line){
   const out=[]; let cur='', inQ=false;
@@ -2693,6 +2686,7 @@ function mesCaixaToKey(mesCaixa){
 function buildRawFromCSV(text){
   const lines = text.split('\n').map(l=>l.replace(/\r$/,'')).filter(l=>l.trim().length>0);
   const newRaw = {};
+  const lancamentos = []; // guarda cada linha individual p/ alimentar Parcelamentos e Tipo de Despesa
   let headerSeen = false;
 
   for(const line of lines){
@@ -2707,14 +2701,19 @@ function buildRawFromCSV(text){
 
     const mesCaixaRaw = cols[1] || '';
     const tipo = (cols[2]||'').trim();         // Receita / Despesa
+    const dataRaw = (cols[3]||'').trim();      // Data
+    const parcelaRaw = (cols[4]||'').trim();   // Par. p/ cartão (ex: "02/06")
+    const transacao = (cols[5]||'').trim();    // Transação (descrição)
     const categoria = (cols[8]||'').trim();    // coluna Categoria
+    const tipoDespesa = (cols[9]||'').trim();  // Tipo de Despesa (EVENTUAL/FIXA/etc)
     const valorRaw = cols[11] || '';           // coluna Valor (R$)
 
     if(!categoria) continue;
     const mesInfo = mesCaixaToKey(mesCaixaRaw);
     if(!mesInfo) continue;
 
-    const valor = Math.abs(parseValorBR(valorRaw));
+    const valorBruto = parseValorBR(valorRaw); // mantém sinal p/ detectar estornos
+    const valor = Math.abs(valorBruto);
     if(!valor) continue;
 
     if(!newRaw[mesInfo.key]) newRaw[mesInfo.key] = { label: mesInfo.label, r:{}, d:{} };
@@ -2724,9 +2723,17 @@ function buildRawFromCSV(text){
     } else if(tipo === 'Despesa'){
       newRaw[mesInfo.key].d[categoria] = (newRaw[mesInfo.key].d[categoria]||0) + valor;
     }
+
+    lancamentos.push({
+      mes: mesInfo.key, mesLabel: mesInfo.label, tipo, data: dataRaw,
+      parcela: parcelaRaw, transacao, categoria, tipoDespesa,
+      valor: valorBruto // com sinal — estornos ficam negativos
+    });
   }
+  LANCAMENTOS = lancamentos;
   return newRaw;
 }
+
 
 function rebuildDashboardData(){
   // Recalcula tudo que depende de RAW, mantendo os mesmos nomes globais
