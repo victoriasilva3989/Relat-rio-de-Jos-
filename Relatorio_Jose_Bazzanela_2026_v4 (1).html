@@ -241,7 +241,7 @@ html,body{scroll-behavior:auto;}
   <button class="nav-tab" onclick="show('dubai')" id="tab-dubai">
     <span class="ti">🇦🇪🇨🇳</span><span class="tab-lbl">✈️ Dubai & China</span>
   </button>
-  <div class="sb-bottom">José Felipe Bazzanella Lírio<br><span id="sb-fechamento-info">Fechamento: <strong style="color:#4AA834;">Abril/26</strong> · Parcial: Maio/26</span>
+  <div class="sb-bottom">José Felipe Bazzanella Lírio<br><span id="sb-fechamento-info">Atualizado até: <strong style="color:#4AA834;">Maio/26</strong></span>
     <div id="last-sync-indicator" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.15);font-size:10.5px;color:rgba(255,255,255,0.75);line-height:1.5;"></div>
   </div>
 </nav>
@@ -500,7 +500,7 @@ html,body{scroll-behavior:auto;}
     <span class="filter-sep">|</span>
     <span class="filter-label">Mês:</span>
     <select class="filter-select" id="mes-select" onchange="renderMensal()">
-      <option value="2026-05">Maio/26 ★ Parcial</option>
+      <option value="2026-05">Maio/26</option>
       <option value="2026-04" selected>Abril/26</option>
       <option value="2026-03">Março/26</option>
       <option value="2026-02">Fevereiro/26</option>
@@ -522,7 +522,7 @@ html,body{scroll-behavior:auto;}
 <div class="page">
   <div class="sec-ey">Controle Orçamentário</div>
   <div class="sec-title">Orçamento 2026</div>
-  <div class="sec-sub">Baseado nos dados reais de cada Mês Caixa · Parcial Maio/26 incluído · <em>tabela de categorias abaixo usa valores brutos de despesa (controle orçamentário por categoria)</em></div>
+  <div class="sec-sub">Baseado nos dados reais de cada Mês Caixa · <em>tabela de categorias abaixo usa valores brutos de despesa (controle orçamentário por categoria)</em></div>
 
   <div class="chart-card" style="margin-bottom:20px;">
     <div class="chart-title">Evolução Receita × Despesa × Saldo</div>
@@ -706,7 +706,7 @@ html,body{scroll-behavior:auto;}
 
   <div class="chart-card" style="margin-bottom:20px;">
     <div class="chart-title">Histórico Completo — Receita vs Despesa</div>
-    <div class="chart-sub">Jul/25 a Mai/26 (parcial)</div>
+    <div class="chart-sub">Jul/25 a Mai/26</div>
     <div class="canvas-wrap" style="height:240px"><canvas id="chartHist"></canvas></div>
   </div>
 
@@ -1274,7 +1274,6 @@ function processMonth(key) {
 
 let MONTHS_ALL = Object.keys(RAW);
 let MONTHS_2026 = MONTHS_ALL.filter(m=>m.startsWith('2026'));
-let PARTIAL_MONTH = MONTHS_ALL.length ? [...MONTHS_ALL].sort().pop() : null; // mês mais recente = parcial
 const DATA = {};
 MONTHS_ALL.forEach(k => { DATA[k] = processMonth(k); });
 
@@ -1358,7 +1357,7 @@ function renderDashKPIs(){
   if(dashFilter==='anual') mn=getAnual();
   else mn=DATA[dashFilter];
   const sClass=mn.s>=0?'':'red';
-  const parcial=dashFilter===PARTIAL_MONTH?' <span class="badge parcial">Parcial</span>':'';
+  const parcial='';
 
   box.innerHTML=`
     <div class="kpi">
@@ -1494,7 +1493,7 @@ function renderMensalDetail(key,container){
   const rL=Object.keys(mn.top_r),rV=Object.values(mn.top_r);
   const dL=Object.keys(mn.top_d),dV=Object.values(mn.top_d);
   const rT=rV.reduce((a,b)=>a+b,0),dT=dV.reduce((a,b)=>a+b,0);
-  const parcialBadge=key===PARTIAL_MONTH?'<span class="badge parcial" style="margin-left:8px;">Parcial</span>':'';
+  const parcialBadge='';
   const netPill='';
 
   container.innerHTML=`
@@ -1567,7 +1566,7 @@ function renderAnual(container){
       <table class="ov-table">
         <thead><tr><th>Mês</th><th>Receita</th><th>Deduções</th><th>Despesa</th><th>Cat. Compensadas</th><th>Saldo</th><th>Status</th></tr></thead>
         <tbody>
-        ${MONTHS_2026.map(m=>{const mn=DATA[m];const parcial=m===PARTIAL_MONTH?'<span class="badge parcial" style="font-size:9px;padding:1px 6px;margin-left:4px;">Parcial</span>':'';
+        ${MONTHS_2026.map(m=>{const mn=DATA[m];const parcial='';
           return`<tr>
           <td><strong>${mn.label}</strong>${parcial}</td>
           <td style="color:var(--green)">${fmt(mn.r)}</td>
@@ -1616,7 +1615,7 @@ function initOrcamento(){
     const mn=DATA[m];
     const deducao=mn.empR+mn.tercD;
     const rLiq=mn.r-mn.empR;
-    const parcial=m===PARTIAL_MONTH?'<span class="badge parcial" style="font-size:9px;padding:1px 4px;margin-left:4px;">★</span>':'';
+    const parcial='';
     return`<tr>
       <td><strong>${mn.label}</strong>${parcial}</td>
       <td style="color:var(--green)">${fmt(mn.r)}</td>
@@ -1667,7 +1666,7 @@ function initHistorico(){
     scales:{y:{ticks:{callback:v=>'R$'+(v/1000).toFixed(0)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}});}
 
   const tbody=document.getElementById('hist-tbody');
-  if(tbody){tbody.innerHTML=MONTHS_ALL.map(m=>{const mn=DATA[m];const parcial=m===PARTIAL_MONTH?'<span class="badge parcial" style="font-size:9px;margin-left:4px;">★</span>':'';
+  if(tbody){tbody.innerHTML=MONTHS_ALL.map(m=>{const mn=DATA[m];const parcial='';
     return`<tr>
       <td><strong>${mn.label}</strong>${parcial}</td>
       <td style="color:var(--green)">${fmt(mn.r)}</td>
@@ -2059,7 +2058,7 @@ const PARCELAMENTOS={
       {desc:'Arena Society (lazer)',det:'2x',val:441.50,cor:'#4AA834'},
       {desc:'Mercadolivre 2 Produtos',det:'2x',val:69.63,cor:'#1A3A5C'},
     ],total:511.13},
-  '2026-05':{label:'Maio 2026 ★',note:'Parcial',
+  '2026-05':{label:'Maio 2026',note:'',
     items:[
       {desc:'Mp Skyairlines (viagens)',det:'6x',val:415.35,cor:'#7F77DD'},
       {desc:'Mercadolivre 3 Produtos',det:'2x',val:214.95,cor:'#E8943A'},
@@ -2072,7 +2071,7 @@ const TIPO_DESP={
   '2026-02':{eventual:138083.90,variavel:1202.31,parcelamento:3495.65,fixa:7057.05,obs:'Eventual alto: R$119.200 veículo',total:149838.91},
   '2026-03':{eventual:23062.11,variavel:1919.50,parcelamento:4702.03,fixa:9880.61,obs:'Sem aquisição de bens ✓',total:39564.25},
   '2026-04':{eventual:191650,variavel:5200,parcelamento:9342,fixa:3966,obs:'Invest.+Viagens EUA extraordinários',total:210158},
-  '2026-05':{eventual:36685,variavel:7900,parcelamento:8274,fixa:2462,obs:'Parcial Mai/26',total:55321}
+  '2026-05':{eventual:36685,variavel:7900,parcelamento:8274,fixa:2462,obs:'',total:55321}
 };
 
 // ════ EVOLUÇÃO MENSAL — com filtro de período + médias ════
@@ -2189,7 +2188,7 @@ function renderCentroCustos(){
   <div style="border-radius:14px;border:1px solid var(--border);overflow:hidden;">
     <div style="background:var(--dark);color:white;display:grid;grid-template-columns:${grid};padding:11px 18px;gap:6px;align-items:center;">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:2.5px;color:rgba(255,255,255,.4);font-weight:700;">Categoria</div>
-      ${meses.map(m=>`<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);text-align:right;line-height:1.4;">${DATA[m].label.replace('★','')}<br>${m===PARTIAL_MONTH?'<span style="color:rgba(255,255,255,.3)">★</span>':''}</div>`).join('')}
+      ${meses.map(m=>`<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);text-align:right;line-height:1.4;">${DATA[m].label.replace('★','')}</div>`).join('')}
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);text-align:right;">Variação<br>${varLabel}</div>
     </div>`;
 
@@ -2335,12 +2334,11 @@ function renderParcelamentos(){
   cont.innerHTML=meses.map(m=>{
     const p=PARCELAMENTOS[m];
     const isLast=m==='2026-04'; // Abril é o mês de fechamento real
-    const isParcial=m===PARTIAL_MONTH;
     const border=isLast?'border:2px solid #4AA834;':'';
     const titleColor=isLast?'color:#4AA834;':'color:var(--dark);';
     return`<div style="background:white;border-radius:12px;padding:18px;${border}">
       <div style="font-weight:700;font-size:14px;${titleColor}margin-bottom:4px;">${p.label}</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">+${fmt(p.total)} adicionados ao orçamento${isParcial?' (estimativa)':''}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">+${fmt(p.total)} adicionados ao orçamento</div>
       ${p.items.map(it=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.05);">
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="width:10px;height:10px;border-radius:2px;background:${it.cor};display:inline-block;flex-shrink:0;"></span>
@@ -2364,7 +2362,7 @@ function renderTipoDespesa(){
   const meses=MONTHS_2026;
   tbody.innerHTML=meses.map(m=>{
     const td=TIPO_DESP[m];if(!td)return'';
-    const parcial=m===PARTIAL_MONTH?'<span class="badge parcial" style="font-size:9px;margin-left:4px;">★</span>':'';
+    const parcial='';
     return`<tr>
       <td><strong>${DATA[m].label}</strong>${parcial}</td>
       <td style="text-align:right;color:var(--red)">${td.eventual>0?fmt(td.eventual):'—'}</td>
@@ -2700,9 +2698,8 @@ function buildRawFromCSV(text){
   for(const line of lines){
     const cols = parseCSVLine(line);
     if(!headerSeen){
-      // Header real: primeira coluna é "#" E segunda contém "caixa"
-      const isRealHeader = cols[0].trim()==='#' && (cols[1]||'').toLowerCase().includes('caixa');
-      if(isRealHeader){ headerSeen = true; }
+      // Header real começa com "#" e tem "Mês Caixa" na 2ª coluna
+      if(cols[0]==='#' || (cols[1]||'').toLowerCase().includes('caixa')){ headerSeen = true; }
       continue;
     }
     // Linha precisa começar com número de lançamento
@@ -2738,33 +2735,23 @@ function rebuildDashboardData(){
   for(const k of Object.keys(DATA)) delete DATA[k];
   MONTHS_ALL.forEach(k => { DATA[k] = processMonth(k); });
 
-  // O mês "parcial" é sempre o mês mais recente presente na planilha.
-  // Assim que o mês seguinte tiver pelo menos 1 lançamento, ele entra em
-  // MONTHS_ALL e passa a ser o novo PARTIAL_MONTH — o mês anterior deixa
-  // de ser parcial automaticamente, sem precisar editar código.
-  PARTIAL_MONTH = MONTHS_ALL.length ? MONTHS_ALL[MONTHS_ALL.length-1] : null;
-
   updateFechamentoTexts();
   buildAllMonthFilterButtons();
 }
 
-// Atualiza os textos fixos de "Fechamento: X · Parcial: Y" na sidebar e no
-// painel principal, usando o mês fechado real (o anterior ao PARTIAL_MONTH)
-// em vez de texto hardcoded.
+// Atualiza os textos da sidebar e do painel principal para refletir o mês
+// mais recente disponível na planilha, sem distinguir "fechado" de "parcial"
+// — todo mês é tratado da mesma forma.
 function updateFechamentoTexts(){
-  if(!PARTIAL_MONTH || MONTHS_ALL.length < 2) return;
-  const idx = MONTHS_ALL.indexOf(PARTIAL_MONTH);
-  const closedMonth = idx > 0 ? MONTHS_ALL[idx-1] : null;
-  if(!closedMonth) return;
-
-  const closedLabel = (DATA[closedMonth]?.label || closedMonth).replace('★','').trim();
-  const partialLabel = (DATA[PARTIAL_MONTH]?.label || PARTIAL_MONTH).replace('★','').trim();
+  if(!MONTHS_ALL.length) return;
+  const lastMonth = MONTHS_ALL[MONTHS_ALL.length-1];
+  const lastLabel = (DATA[lastMonth]?.label || lastMonth).replace('★','').trim();
 
   const sb = document.getElementById('sb-fechamento-info');
-  if(sb) sb.innerHTML = `Fechamento: <strong style="color:#4AA834;">${closedLabel}</strong> · Parcial: ${partialLabel}`;
+  if(sb) sb.innerHTML = `Atualizado até: <strong style="color:#4AA834;">${lastLabel}</strong>`;
 
   const sub = document.getElementById('dash-sec-sub');
-  if(sub) sub.textContent = `Fechamento confirmado: ${closedLabel} · Dados parciais de ${partialLabel} incluídos`;
+  if(sub) sub.textContent = `Dados atualizados até ${lastLabel}`;
 }
 
 // ════════════════════════════════════════════════════════
@@ -2773,7 +2760,7 @@ function updateFechamentoTexts(){
 // partir dos meses realmente presentes em MONTHS_ALL/2026,
 // nos 4 painéis que tinham botões fixos em HTML.
 // O mês mais recente vira o botão ativo por padrão e ganha
-// a estrela ★ se for o mês mais novo (provavelmente parcial).
+// a estrela ★ por ser o mês mais novo.
 // ════════════════════════════════════════════════════════
 function buildMonthButtons(containerId, idPrefix, setFnName, months){
   const box = document.getElementById(containerId);
